@@ -1,0 +1,143 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import 'tailwindcss';
+
+@theme {
+  /* Pri 색상 계열 */
+  --color-pri-900: #030f0f;
+  --color-pri-800: #071d1e;
+  --color-pri-700: #0b2c2d;
+  --color-pri-600: #103c3e;
+  --color-pri-500: #154d50;
+  --color-pri-400: #2f8c8e;
+  --color-pri-300: #66b7b7;
+  --color-pri-200: #a5dada;
+  --color-pri-100: #dff4f4;
+
+  /* Gray 색상 계열 */
+  --color-gray-900: #1c1d1c;
+  --color-gray-800: #393a39;
+  --color-gray-700: #555755;
+  --color-gray-600: #727472;
+  --color-gray-500: #8e918e;
+  --color-gray-400: #a5a7a5;
+  --color-gray-300: #bbbdbb;
+  --color-gray-200: #d2d3d2;
+  --color-gray-100: #e8e9e8;
+  --color-gray-50: #f2f2f2;
+  --color-gray-30: #f8f8f8;
+  --color-gray-10: #fdfdfd;
+
+  /* Mild 색상 */
+  --color-error: #e94e4e;
+  --color-success: #48bb78;
+  --color-background: #f7f8f9;
+  --color-skt: #3617ce;
+  --color-kt: #d71826;
+  --color-lguplus: #e6007e;
+
+  /* Gradient 색상 */
+  --color-pri-gradation: linear-gradient(69deg, #1c2c3a 0%, #154d50 100%);
+  --color-pri-gradation-small: linear-gradient(0deg, #1c2c3a 0%, #183d45 69%, #154d50 100%);
+  --color-coupon-gradation-mb: linear-gradient(0deg, #86cfcf 0%, #baf1f1 100%);
+  --color-coupon-gradation-gb: linear-gradient(0deg, #4ea4a6 0%, #7bc8ca 100%);
+
+  /* Effect 스타일 */
+  --shadow-card: 0px 8px 24px rgba(170, 170, 170, 0.12);
+  --shadow-coupon: 0px 2.87px 4.3px rgba(0, 0, 0, 0.2);
+  --shadow-label: 0px -4px 2px rgba(0, 0, 0, 0.15);
+  --shadow-receipt: 0px 4px 16px rgba(102, 102, 102, 0.08);
+  --shadow-modal: 0px 8px 24px rgba(0, 0, 0, 0.08);
+
+  --shadow-side-filter: 0px 32px 32px -24px rgba(0, 0, 0, 0.1);
+  --backdrop-blur-side-filter: 8px;
+
+  --shadow-header-modal:
+    0px -1px 2.5px rgba(0, 0, 0, 0.08), 0px 1px 2.5px rgba(0, 0, 0, 0.08),
+    0px 1px 5px rgba(0, 0, 0, 0.08);
+
+  --shadow-button: 0px 2px 5px rgba(0, 0, 0, 0.08), 0px 1px 2.5px rgba(0, 0, 0, 0.08);
+
+  /* Font Family */
+  --font-pretendard: Pretendard, sans-serif;
+
+  /* Font Weight */
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-xxl: 24px;
+  --radius-full: 9999px;
+}
+
+@layer utilities {
+  .bg-pri-gradation {
+    background-image: var(--color-pri-gradation);
+  }
+
+  .bg-pri-gradation-small {
+    background-image: var(--color-pri-gradation-small);
+  }
+
+  .bg-coupon-gradation-mb {
+    background-image: var(--color-coupon-gradation-mb);
+  }
+
+  .bg-coupon-gradation-gb {
+    background-image: var(--color-coupon-gradation-gb);
+  }
+
+  .effect-side-filter {
+    box-shadow: var(--shadow-side-filter);
+    backdrop-filter: blur(var(--backdrop-blur-side-filter));
+    -webkit-backdrop-filter: blur(var(--backdrop-blur-side-filter));
+  }
+
+  .shadow-header-modal {
+    box-shadow: var(--shadow-header-modal);
+  }
+
+  .shadow-button {
+    box-shadow: var(--shadow-button);
+  }
+}
+
+body {
+  font-family: var(--font-pretendard);
+  color: var(--color-gray-900);
+  letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  outline: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  transition: 0.2s ease;
+}
