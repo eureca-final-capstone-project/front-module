@@ -34,6 +34,7 @@
   --color-skt: #3617ce;
   --color-kt: #d71826;
   --color-lguplus: #e6007e;
+  --color-modal-background: #1c1d1c80;
 
   /* Gradient 색상 */
   --color-pri-gradation: linear-gradient(69deg, #1c2c3a 0%, #154d50 100%);
