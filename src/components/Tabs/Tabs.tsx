@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 interface TabItem {
   id: string
@@ -13,6 +15,7 @@ interface TabsProps {
 
 const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
   const [selectedTab, setSelectedTab] = useState(defaultTabId || tabs[0]?.id)
+  const deviceType = useDeviceType()
 
   const handleClick = (tabId: string) => {
     setSelectedTab(tabId) // 선택된 탭 상태 변경
@@ -23,26 +26,35 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
 
   return (
     <div className="w-full">
-      <div className="border-pri-600 flex border-1 pt-2">
+      <div className="relative flex items-end pt-2">
         {tabs.map(tab => {
           const isSelected = selectedTab === tab.id
+
           return (
             <button
               key={tab.id}
               onClick={() => handleClick(tab.id)}
-              className={`text-fs18 flex-1 rounded-t-md text-center leading-[1.375rem] transition duration-200 ${
-                isSelected
-                  ? 'bg-background text-pri-600 border-pri-600 -mt-2 border-t border-r border-l px-4 py-5 font-bold'
-                  : 'text-gray-10 bg-pri-gradation-small border-gray-10 mt-0 border-t border-r border-l p-4'
-              }`}
+              className="flex-1 outline-none"
             >
-              {tab.label}
+              <motion.div
+                layout
+                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                className={`rounded-t-md px-4 pb-4 ${
+                  isSelected
+                    ? 'bg-background text-pri-600 border-pri-600 pt-6 font-bold'
+                    : 'bg-pri-gradation-small text-gray-10 border-gray-10 pt-4'
+                } border-x border-t`}
+              >
+                <span className={`${deviceType === 'desktop' ? 'text-fs18' : 'text-fs16'}`}>
+                  {tab.label}
+                </span>
+              </motion.div>
             </button>
           )
         })}
       </div>
 
-      <div>
+      <div className="mt-4">
         <p>선택된 탭: {tabs.find(t => t.id === selectedTab)?.label}</p>
       </div>
     </div>

@@ -12,6 +12,7 @@ const tabData = [
 const MyPage = () => {
   return (
     <>
+      <div className="h-[200px]">마이페이지</div>
       <Tabs tabs={tabData} defaultTabId="favorites" />
     </>
   )
