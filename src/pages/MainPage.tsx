@@ -9,6 +9,7 @@ const MainPage = () => {
   return (
     <>
       <div>MainPage 25.07.02 11:22</div>
+      <div>MainPage 25.07.02 11:22</div>
       <button onClick={handleGoToLogin}>로그인 페이지로 이동</button>
     </>
   )
