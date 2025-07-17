@@ -1,18 +1,18 @@
-import React from 'react'
+import { ChangeEvent } from 'react'
 
 interface FloatingLabelInputProps {
   label: string
   id: string
   type?: string
   value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
   required?: boolean
   disabled?: boolean
   error?: boolean
   className?: string
 }
 
-const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
+const FloatingLabelInput = ({
   label,
   id,
   type = 'text',
@@ -22,7 +22,7 @@ const FloatingLabelInput: React.FC<FloatingLabelInputProps> = ({
   disabled = false,
   error = false,
   className = '',
-}) => {
+}: FloatingLabelInputProps) => {
   return (
     <div className={`relative ${className}`}>
       <input
