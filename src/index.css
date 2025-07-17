@@ -80,6 +80,18 @@
   --radius-xl: 20px;
   --radius-xxl: 24px;
   --radius-full: 9999px;
+
+  /* Font Size */
+  --text-fs10: 0.625rem;
+  --text-fs12: 0.75rem;
+  --text-fs14: 0.875rem;
+  --text-fs16: 1rem;
+  --text-fs18: 1.125rem;
+  --text-fs20: 1.25rem;
+  --text-fs22: 1.375rem;
+  --text-fs24: 1.5rem;
+  --text-fs28: 1.75rem;
+  --text-fs32: 2rem;
 }
 
 @layer utilities {
@@ -118,6 +130,8 @@ body {
   font-family: var(--font-pretendard);
   color: var(--color-gray-900);
   letter-spacing: -0.02em;
+  font-weight: var(--font-weight-regular);
+  background-color: var(--color-background);
 }
 
 a {
