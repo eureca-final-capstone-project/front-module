@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useDeviceType } from '../../hooks/useDeviceType'
 
@@ -16,6 +16,12 @@ interface TabsProps {
 const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
   const [selectedTab, setSelectedTab] = useState(defaultTabId || tabs[0]?.id)
   const deviceType = useDeviceType()
+
+  useEffect(() => {
+    if (defaultTabId && defaultTabId !== selectedTab) {
+      setSelectedTab(defaultTabId)
+    }
+  }, [defaultTabId])
 
   const handleClick = (tabId: string) => {
     setSelectedTab(tabId) // 선택된 탭 상태 변경
@@ -39,13 +45,13 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
               <motion.div
                 layout
                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                className={`rounded-t-md px-4 pb-4 ${
+                className={`cursor-pointer rounded-t-md px-2 pb-4 lg:px-4 ${
                   isSelected
                     ? 'bg-background text-pri-600 border-pri-600 pt-6 font-bold'
                     : 'bg-pri-gradation-small text-gray-10 border-gray-10 pt-4'
                 } border-x border-t`}
               >
-                <span className={`${deviceType === 'desktop' ? 'text-fs18' : 'text-fs16'}`}>
+                <span className={`${deviceType === 'desktop' ? 'text-fs18' : 'text-fs14'}`}>
                   {tab.label}
                 </span>
               </motion.div>

@@ -11,10 +11,6 @@ export const router = createBrowserRouter([
     element: <MainPage />,
   },
   {
-    path: '/mypage',
-    element: <MyPage />,
-  },
-  {
     element: <AuthLayout />,
     children: [
       {
@@ -27,7 +23,7 @@ export const router = createBrowserRouter([
     element: <DefaultLayout />,
     children: [
       {
-        path: '/mypage',
+        path: '/mypage/:tabId',
         element: <MyPage />,
       },
     ],
