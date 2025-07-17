@@ -36,20 +36,24 @@ const Card = ({
   children,
 }: CardProps) => {
   const deviceType = useDeviceType()
-  const paddingClass = deviceType === 'mobile' ? 'p-4 gap-4' : 'p-5 gap-5'
-  const labelTextClass = deviceType === 'mobile' ? 'text-fs18' : 'text-fs20'
   const isIconType = type === 'warning' || type === 'notice'
   const iconCardStyle = isIconType ? typeStyles[type] : undefined
   const Icon = iconCardStyle?.icon
   return (
     <div
-      className={`shadow-card flex w-full flex-col rounded-md ${paddingClass} ${
-        isIconType ? iconCardStyle?.cardBg : 'bg-gray-10'
-      } ${className}`}
+      className={`shadow-card flex w-full flex-col rounded-md ${
+        deviceType === 'mobile' ? 'gap-4 p-4' : 'gap-5 p-5'
+      } ${isIconType ? iconCardStyle?.cardBg : 'bg-gray-10'} ${className}`}
     >
       {type === 'label' && labelTitle && (
         <div className="flex flex-col gap-2">
-          <div className={`w-full font-medium text-gray-900 ${labelTextClass}`}>{labelTitle}</div>
+          <div
+            className={`w-full font-medium text-gray-900 ${
+              deviceType === 'mobile' ? 'text-fs18' : 'text-fs20'
+            }`}
+          >
+            {labelTitle}
+          </div>
           <hr className="border-t border-gray-100" />
         </div>
       )}
@@ -58,13 +62,19 @@ const Card = ({
           className={`flex w-full items-center gap-3 ${type === 'notice' ? 'justify-between' : ''}`}
         >
           <div
-            className={`text-fs24 flex h-12 w-12 items-center justify-center rounded-full ${iconCardStyle?.iconWrapper}`}
+            className={`text-fs24 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full ${iconCardStyle?.iconWrapper}`}
           >
             {Icon && <Icon />}
           </div>
           <div className="flex w-full flex-col justify-center gap-1">
-            <p className={`text-fs20 font-medium ${iconCardStyle?.title}`}>{iconTitle}</p>
-            <p className="text-fs14 text-gray-700">{iconDescription}</p>
+            <p
+              className={`${deviceType === 'mobile' ? 'text-fs16' : 'text-fs20'} font-medium ${iconCardStyle?.title}`}
+            >
+              {iconTitle}
+            </p>
+            <p className={`${deviceType === 'mobile' ? 'text-fs12' : 'text-fs14'} text-gray-700`}>
+              {iconDescription}
+            </p>
           </div>
           {type === 'notice' && (
             <div className="flex items-center">
