@@ -39,19 +39,31 @@ const Card = ({
   const isIconType = type === 'warning' || type === 'notice'
   const iconCardStyle = isIconType ? typeStyles[type] : undefined
   const Icon = iconCardStyle?.icon
+
+  const responsiveStyles =
+    deviceType === 'mobile'
+      ? {
+          wrapper: 'p-4 gap-4',
+          iconTitle: 'text-fs16',
+          iconDescription: 'text-fs12',
+          labelTitle: 'text-fs18',
+        }
+      : {
+          wrapper: 'p-5 gap-5',
+          iconTitle: 'text-fs20',
+          iconDescription: 'text-fs14',
+          labelTitle: 'text-fs20',
+        }
+
   return (
     <div
-      className={`shadow-card flex w-full flex-col rounded-md ${
-        deviceType === 'mobile' ? 'gap-4 p-4' : 'gap-5 p-5'
-      } ${isIconType ? iconCardStyle?.cardBg : 'bg-gray-10'} ${className}`}
+      className={`shadow-card flex w-full flex-col rounded-md ${responsiveStyles.wrapper} ${
+        isIconType ? iconCardStyle?.cardBg : 'bg-gray-10'
+      } ${className}`}
     >
       {type === 'label' && labelTitle && (
         <div className="flex flex-col gap-2">
-          <div
-            className={`w-full font-medium text-gray-900 ${
-              deviceType === 'mobile' ? 'text-fs18' : 'text-fs20'
-            }`}
-          >
+          <div className={`w-full font-medium text-gray-900 ${responsiveStyles.labelTitle}`}>
             {labelTitle}
           </div>
           <hr className="border-t border-gray-100" />
@@ -67,14 +79,10 @@ const Card = ({
             {Icon && <Icon />}
           </div>
           <div className="flex w-full flex-col justify-center gap-1">
-            <p
-              className={`${deviceType === 'mobile' ? 'text-fs16' : 'text-fs20'} font-medium ${iconCardStyle?.title}`}
-            >
+            <p className={`${responsiveStyles.iconTitle} font-medium ${iconCardStyle?.title}`}>
               {iconTitle}
             </p>
-            <p className={`${deviceType === 'mobile' ? 'text-fs12' : 'text-fs14'} text-gray-700`}>
-              {iconDescription}
-            </p>
+            <p className={`${responsiveStyles.iconDescription} text-gray-700`}>{iconDescription}</p>
           </div>
           {type === 'notice' && (
             <div className="flex items-center">
