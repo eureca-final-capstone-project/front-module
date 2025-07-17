@@ -23,7 +23,7 @@ export const router = createBrowserRouter([
     element: <DefaultLayout />,
     children: [
       {
-        path: '/mypage',
+        path: '/mypage/:tabId',
         element: <MyPage />,
       },
     ],
