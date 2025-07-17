@@ -4,6 +4,7 @@ import LoginPage from '../pages/LoginPage'
 import AuthLayout from '../layout/AuthLayout'
 import DefaultLayout from '../layout/DefaultLayout'
 import MyPage from '../pages/MyPage'
+import PayChargeResultPage from '../pages/PayChargeResultPage'
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
       {
         path: '/mypage/:tabId',
         element: <MyPage />,
+      },
+      {
+        path: '/charge-result',
+        element: <PayChargeResultPage />,
       },
     ],
   },
