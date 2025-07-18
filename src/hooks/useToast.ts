@@ -1,7 +1,7 @@
 import { toast, ToastOptions } from 'react-toastify'
 
 interface ToastProps {
-  msg: string
+  msg?: string
   type: 'default' | 'success' | 'error' | 'promise'
   customOptions?: ToastOptions
   promiseMessages?: {
