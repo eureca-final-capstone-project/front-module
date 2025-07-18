@@ -172,3 +172,10 @@ select:-webkit-autofill:focus {
   box-shadow: 0 0 0px 1000px white inset;
   -webkit-text-fill-color: black;
 }
+
+.Toastify__toast-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
