@@ -57,7 +57,7 @@ const Input = ({
           onClick={() => setShowPassword(prev => !prev)}
           className="cursor-pointer focus:outline-none"
         >
-          {showPassword ? <PasswordOnIcon /> : <PasswordOffIcon />}
+          {showPassword ? <PasswordOnIcon className="text-pri-500" /> : <PasswordOffIcon />}
         </button>
       )
     }
