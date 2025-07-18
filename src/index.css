@@ -29,6 +29,7 @@
 
   /* Mild 색상 */
   --color-error: #e94e4e;
+  --color-error-light: #ffefef;
   --color-success: #48bb78;
   --color-background: #f7f8f9;
   --color-skt: #3617ce;
@@ -133,6 +134,7 @@ body {
   letter-spacing: -0.02em;
   font-weight: var(--font-weight-regular);
   background-color: var(--color-background);
+  line-height: 1.2;
 }
 
 a {
