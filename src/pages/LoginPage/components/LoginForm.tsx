@@ -1,5 +1,5 @@
 import Button from '../../../components/Button/Button'
-import FloatingLabelInput from '../../../components/FloatingLabelInput/FloatingLabelInput'
+import Input from '../../../components/Input/Input'
 import { Controller, useForm } from 'react-hook-form'
 import { loginSchema, LoginSchemaType } from '../../../utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,7 +48,7 @@ const LoginForm = () => {
         control={control}
         defaultValue=""
         render={({ field }) => (
-          <FloatingLabelInput
+          <Input
             label="이메일"
             id="email"
             value={field.value}
@@ -57,6 +57,7 @@ const LoginForm = () => {
               if (errors.email) clearErrors('email')
             }}
             error={errors.email?.message}
+            floating={true}
           />
         )}
       />
@@ -65,7 +66,7 @@ const LoginForm = () => {
         control={control}
         defaultValue=""
         render={({ field }) => (
-          <FloatingLabelInput
+          <Input
             label="비밀번호"
             id="password"
             type="password"
@@ -75,6 +76,7 @@ const LoginForm = () => {
               if (errors.password) clearErrors('password')
             }}
             error={errors.password?.message}
+            floating={true}
           />
         )}
       />
