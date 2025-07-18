@@ -19,7 +19,7 @@ const LoginForm = () => {
   } = useForm<LoginSchemaType>({
     resolver: zodResolver(loginSchema),
     mode: 'onSubmit', // 폼 제출 시, 검증
-    reValidateMode: 'onSubmit', // 폼 한 번 제출 후, 다시 제출 시 재검증
+    reValidateMode: 'onSubmit', // 폼 한 번 제출 후, 다시 제출 시 검증
   })
 
   const emailValue = watch('email')
@@ -72,7 +72,7 @@ const LoginForm = () => {
             value={field.value}
             onChange={e => {
               field.onChange(e)
-              if (errors.password) clearErrors('password') // 🚩 변경 시 해당 에러 초기화
+              if (errors.password) clearErrors('password')
             }}
             error={errors.password?.message}
           />
