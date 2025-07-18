@@ -56,7 +56,7 @@ const MyPage = () => {
         }}
       />
       {/* 콘텐츠 */}
-      {selected.content}
+      <div className="px-5 py-8">{selected.content}</div>
     </>
   )
 }
