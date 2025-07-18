@@ -59,6 +59,8 @@
 
   --shadow-button: 0px 2px 5px rgba(0, 0, 0, 0.08), 0px 1px 2.5px rgba(0, 0, 0, 0.08);
 
+  --shadow-tile: 0px 2px 5px rgba(0, 0, 0, 0.03), 0px 1px 2.5px rgba(0, 0, 0, 0.03);
+
   /* Font Family */
   --font-pretendard: Pretendard, sans-serif;
 
