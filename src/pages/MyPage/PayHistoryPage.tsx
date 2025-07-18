@@ -1,3 +1,4 @@
+import FadeInUpDiv from '../../components/Animation/FadeInUpDiv'
 import Badge from '../../components/Badge/Badge'
 import ListTile from '../../components/ListTile/ListTile'
 
@@ -30,16 +31,18 @@ const PayHistoryPage = () => {
         <p>페이 변동</p>
       </ListTile>
       <div className="flex flex-col gap-2">
-        {dummyPayHistory.map(item => {
+        {dummyPayHistory.map((item, i) => {
           const { text, colorClass } = getFormattedAmount(item.type, item.amount)
           return (
-            <ListTile key={item.id}>
-              <div className="flex gap-2">
-                <Badge {...getBadgeInfo(item.type)} variant="default" size="medium" />
-                <p>{item.type}</p>
-              </div>
-              <p className={`${colorClass} font-medium`}>{text}</p>
-            </ListTile>
+            <FadeInUpDiv key={item.id} custom={i} delayUnit={0.07} duration={0.3}>
+              <ListTile>
+                <div className="flex gap-2">
+                  <Badge {...getBadgeInfo(item.type)} variant="default" size="medium" />
+                  <p>{item.type}</p>
+                </div>
+                <p className={`${colorClass} font-medium`}>{text}</p>
+              </ListTile>
+            </FadeInUpDiv>
           )
         })}
       </div>
