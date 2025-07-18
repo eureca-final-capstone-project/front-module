@@ -3,8 +3,13 @@ import FloatingLabelInput from '../../../components/FloatingLabelInput/FloatingL
 import { Controller, useForm } from 'react-hook-form'
 import { loginSchema, LoginSchemaType } from '../../../utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { login } from '../../../apis/auth'
 
 const LoginForm = () => {
+  const navigate = useNavigate()
+
   const {
     control,
     handleSubmit,
@@ -21,8 +26,19 @@ const LoginForm = () => {
   const passwordValue = watch('password')
   const isActive = emailValue && passwordValue
 
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      navigate('/')
+    },
+    onError: error => {
+      alert('로그인 실패')
+      console.error(error)
+    },
+  })
+
   const handleLogin = (data: LoginSchemaType) => {
-    console.log('✅ 제출:', data)
+    mutation.mutate(data)
   }
 
   return (
