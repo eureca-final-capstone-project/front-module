@@ -1,53 +1,72 @@
-import { FormEvent, useState } from 'react'
 import Button from '../../../components/Button/Button'
 import FloatingLabelInput from '../../../components/FloatingLabelInput/FloatingLabelInput'
-import { validateEmail } from '../../../utils/validation'
+import { Controller, useForm } from 'react-hook-form'
+import { loginSchema, LoginSchemaType } from '../../../utils/validation'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({})
+  const {
+    control,
+    handleSubmit,
+    watch,
+    clearErrors,
+    formState: { errors },
+  } = useForm<LoginSchemaType>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onSubmit', // 폼 제출 시, 검증
+    reValidateMode: 'onSubmit', // 폼 한 번 제출 후, 다시 제출 시 재검증
+  })
 
-  const validateLoginForm = () => {
-    const errors: { email?: string; password?: string } = {}
+  const emailValue = watch('email')
+  const passwordValue = watch('password')
+  const isActive = emailValue && passwordValue
 
-    const emailError = validateEmail(email)
-    console.log(emailError)
-    if (emailError) errors.email = emailError
-
-    return errors
-  }
-
-  const handleLogin = (e: FormEvent) => {
-    e.preventDefault()
-
-    const validationErrors = validateLoginForm()
-    setErrors(validationErrors)
+  const handleLogin = (data: LoginSchemaType) => {
+    console.log('✅ 제출:', data)
   }
 
   return (
-    <form onSubmit={handleLogin} className="flex flex-col gap-10">
-      <FloatingLabelInput
-        label="이메일"
-        id="email"
-        value={email}
-        error={errors.email}
-        onChange={e => {
-          setEmail(e.target.value)
-          if (errors.email) setErrors(prev => ({ ...prev, email: undefined }))
-        }}
+    <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-10">
+      <Controller
+        name="email"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <FloatingLabelInput
+            label="이메일"
+            id="email"
+            value={field.value}
+            onChange={e => {
+              field.onChange(e)
+              if (errors.email) clearErrors('email')
+            }}
+            error={errors.email?.message}
+          />
+        )}
       />
-      <FloatingLabelInput
-        label="비밀번호"
-        id="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
+      <Controller
+        name="password"
+        control={control}
+        defaultValue=""
+        render={({ field }) => (
+          <FloatingLabelInput
+            label="비밀번호"
+            id="password"
+            type="password"
+            value={field.value}
+            onChange={e => {
+              field.onChange(e)
+              if (errors.password) clearErrors('password') // 🚩 변경 시 해당 에러 초기화
+            }}
+            error={errors.password?.message}
+          />
+        )}
       />
       <Button
         text="로그인"
         type="submit"
-        disabled={!email || !password}
-        className={email && password ? 'bg-pri-500 text-gray-10' : 'bg-gray-50 text-gray-500'}
+        disabled={!isActive}
+        className="bg-pri-500 text-gray-10 disabled:bg-gray-50 disabled:text-gray-500"
       />
     </form>
   )
