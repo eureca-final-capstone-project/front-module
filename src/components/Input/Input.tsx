@@ -1,8 +1,9 @@
 import { ChangeEvent, ReactNode, useState } from 'react'
 import PasswordOffIcon from '@/assets/icons/password-off.svg?react'
 import PasswordOnIcon from '@/assets/icons/password-on.svg?react'
+import ClearIcon from '@/assets/icons/clear.svg?react'
 
-interface FloatingLabelInputProps {
+interface InputProps {
   label: string
   id: string
   type?: string
@@ -11,13 +12,12 @@ interface FloatingLabelInputProps {
   required?: boolean
   disabled?: boolean
   error?: string
-  className?: string
-  floating?: boolean
+  shape?: 'square' | 'floating' | 'underline'
   prefix?: ReactNode
   suffix?: ReactNode
 }
 
-const FloatingLabelInput = ({
+const Input = ({
   label,
   id,
   type = 'text',
@@ -26,14 +26,28 @@ const FloatingLabelInput = ({
   required = false,
   disabled = false,
   error = '',
-  className = '',
-  floating = false,
+  shape = 'square',
   prefix,
   suffix,
-}: FloatingLabelInputProps) => {
+}: InputProps) => {
   const [showPassword, setShowPassword] = useState(false)
   const isPassword = type === 'password'
   const inputType = isPassword && showPassword ? 'text' : type
+  const isClearVisible = shape === 'underline' && value.length > 0
+
+  const handleClear = () => {
+    onChange({ target: { value: '' } } as ChangeEvent<HTMLInputElement>)
+  }
+
+  const inputBaseClasses = `
+    w-full p-4 text-sm text-gray-900 peer focus:outline-none disabled:cursor-not-allowed font-regular
+    ${prefix ? 'pl-12' : ''} ${shape === 'underline' ? 'pr-7' : suffix || isPassword ? 'pr-11' : ''}
+  `
+
+  const borderClasses =
+    shape === 'underline'
+      ? `border-b bg-transparent px-1 py-2 ${error ? 'border-b-error' : 'border-b-gray-400 focus:border-b-pri-500 hover:border-b-pri-500'} bg-transparent`
+      : `rounded-sm border bg-gray-10  ${error ? 'border-error' : 'border-gray-400 focus:border-pri-500 hover:border-pri-500'}`
 
   const renderSuffixOrToggle = () => {
     if (isPassword) {
@@ -50,12 +64,21 @@ const FloatingLabelInput = ({
     if (suffix) {
       return <div className="pointer-events-none">{suffix}</div>
     }
+
+    if (isClearVisible) {
+      return (
+        <button type="button" onClick={handleClear} className="cursor-pointer focus:outline-none">
+          <ClearIcon className="hover:text-pri-500 h-3 w-3 text-gray-400" />
+        </button>
+      )
+    }
+
     return null
   }
 
   return (
     <div className="flex flex-col">
-      <div className={`relative ${className}`}>
+      <div className="relative">
         {prefix && (
           <div className="pointer-events-none absolute top-1/2 left-4 flex h-6 w-6 -translate-y-1/2 items-center">
             {prefix}
@@ -69,21 +92,23 @@ const FloatingLabelInput = ({
           onChange={onChange}
           required={required}
           disabled={disabled}
-          placeholder={floating ? '' : label}
-          className={`w-full rounded-sm border bg-white p-4 text-sm text-gray-900 ${prefix ? 'pl-12' : ''} ${suffix || isPassword ? 'pr-11' : ''} ${error ? 'border-red-500' : 'focus:border-pri-500 hover:border-pri-500 border-gray-400'} peer focus:ring-0 focus:outline-none disabled:cursor-not-allowed`}
+          placeholder={shape === 'floating' ? '' : label}
+          className={`${inputBaseClasses} ${borderClasses}`}
         />
 
-        {floating && (
+        {shape === 'floating' && (
           <label
             htmlFor={id}
-            className={`absolute top-2 left-2 z-10 origin-[0] -translate-y-4 scale-75 transform bg-white px-2 text-sm duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 ${error ? 'text-red-500' : 'peer-focus:text-pri-500 text-gray-400'} `}
+            className={`bg-gray-10 absolute top-2 left-2 z-10 origin-[0] -translate-y-4 scale-75 transform px-2 text-sm duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 ${error ? 'text-error' : 'peer-focus:text-pri-500 text-gray-400'} `}
           >
             {label}
           </label>
         )}
 
-        {(suffix || isPassword) && (
-          <div className="absolute top-1/2 right-4 flex -translate-y-1/2 items-center">
+        {(suffix || isPassword || isClearVisible) && (
+          <div
+            className={`absolute top-1/2 ${shape === 'underline' ? 'right-1' : 'right-4'} flex -translate-y-1/2 items-center`}
+          >
             {renderSuffixOrToggle()}
           </div>
         )}
@@ -94,4 +119,4 @@ const FloatingLabelInput = ({
   )
 }
 
-export default FloatingLabelInput
+export default Input

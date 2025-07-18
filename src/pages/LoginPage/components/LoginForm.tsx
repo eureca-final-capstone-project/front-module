@@ -57,7 +57,7 @@ const LoginForm = () => {
               if (errors.email) clearErrors('email')
             }}
             error={errors.email?.message}
-            floating={true}
+            shape="floating"
           />
         )}
       />
@@ -76,7 +76,7 @@ const LoginForm = () => {
               if (errors.password) clearErrors('password')
             }}
             error={errors.password?.message}
-            floating={true}
+            shape="floating"
           />
         )}
       />
