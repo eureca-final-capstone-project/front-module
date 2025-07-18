@@ -1,6 +1,6 @@
 import { ToastContainer, Bounce } from 'react-toastify'
-import SuccessIcon from '../../assets/icons/toastSuccessIcon.svg?react'
-import ErrorIcon from '../../assets/icons/toastErrorIcon.svg?react'
+import SuccessIcon from '../../assets/icons/toast-success.svg?react'
+import ErrorIcon from '../../assets/icons/toast-error.svg?react'
 
 const Toast = () => {
   return (
