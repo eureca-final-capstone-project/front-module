@@ -22,7 +22,7 @@ export interface ReceiptProps {
 
 const ReceiptCard: React.FC<ReceiptProps> = ({ type, pay, info }) => {
   const configItem = config[type]
-  if (!configItem) return <div>잘못된 타입입니다: {type}</div>
+  if (!configItem) return <div>타입에러발생 {type}</div>
 
   const { title, description } = configItem
 

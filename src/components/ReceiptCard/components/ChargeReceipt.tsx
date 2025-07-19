@@ -1,17 +1,15 @@
-// src/components/Receipt/ChargeReceipt.tsx
 import React from 'react'
 import type { ReceiptProps } from '../ReceiptCard'
 import { config } from './config'
-import ReceiptInfoCard from './ReceiptInfoCard'
+import ReceiptInfo from './ReceiptInfo'
 
 const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
-  const { historyMent, history, payMent, isMinus } = config[type]
-  const { extra } = config[type]
+  const { historyMent, history, payMent, isMinus, extra } = config[type]
   const extraInfo = [
     info.id,
     info.time,
     type === 'refund' ? info.account || '' : info.method || '',
-    info.carrier || `${info.totalPay.toLocaleString()}원`,
+    `${info.totalPay.toLocaleString()}원`,
   ]
   return (
     <div className="flex flex-col gap-8">
@@ -32,7 +30,11 @@ const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
 
             return (
               <React.Fragment key={i}>
-                <div className="text-fs12 flex justify-between font-medium text-gray-900">
+                <div
+                  className={`flex justify-between text-gray-900 ${
+                    i === history.length - 1 ? 'text-fs16 font-medium' : 'text-fs14'
+                  }`}
+                >
                   <span>{item.label}</span>
                   <span>{value}</span>
                 </div>
@@ -53,10 +55,10 @@ const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
       </div>
 
       <div className="flex flex-col gap-2">
-        {[0, 2].map(start => (
-          <div key={start} className="flex justify-between gap-2">
-            <ReceiptInfoCard label={extra[start]} value={extraInfo[start] || ''} />
-            <ReceiptInfoCard label={extra[start + 1]} value={extraInfo[start + 1] || ''} />
+        {[0, 2].map(i => (
+          <div key={i} className="flex justify-between gap-2">
+            <ReceiptInfo label={extra[i]} value={extraInfo[i] || ''} />
+            <ReceiptInfo label={extra[i + 1]} value={extraInfo[i + 1] || ''} />
           </div>
         ))}
       </div>
