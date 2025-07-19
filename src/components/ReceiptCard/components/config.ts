@@ -1,0 +1,46 @@
+export const config = {
+  charge: {
+    title: '페이 충전 및 환전 내역',
+    description: '충전 일시와 금액을 한눈에 확인해보세요.',
+    historyMent: '결제 내역',
+    history: [
+      { label: '결제 금액', key: 'pay' },
+      { label: '할인된 금액', value: '0원' },
+      { label: '최종 결제 금액', key: 'pay' },
+    ],
+    payMent: '충전 다챠페이',
+    isMinus: false,
+    extra: ['결제 번호', '충전 시간', '충전 방식', '총 다챠페이'],
+  },
+  refund: {
+    title: '페이 충전 및 환전 내역',
+    description: '환전 일시와 금액을 한눈에 확인해보세요.',
+    historyMent: '환전 내역',
+    history: [
+      { label: '환전 금액', key: 'pay' },
+      { label: '수수료 3% 부가', value: (pay: number) => `${(pay * 0.03).toLocaleString()}원` },
+      { label: '최종 환전 금액', value: (pay: number) => `${(pay * 0.97).toLocaleString()}원` },
+    ],
+    payMent: '환전 다챠페이',
+    isMinus: true,
+    extra: ['환전 번호', '환전 시간', '환전 계좌', '총 다챠페이'],
+  },
+  buy: {
+    title: '거래 내역 (구매)',
+    description: '거래 일시와 금액을 한눈에 확인해보세요.',
+    historyMent: null,
+    history: [],
+    payMent: '거래 다챠페이',
+    isMinus: true,
+    extra: ['거래 번호', '거래 시간', '거래 게시글', '통신사', '총 다챠페이'],
+  },
+  sell: {
+    title: '거래 내역 (판매)',
+    description: '거래 일시와 금액을 한눈에 확인해보세요.',
+    historyMent: null,
+    history: [],
+    payMent: '거래 다챠페이',
+    isMinus: false,
+    extra: ['거래 번호', '거래 시간', '거래 게시글', '통신사', '총 다챠페이'],
+  },
+} as const
