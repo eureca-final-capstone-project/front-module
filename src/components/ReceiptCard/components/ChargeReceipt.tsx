@@ -3,7 +3,7 @@ import type { ReceiptProps } from '../ReceiptCard'
 import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 
-const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
+const ChargeReceipt = ({ type, pay, info }: ReceiptProps) => {
   const { historyMent, history, payMent, isMinus, extra } = config[type]
   const extraInfo = [
     info.id,
@@ -16,7 +16,6 @@ const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
       {historyMent && (
         <div className="flex flex-col gap-[0.5rem]">
           <h3 className="text-fs14 text-center text-gray-700">{historyMent}</h3>
-
           {history.map((item, i) => {
             let value: string
 
@@ -27,7 +26,6 @@ const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
             } else {
               value = '-'
             }
-
             return (
               <React.Fragment key={i}>
                 <div
@@ -46,7 +44,6 @@ const ChargeReceipt: React.FC<ReceiptProps> = ({ type, pay, info }) => {
           })}
         </div>
       )}
-
       <div className="flex flex-col items-center gap-2 text-center">
         <h3 className="text-fs14 text-center text-gray-700">{payMent}</h3>
         <span className={`${isMinus ? 'text-error' : 'text-success'} text-fs24 font-bold`}>
