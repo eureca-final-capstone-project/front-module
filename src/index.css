@@ -36,6 +36,7 @@
   --color-kt: #d71826;
   --color-lguplus: #e6007e;
   --color-modal-background: #1c1d1c80;
+  --color-mobile-transparent: rgba(253, 253, 253, 0.1);
 
   /* Gradient 색상 */
   --color-pri-gradation: linear-gradient(69deg, #1c2c3a 0%, #154d50 100%);
@@ -78,6 +79,7 @@
 
   /* Radius */
   --radius-xs: 4px;
+  --radius-custom-s: 6px;
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
