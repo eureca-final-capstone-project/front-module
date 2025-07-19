@@ -32,7 +32,7 @@ export const config = {
     history: [],
     payMent: '거래 다챠페이',
     isMinus: true,
-    extra: ['거래 번호', '거래 시간', '거래 게시글', '통신사', '총 다챠페이'],
+    extra: ['거래 게시글', '거래 번호', '거래 시간', '통신사', '총 다챠페이'],
   },
   sell: {
     title: '거래 내역 (판매)',
@@ -41,6 +41,6 @@ export const config = {
     history: [],
     payMent: '거래 다챠페이',
     isMinus: false,
-    extra: ['거래 번호', '거래 시간', '거래 게시글', '통신사', '총 다챠페이'],
+    extra: ['거래 게시글', '거래 번호', '거래 시간', '통신사', '총 다챠페이'],
   },
 } as const
