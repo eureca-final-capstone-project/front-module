@@ -1,6 +1,7 @@
 import ChargeReceipt from './ChargeReceipt'
 import TradeReceipt from './TradeReceipt'
 import { config } from './config'
+import CloseIcon from '../../assets/icons/x.svg?react'
 
 export interface ReceiptProps {
   type: 'charge' | 'refund' | 'buy' | 'sell'
@@ -19,8 +20,11 @@ export interface ReceiptProps {
     }
   }
 }
+interface ReceiptModalProps extends ReceiptProps {
+  onClose: () => void
+}
 
-const ReceiptModal = ({ type, pay, info }: ReceiptProps) => {
+const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
   const configItem = config[type]
   if (!configItem) return <div>타입에러발생 {type}</div>
 
@@ -30,6 +34,12 @@ const ReceiptModal = ({ type, pay, info }: ReceiptProps) => {
     <div className="flex w-88 flex-col overflow-hidden rounded-md">
       <div className="bg-gray-10 flex flex-col gap-5 px-4 py-9">
         <div className="flex flex-col gap-[0.5rem]">
+          <div className="-mb-2 flex justify-end">
+            <CloseIcon
+              className="transition-smooth cursor-pointer text-gray-400 hover:text-gray-800 focus:text-gray-800"
+              onClick={onClose}
+            />
+          </div>
           <h2 className="text-fs18 text-center font-medium text-gray-900">{title}</h2>
           <p className="text-fs12 text-center text-gray-700">{description}</p>
         </div>
