@@ -12,7 +12,7 @@ const DataChargePage = () => {
   }[deviceType]
 
   return (
-    <div className={`grid ${gridCols} gap-3`}>
+    <div className={`grid ${gridCols} gap-4`}>
       {vouchers.map((_, index) => (
         <DataChargeVoucher key={index} />
       ))}
