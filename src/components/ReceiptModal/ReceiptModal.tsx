@@ -31,7 +31,7 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
   const { title, description } = configItem
 
   return (
-    <div className="flex w-88 flex-col overflow-hidden rounded-md">
+    <div className="flex w-82 flex-col overflow-hidden rounded-t-md md:w-88">
       <div className="bg-gray-10 flex flex-col gap-5 px-4 py-9">
         <div className="flex flex-col gap-[0.5rem]">
           <div className="-mb-2 flex justify-end">
@@ -40,8 +40,8 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
               onClick={onClose}
             />
           </div>
-          <h2 className="text-fs18 text-center font-medium text-gray-900">{title}</h2>
-          <p className="text-fs12 text-center text-gray-700">{description}</p>
+          <h2 className="text-fs18 md:text-fs20 text-center font-medium text-gray-900">{title}</h2>
+          <p className="text-fs12 md:text-fs14 text-center text-gray-500">{description}</p>{' '}
         </div>
         <hr className="border-gray-100" />
         <div>
@@ -62,8 +62,8 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
         >
           <mask id="receipt-mask">
             <rect x="0" y="0" width="352" height="16" fill="white" />
-            {Array.from({ length: 10 }).map((_, i) => (
-              <circle key={i} cx={40 + i * 30} cy="16" r="10" fill="black" />
+            {Array.from({ length: 11 }).map((_, i) => (
+              <circle key={i} cx={25 + i * 30} cy="16" r="10" fill="black" />
             ))}
           </mask>
           <rect width="352" height="16" fill="#f9f9f9" mask="url(#receipt-mask)" />
