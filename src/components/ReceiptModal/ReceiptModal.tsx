@@ -66,7 +66,7 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
               <circle key={i} cx={25 + i * 30} cy="16" r="10" fill="black" />
             ))}
           </mask>
-          <rect width="352" height="16" fill="#f9f9f9" mask="url(#receipt-mask)" />
+          <rect width="352" height="16" fill="#fdfdfd" mask="url(#receipt-mask)" />
         </svg>
       </div>
     </div>
