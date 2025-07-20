@@ -3,9 +3,13 @@ import LogoPrimary from '@/assets/images/logo-primary.svg'
 import SearchBar from '../SearchBar/SearchBar'
 import { useNavigate } from 'react-router-dom'
 import { useDeviceType } from '../../hooks/useDeviceType'
-import SearchIcon from '@/assets/icons/search.svg?react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Dispatch, SetStateAction } from 'react'
+import SearchIcon from '@/assets/icons/search.svg?react'
+import NotificationIcon from '@/assets/icons/notification.svg?react' // 기본 (알림 없음)
+import NotificationActiveIcon from '@/assets/icons/notification-active.svg?react' // 알림 존재
+import MenuIcon from '@/assets/icons/menu.svg?react'
+import HeaderNav from './HeaderNav'
 
 const Header = ({
   showMobileSearch,
@@ -17,6 +21,9 @@ const Header = ({
   const navigate = useNavigate()
   const deviceType = useDeviceType()
 
+  const notifications = [{ sample1: 'sample1' }]
+  const hasUnreadNotifications = notifications.length > 0
+
   const handleSearch = (keyword: string) => {
     navigate(`/list?keyword=${encodeURIComponent(keyword)}`)
   }
@@ -24,15 +31,14 @@ const Header = ({
   return (
     <header className="bg-gray-10 fixed z-50 flex h-16 w-full items-center p-4 shadow-xs sm:h-21.5">
       <Container className="flex items-center justify-between gap-4">
-        <img src={LogoPrimary} alt="로고" className="h-full" />
+        <div onClick={() => navigate('/')} className="h-full cursor-pointer">
+          <img src={LogoPrimary} alt="로고" className="h-full" />
+        </div>
         {deviceType === 'desktop' || deviceType === 'tablet' ? (
           <>
             {/* 데스크탑, 태블릿 */}
             <SearchBar onSubmit={handleSearch} />
-            <div>
-              <nav>로그인</nav>
-              <nav>거래</nav>
-            </div>
+            <HeaderNav />
           </>
         ) : (
           <>
@@ -45,7 +51,12 @@ const Header = ({
               >
                 <SearchIcon />
               </button>
-              <button>아이콘</button>
+              <button type="button" className="cursor-pointer">
+                {hasUnreadNotifications ? <NotificationActiveIcon /> : <NotificationIcon />}
+              </button>
+              <button type="button" className="cursor-pointer">
+                <MenuIcon />
+              </button>
             </div>
             <AnimatePresence>
               {showMobileSearch && (
