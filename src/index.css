@@ -194,3 +194,8 @@ select:-webkit-autofill:focus {
   transition-duration: 200ms;
   transition-timing-function: ease-in-out;
 }
+.text-truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
