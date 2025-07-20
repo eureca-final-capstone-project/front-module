@@ -184,3 +184,9 @@ select:-webkit-autofill:focus {
   top: 50%;
   transform: translateY(-50%);
 }
+
+.transition-smooth {
+  transition-property: color;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+}
