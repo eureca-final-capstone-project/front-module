@@ -1,6 +1,6 @@
 import EventCoupon from './components/EventCoupon/EventCoupon'
-import { dummyCoupons } from '../../mocks/EventCouponData'
 import { useDeviceType } from '../../hooks/useDeviceType'
+import { dummyCoupons } from '../../mocks/eventData'
 // import { useQuery } from '@tanstack/react-query'
 
 const EventCouponPage = () => {
