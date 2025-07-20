@@ -1,5 +1,5 @@
 import React from 'react'
-import type { ReceiptProps } from '../ReceiptCard'
+import type { ReceiptProps } from './ReceiptModal'
 import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 

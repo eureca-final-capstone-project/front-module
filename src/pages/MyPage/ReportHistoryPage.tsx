@@ -1,9 +1,9 @@
-import ReceiptCard from '../../components/ReceiptCard/ReceiptCard'
+import ReceiptModal from '../../components/ReceiptModal/ReceiptModal'
 
 const ReportHistoryPage = () => {
   return (
     <div className="flex flex-col gap-3 bg-gray-400 p-10">
-      <ReceiptCard
+      <ReceiptModal
         type="buy"
         pay={1500}
         info={{
@@ -17,8 +17,8 @@ const ReportHistoryPage = () => {
           carrier: 'KT',
           totalPay: 1500,
         }}
-      ></ReceiptCard>
-      <ReceiptCard
+      ></ReceiptModal>
+      <ReceiptModal
         type="charge"
         pay={50000}
         info={{
@@ -27,8 +27,8 @@ const ReportHistoryPage = () => {
           method: '카드 결제',
           totalPay: 50000,
         }}
-      ></ReceiptCard>
-      <ReceiptCard
+      ></ReceiptModal>
+      <ReceiptModal
         type="refund"
         pay={50000}
         info={{
@@ -37,8 +37,8 @@ const ReportHistoryPage = () => {
           method: '카드 결제',
           totalPay: 50000,
         }}
-      ></ReceiptCard>
-      <ReceiptCard
+      ></ReceiptModal>
+      <ReceiptModal
         type="sell"
         pay={1500}
         info={{
@@ -52,7 +52,7 @@ const ReportHistoryPage = () => {
           carrier: 'KT',
           totalPay: 1500,
         }}
-      ></ReceiptCard>
+      ></ReceiptModal>
     </div>
   )
 }

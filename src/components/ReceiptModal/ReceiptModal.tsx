@@ -1,6 +1,6 @@
-import ChargeReceipt from './components/ChargeReceipt'
-import TradeReceipt from './components/TradeReceipt'
-import { config } from './components/config'
+import ChargeReceipt from './ChargeReceipt'
+import TradeReceipt from './TradeReceipt'
+import { config } from './config'
 
 export interface ReceiptProps {
   type: 'charge' | 'refund' | 'buy' | 'sell'
@@ -20,7 +20,7 @@ export interface ReceiptProps {
   }
 }
 
-const ReceiptCard: React.FC<ReceiptProps> = ({ type, pay, info }) => {
+const ReceiptModal = ({ type, pay, info }: ReceiptProps) => {
   const configItem = config[type]
   if (!configItem) return <div>타입에러발생 {type}</div>
 
@@ -63,4 +63,4 @@ const ReceiptCard: React.FC<ReceiptProps> = ({ type, pay, info }) => {
   )
 }
 
-export default ReceiptCard
+export default ReceiptModal
