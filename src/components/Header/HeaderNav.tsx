@@ -1,7 +1,16 @@
-import { useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import SearchIcon from '@/assets/icons/search.svg?react'
+import NotificationIcon from '@/assets/icons/notification.svg?react'
+import NotificationActiveIcon from '@/assets/icons/notification-active.svg?react'
+import MenuIcon from '@/assets/icons/menu.svg?react'
 
-const HeaderNav = () => {
+interface HeaderNavProps {
+  deviceType: string
+  setShowMobileSearch: Dispatch<SetStateAction<boolean>>
+}
+
+const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -53,6 +62,41 @@ const HeaderNav = () => {
       matchPath: '/mypage/favorites',
     },
   ]
+
+  const mobileNav = [
+    {
+      key: 'search',
+      icon: <SearchIcon />,
+      onClick: () => setShowMobileSearch(prev => !prev),
+    },
+    {
+      key: 'notification',
+      icon: hasUnreadNotifications ? <NotificationActiveIcon /> : <NotificationIcon />,
+      onClick: () => alert('알림 모달 오픈'),
+    },
+    {
+      key: 'menu',
+      icon: <MenuIcon />,
+      onClick: () => alert('모바일 메뉴 오픈'),
+    },
+  ]
+
+  // 모바일 nav
+  if (deviceType === 'mobile')
+    return (
+      <nav className="flex items-center gap-4 sm:hidden">
+        {mobileNav.map(({ key, icon, onClick }) => (
+          <button
+            key={key}
+            type="button"
+            onClick={onClick}
+            className="hover:text-pri-500 cursor-pointer"
+          >
+            {icon}
+          </button>
+        ))}
+      </nav>
+    )
 
   return (
     <div className="font-regular flex flex-col items-end gap-4">
