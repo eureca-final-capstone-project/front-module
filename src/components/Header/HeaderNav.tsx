@@ -1,71 +1,94 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
 const HeaderNav = () => {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const [activeNav, setActiveNav] = useState<string | null>(null)
 
   const isLoggedIn = true
-
   const notifications = [{ sample1: 'sample1' }]
   const hasUnreadNotifications = notifications.length > 0
 
-  const handleAction = (loggedInCallback: () => void) => () => {
+  const isActiveLink = (path: string) => location.pathname.startsWith(path)
+
+  const handleAction = (key: string, callback: () => void) => () => {
+    setActiveNav(key)
     if (isLoggedIn) {
-      loggedInCallback()
+      callback()
     } else {
       navigate('/login')
     }
   }
 
+  const navButtons = [
+    {
+      key: 'notification',
+      label: '알림',
+      action: () => alert('알림 모달 오픈'),
+      badge: hasUnreadNotifications,
+    },
+    {
+      key: 'mypage',
+      label: '마이페이지',
+      action: () => navigate('/mypage/favorites'),
+    },
+    {
+      key: 'profile',
+      label: isLoggedIn ? '닉네임' : '로그인',
+      action: () => alert('사용자 정보 모달 오픈'),
+    },
+  ]
+
+  const navLinks = [
+    {
+      label: '데이터 거래',
+      to: '#',
+      matchPath: '#',
+    },
+    {
+      label: '관심 거래',
+      to: isLoggedIn ? '/mypage/favorites' : '/login',
+      matchPath: '/mypage/favorites',
+    },
+  ]
+
   return (
     <div className="font-regular flex flex-col items-end gap-4">
+      {/* 상단 nav */}
       <nav className="text-fs12">
         <ul className="flex gap-4">
-          <li>
-            <button
-              type="button"
-              className="hover:text-pri-500 relative cursor-pointer"
-              onClick={handleAction(() => {
-                // TODO: 알림 모달 오픈
-                alert('알림 모달 오픈')
-              })}
-            >
-              <span>알림</span>
-              {hasUnreadNotifications && (
-                <span className="bg-error absolute -right-[0.3125rem] h-1 w-1 rounded-full"></span>
-              )}
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="cursor-pointer"
-              onClick={handleAction(() => navigate('/mypage/favorites'))}
-            >
-              마이페이지
-            </button>
-          </li>
-          <li>
-            <button
-              type="button"
-              className="cursor-pointer"
-              onClick={handleAction(() => {
-                // TODO: 사용자 정보 모달 오픈
-                alert('사용자 정보 모달 오픈')
-              })}
-            >
-              {isLoggedIn ? '닉네임' : '로그인'}
-            </button>
-          </li>
+          {navButtons.map(({ key, label, action, badge }) => (
+            <li key={key}>
+              <button
+                type="button"
+                onClick={handleAction(key, action)}
+                className={`hover:text-pri-500 relative cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
+              >
+                <span>{label}</span>
+                {badge && (
+                  <span className="bg-error absolute -right-[0.3125rem] h-1 w-1 rounded-full" />
+                )}
+              </button>
+            </li>
+          ))}
         </ul>
       </nav>
+
+      {/* 하단 nav */}
       <nav className="text-fs20">
         <ul className="flex gap-4">
-          <li>
-            <Link to="#">데이터 거래</Link>
-          </li>
-          <li>
-            <Link to={isLoggedIn ? '/mypage/favorites' : '/login'}>관심 거래</Link>
-          </li>
+          {navLinks.map(({ label, to, matchPath }) => (
+            <li key={label}>
+              <Link
+                to={to}
+                className={`hover:text-pri-500 ${isActiveLink(matchPath) ? 'text-pri-500' : ''}`}
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
         </ul>
       </nav>
     </div>
