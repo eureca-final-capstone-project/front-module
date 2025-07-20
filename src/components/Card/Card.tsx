@@ -1,8 +1,8 @@
 import React from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
-import WarningIcon from '../../assets/icons/warningIcon.svg?react'
-import NoticeIcon from '../../assets/icons/noticeIcon.svg?react'
-import ArrowRightIcon from '../../assets/icons/arrowRightIcon.svg?react'
+import WarningIcon from '../../assets/icons/warning.svg?react'
+import NoticeIcon from '../../assets/icons/notice.svg?react'
+import ArrowRightIcon from '../../assets/icons/arrow-right.svg?react'
 
 interface CardProps {
   type?: 'default' | 'label' | 'warning' | 'notice'
