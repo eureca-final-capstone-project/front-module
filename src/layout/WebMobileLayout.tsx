@@ -1,8 +1,10 @@
 import BackIcon from '@/assets/icons/back.svg?react'
-import { Outlet, useMatches } from 'react-router-dom'
+import { Outlet, useMatches, useNavigate } from 'react-router-dom'
 import Container from '../components/Container/Container'
 
 const WebMobileLayout = () => {
+  const navigate = useNavigate()
+
   // 현재 경로에 매칭된 라우트 배열에서 타이틀을 가져와 헤더에 표시
   const matches = useMatches() as { handle?: { title?: string } }[]
   const title = matches.reverse().find(match => match.handle?.title)?.handle?.title ?? ''
@@ -11,7 +13,10 @@ const WebMobileLayout = () => {
     <div className="bg-background flex h-full min-h-screen flex-col">
       <header className="bg-gray-10 fixed z-50 flex h-16 w-full items-center p-4 shadow-xs sm:h-21.5">
         <Container className="relative flex max-w-[640px] items-center justify-center">
-          <BackIcon className="absolute top-1/2 left-0 -translate-y-1/2" />
+          <BackIcon
+            className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer text-black"
+            onClick={() => navigate(-1)}
+          />
           <h1 className="text-fs20 font-medium">{title}</h1>
         </Container>
       </header>
