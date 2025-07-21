@@ -4,6 +4,7 @@ interface ButtonProps {
   onClick?: () => void
   disabled?: boolean
   className?: string
+  shape?: 'square' | 'underline'
 }
 
 const Button = ({
@@ -12,13 +13,14 @@ const Button = ({
   onClick,
   disabled = false,
   className = '',
+  shape = 'square',
 }: ButtonProps) => {
   return (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`font-regular shadow-button cursor-pointer rounded-sm p-3.5 text-lg disabled:cursor-not-allowed ${className}`}
+      className={`${shape === 'underline' ? 'hover:text-pri-400 text-gray-700 underline decoration-current underline-offset-4' : 'shadow-button rounded-sm p-3.5'} font-regular transition-smooth cursor-pointer disabled:cursor-not-allowed ${className}`}
     >
       {text}
     </button>

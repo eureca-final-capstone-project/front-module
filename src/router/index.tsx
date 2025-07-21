@@ -5,6 +5,8 @@ import AuthLayout from '../layout/AuthLayout'
 import DefaultLayout from '../layout/DefaultLayout'
 import MyPage from '../pages/MyPage'
 import PayChargeResultPage from '../pages/PayChargeResultPage'
+import WebMobileLayout from '../layout/WebMobileLayout'
+import WritePage from '../pages/WritePage'
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +32,16 @@ export const router = createBrowserRouter([
       {
         path: '/charge-result',
         element: <PayChargeResultPage />,
+      },
+    ],
+  },
+  {
+    element: <WebMobileLayout />,
+    children: [
+      {
+        path: '/write',
+        element: <WritePage />,
+        handle: { title: '내 데이터 판매' },
       },
     ],
   },
