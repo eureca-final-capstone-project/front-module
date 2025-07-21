@@ -20,7 +20,7 @@ const Button = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`${shape === 'underline' ? 'hover:text-pri-500 underline decoration-current underline-offset-4' : 'shadow-button rounded-sm p-3.5'} font-regular cursor-pointer disabled:cursor-not-allowed ${className}`}
+      className={`${shape === 'underline' ? 'hover:text-pri-400 text-gray-700 underline decoration-current underline-offset-4' : 'shadow-button rounded-sm p-3.5'} font-regular transition-smooth cursor-pointer disabled:cursor-not-allowed ${className}`}
     >
       {text}
     </button>
