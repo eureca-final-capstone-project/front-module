@@ -62,16 +62,16 @@ const Input = ({
       )
     }
 
+    if (suffix && value) {
+      return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
+    }
+
     if (isClearVisible) {
       return (
         <button type="button" onClick={handleClear} className="cursor-pointer focus:outline-none">
           <ClearIcon className="hover:text-pri-500 h-3 w-3 text-gray-400" />
         </button>
       )
-    }
-
-    if (suffix && value) {
-      return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
     }
 
     return null
@@ -81,7 +81,7 @@ const Input = ({
     <div className="flex flex-col">
       <div className="relative">
         {prefix && (
-          <div className="pointer-events-none absolute top-1/2 left-4 flex h-6 w-6 -translate-y-1/2 items-center">
+          <div className="pointer-events-none absolute top-1/2 left-4 flex size-6 -translate-y-1/2 items-center">
             {prefix}
           </div>
         )}
