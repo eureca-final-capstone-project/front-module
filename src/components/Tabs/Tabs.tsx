@@ -30,7 +30,7 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
 
   return (
     <div className="w-full">
-      <div className="relative flex items-end pt-2">
+      <div className="relative flex items-end">
         {tabs.map(tab => {
           const isSelected = selectedTab === tab.id
 
@@ -45,7 +45,7 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 className={`cursor-pointer rounded-t-md px-2 pb-4 lg:px-4 ${
                   isSelected
-                    ? 'bg-background text-pri-600 border-pri-600 pt-6 font-bold'
+                    ? 'bg-background text-pri-600 border-pri-600 border-x-2 border-t-2 pt-6 font-bold'
                     : 'bg-pri-gradation-small text-gray-10 border-gray-10 pt-4'
                 } border-x border-t`}
               >
@@ -56,9 +56,9 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
         })}
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <p>선택된 탭: {tabs.find(t => t.id === selectedTab)?.label}</p>
-      </div>
+      </div> */}
     </div>
   )
 }
