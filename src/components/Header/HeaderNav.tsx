@@ -67,36 +67,37 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'search',
       icon: <SearchIcon />,
-      onClick: () => setShowMobileSearch(prev => !prev),
+      action: () => setShowMobileSearch(prev => !prev),
     },
     {
       key: 'notification',
       icon: hasUnreadNotifications ? <NotificationActiveIcon /> : <NotificationIcon />,
-      onClick: () => alert('알림 모달 오픈'),
+      action: () => alert('알림 모달 오픈'),
     },
     {
       key: 'menu',
       icon: <MenuIcon />,
-      onClick: () => alert('모바일 메뉴 오픈'),
+      action: () => alert('모바일 메뉴 오픈'),
     },
   ]
 
   // 모바일 nav
-  if (deviceType === 'mobile')
+  if (deviceType === 'mobile') {
     return (
       <nav className="flex items-center gap-4 sm:hidden">
-        {mobileNav.map(({ key, icon, onClick }) => (
+        {mobileNav.map(({ key, icon, action }) => (
           <button
             key={key}
             type="button"
-            onClick={onClick}
-            className="hover:text-pri-500 cursor-pointer"
+            onClick={handleAction(key, action)}
+            className={`hover:text-pri-500 cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
           >
             {icon}
           </button>
         ))}
       </nav>
     )
+  }
 
   return (
     <div className="font-regular flex flex-col items-end gap-4">
