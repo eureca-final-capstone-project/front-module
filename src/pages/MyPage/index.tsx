@@ -1,16 +1,19 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
+
+import Profile from './components/InfoCard/Profile'
+import DataStatus from './components/InfoCard/DataStatus'
+import PayStatus from './components/InfoCard/PayStatus'
+
 import Tabs from '../../components/Tabs/Tabs'
+
 import FavoritesPage from './FavoritesPage'
 import DataChargePage from './DataChargePage'
 import EventCouponPage from './EventCouponPage'
 import TransactionHistoryPage from './TransactionHistoryPage'
 import PayHistoryPage from './PayHistoryPage'
 import ReportHistoryPage from './ReportHistoryPage'
-import InfoCard from './components/InfoCard/InfoCard'
-import Badge from '../../components/Badge/Badge'
-import Button from '../../components/Button/Button'
 
 const tabData = [
   { id: 'favorites', label: '관심 거래', content: <FavoritesPage /> },
@@ -44,59 +47,9 @@ const MyPage = () => {
     <>
       {/* 상단 */}
       <section className="mb-10 flex h-[280px] justify-between gap-3 lg:gap-5">
-        <InfoCard title="내 정보" showEditBtn={true}>
-          <div>
-            <h3 className="text-fs16 lg:text-fs18 font-medium">닉네임네임 닉네임</h3>
-            <div className="text-fs12 lg:text-fs14 mt-7 flex flex-col gap-3 text-gray-700">
-              <p>email@email.com</p>
-              <div className="flex items-center gap-[0.375rem]">
-                <Badge
-                  className="text-gray-10 text-fs12 bg-lguplus w-fit px-2 py-1 leading-none lg:py-1.25"
-                  label="LG U+"
-                />
-                <p>010-0000-0000</p>
-              </div>
-            </div>
-          </div>
-        </InfoCard>
-        <InfoCard title="내 데이터 정보">
-          <>
-            <div className="flex flex-col gap-3">
-              <div className="text-fs16 lg:text-fs18 flex w-full justify-between font-medium text-gray-900">
-                <p>보유 데이터</p>
-                <p>1.9GB</p>
-              </div>
-              <div className="text-fs16 lg:text-fs18 flex w-full justify-between font-medium text-gray-900">
-                <p>구매 데이터</p>
-                <p>600MB</p>
-              </div>
-              <div className="text-fs16 lg:text-fs18 flex w-full justify-between font-medium text-gray-900">
-                <p>판매 가능 데이터</p>
-                <p>300MB</p>
-              </div>
-            </div>
-            <Button
-              text="데이터 전환하기"
-              className="text-fs16 lg:text-fs18 border-pri-600 text-pri-600 border-[1.7px] font-medium"
-            />
-          </>
-        </InfoCard>
-        <InfoCard title="내 다챠페이 정보">
-          <div className="text-fs16 lg:text-fs18 flex w-full justify-between font-medium text-gray-900">
-            <p>보유 다챠페이</p>
-            <p>10,400원</p>
-          </div>
-          <div className="flex gap-2 lg:gap-4">
-            <Button
-              text="충전하기"
-              className="text-fs16 lg:text-fs18 border-pri-600 text-pri-600 w-full border-[1.7px] font-medium"
-            />
-            <Button
-              text="환전하기"
-              className="text-fs16 lg:text-fs18 border-pri-600 text-pri-600 w-full border-[1.7px] font-medium"
-            />
-          </div>
-        </InfoCard>
+        <Profile />
+        <DataStatus />
+        <PayStatus />
       </section>
 
       {/* 탭 */}
@@ -104,7 +57,6 @@ const MyPage = () => {
         tabs={tabData}
         defaultTabId={tabId}
         onTabChange={id => {
-          console.log('탭 변경:', id)
           navigate(`/mypage/${id}`)
         }}
       />

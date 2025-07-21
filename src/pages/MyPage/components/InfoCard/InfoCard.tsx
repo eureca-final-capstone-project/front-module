@@ -9,7 +9,7 @@ interface InfoCardProps {
 const InfoCard = ({ title, showEditBtn = false, children }: InfoCardProps) => {
   return (
     <div
-      className={`rounded-custom-m bg-gray-10 flex h-full w-full flex-col gap-7 border-1 border-gray-200 p-5 ${
+      className={`rounded-custom-m bg-gray-10 flex h-full w-full flex-col gap-7 border-1 border-gray-200 px-4 py-5 lg:p-5 ${
         showEditBtn ? 'max-w-75' : ''
       }`}
     >
