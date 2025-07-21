@@ -68,18 +68,14 @@ const Input = ({
       : `rounded-sm border  ${error ? 'border-error' : value ? 'border-gray-400 sm:border-pri-500' : 'border-gray-200 focus:border-gray-400 hover:border-gray-400 sm:border-gray-400 sm:focus:border-pri-500 sm:hover:border-pri-500'}`
 
   const renderSuffixOrToggle = () => {
-    if (isPassword) {
+    if (isPassword && value) {
       return (
         <button
           type="button"
           onClick={() => setShowPassword(prev => !prev)}
           className="cursor-pointer focus:outline-none"
         >
-          {showPassword ? (
-            <PasswordOnIcon className="sm:text-pri-500 text-gray-400" />
-          ) : (
-            <PasswordOffIcon />
-          )}
+          {showPassword ? <PasswordOnIcon className="text-pri-500" /> : <PasswordOffIcon />}
         </button>
       )
     }
