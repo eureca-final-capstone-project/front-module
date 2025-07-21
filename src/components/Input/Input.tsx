@@ -40,7 +40,7 @@ const Input = ({
   }
 
   const inputBaseClasses = `
-    w-full p-4 text-sm text-gray-900 peer focus:outline-none disabled:cursor-not-allowed font-regular
+    w-full p-4 text-gray-900 peer focus:outline-none disabled:cursor-not-allowed placeholoder:text-gray-600
     ${prefix ? 'pl-12' : ''} ${shape === 'underline' ? 'pr-7' : suffix || isPassword ? 'pr-11' : ''}
   `
 
@@ -61,8 +61,9 @@ const Input = ({
         </button>
       )
     }
-    if (suffix) {
-      return <div className="pointer-events-none">{suffix}</div>
+
+    if (suffix && value) {
+      return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
     }
 
     if (isClearVisible) {
@@ -80,7 +81,7 @@ const Input = ({
     <div className="flex flex-col">
       <div className="relative">
         {prefix && (
-          <div className="pointer-events-none absolute top-1/2 left-4 flex h-6 w-6 -translate-y-1/2 items-center">
+          <div className="pointer-events-none absolute top-1/2 left-4 flex size-6 -translate-y-1/2 items-center">
             {prefix}
           </div>
         )}
@@ -99,7 +100,7 @@ const Input = ({
         {shape === 'floating' && (
           <label
             htmlFor={id}
-            className={`bg-gray-10 absolute top-2 left-2 z-10 origin-[0] -translate-y-4 scale-75 transform px-2 text-sm duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 ${error ? 'text-error' : 'peer-focus:text-pri-500 text-gray-400'} `}
+            className={`bg-gray-10 absolute top-2 left-2 z-10 origin-[0] -translate-y-4 scale-75 transform px-2 duration-300 peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:scale-100 peer-focus:top-2 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:px-2 ${error ? 'text-error' : 'peer-focus:text-pri-500 text-gray-400'} `}
           >
             {label}
           </label>

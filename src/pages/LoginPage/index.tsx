@@ -1,3 +1,4 @@
+import Button from '../../components/Button/Button'
 import LoginForm from './components/LoginForm'
 
 const LoginPage = () => {
@@ -6,20 +7,10 @@ const LoginPage = () => {
       <h1 className="text-fs24 font-bold">로그인</h1>
       <div className="space-y-7">
         <LoginForm />
-        <div className="text-fs14 font-regular space-x-3 text-right">
-          <button
-            onClick={() => {}}
-            className="cursor-pointer border-b border-gray-700 text-sm text-gray-700"
-          >
-            회원가입
-          </button>
-          <span className="text-gray-700">|</span>
-          <button
-            onClick={() => {}}
-            className="cursor-pointer border-b border-gray-700 text-sm text-gray-700"
-          >
-            비밀번호 찾기
-          </button>
+        <div className="text-fs14 font-regular space-x-3 text-right text-gray-700">
+          <Button text="회원가입" onClick={() => {}} shape="underline" />
+          <span>|</span>
+          <Button text="비밀번호 찾기" onClick={() => {}} shape="underline" />
         </div>
       </div>
       <div className="space-y-8">
