@@ -42,11 +42,11 @@ const Header = () => {
                   onClick={() => setShowMobileSearch(false)}
                 />
                 <motion.div
-                  initial={{ y: -50, opacity: 0 }}
+                  initial={{ y: -20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -50, opacity: 0 }}
-                  transition={{ duration: 0.4, ease: 'easeInOut' }}
-                  className="absolute top-16 right-0 left-0 p-4"
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ duration: 0.2, ease: 'easeInOut' }}
+                  className="absolute top-16 right-0 left-0 z-1 p-4"
                 >
                   <SearchBar onSubmit={handleSearch} />
                 </motion.div>
