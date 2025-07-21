@@ -6,9 +6,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
+import { useDeviceType } from '../../../hooks/useDeviceType'
 
 const LoginForm = () => {
   const navigate = useNavigate()
+
+  const deviceType = useDeviceType()
 
   const {
     control,
@@ -57,7 +60,7 @@ const LoginForm = () => {
               if (errors.email) clearErrors('email')
             }}
             error={errors.email?.message}
-            shape="floating"
+            shape={deviceType === 'mobile' ? 'square' : 'floating'}
           />
         )}
       />
@@ -76,7 +79,7 @@ const LoginForm = () => {
               if (errors.password) clearErrors('password')
             }}
             error={errors.password?.message}
-            shape="floating"
+            shape={deviceType === 'mobile' ? 'square' : 'floating'}
           />
         )}
       />
