@@ -17,7 +17,7 @@ const fadeInY = (custom: number, reverse: boolean, delayUnit = 0.2, duration = 0
   }
 }
 
-interface FadeInUpDivProps extends HTMLMotionProps<'div'> {
+interface FadeInUpMotionProps extends HTMLMotionProps<'div'> {
   custom: number
   children: React.ReactNode
   delayUnit?: number
@@ -25,14 +25,14 @@ interface FadeInUpDivProps extends HTMLMotionProps<'div'> {
   reverse?: boolean
 }
 
-const FadeInUpDiv = ({
+const FadeInUpMotion = ({
   custom,
   delayUnit = 0.2,
   duration = 0.6,
   reverse = false,
   children,
   ...rest
-}: FadeInUpDivProps) => (
+}: FadeInUpMotionProps) => (
   <motion.div
     initial="hidden"
     animate="visible"
@@ -43,4 +43,4 @@ const FadeInUpDiv = ({
     {children}
   </motion.div>
 )
-export default FadeInUpDiv
+export default FadeInUpMotion
