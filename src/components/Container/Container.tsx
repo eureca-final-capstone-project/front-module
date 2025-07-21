@@ -6,6 +6,6 @@ interface ContainerProps {
 }
 
 const Container = ({ children, className = '' }: ContainerProps) => {
-  return <div className={`mx-auto h-full w-full max-w-[1280px] ${className}`}>{children}</div>
+  return <div className={`mx-auto h-full w-full ${className}`}>{children}</div>
 }
 export default Container
