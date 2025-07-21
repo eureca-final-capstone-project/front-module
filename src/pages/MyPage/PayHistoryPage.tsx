@@ -1,6 +1,7 @@
 import FadeInUpMotion from '../../components/Animation/FadeInUpMotion'
 import Badge from '../../components/Badge/Badge'
 import ListTile from '../../components/ListTile/ListTile'
+import { formatAmount } from '../../utils/format'
 
 const dummyPayHistory = [
   { id: 1, type: '데이터 구매', amount: 2500 },
@@ -22,7 +23,7 @@ const PayHistoryPage = () => {
     const isIncome = type === '데이터 판매' || type === '다챠페이 충전'
     const sign = isIncome ? '+' : '-'
     const colorClass = isIncome ? 'text-success' : 'text-error'
-    return { text: `${sign} ${amount.toLocaleString()}원`, colorClass }
+    return { text: `${sign} ${formatAmount(amount)}`, colorClass }
   }
   return (
     <div className="flex flex-col gap-5">
