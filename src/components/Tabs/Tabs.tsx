@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useDeviceType } from '../../hooks/useDeviceType'
 
 interface TabItem {
   id: string
@@ -15,7 +14,6 @@ interface TabsProps {
 
 const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
   const [selectedTab, setSelectedTab] = useState(defaultTabId || tabs[0]?.id)
-  const deviceType = useDeviceType()
 
   useEffect(() => {
     if (defaultTabId && defaultTabId !== selectedTab) {
@@ -51,9 +49,7 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
                     : 'bg-pri-gradation-small text-gray-10 border-gray-10 pt-4'
                 } border-x border-t`}
               >
-                <span className={`${deviceType === 'desktop' ? 'text-fs18' : 'text-fs14'}`}>
-                  {tab.label}
-                </span>
+                <span className="text-fs14 lg:text-fs18">{tab.label}</span>
               </motion.div>
             </button>
           )
