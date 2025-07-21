@@ -10,17 +10,17 @@ const InfoCard = ({ title, showEditBtn = false, children }: InfoCardProps) => {
   return (
     <div
       className={`rounded-custom-m bg-gray-10 flex h-full w-full flex-col gap-7 border-1 border-gray-200 p-5 ${
-        showEditBtn ? 'max-w-80' : ''
+        showEditBtn ? 'max-w-75' : ''
       }`}
     >
       <div className="flex w-full items-start justify-between">
-        <h2 className="text-fs16 font-medium text-gray-500">{title}</h2>
+        <h2 className="text-fs14 lg:text-fs16 font-medium text-gray-500">{title}</h2>
         {showEditBtn && (
           <Button
             text="수정하기"
             onClick={() => {}}
             shape="underline"
-            className="text-pri-400 hover:text-pri-600"
+            className="text-pri-400 hover:text-pri-600 text-fs12 lg:text-fs14"
           />
         )}
       </div>
