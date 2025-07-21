@@ -4,10 +4,10 @@ import Header from '../components/Header/Header'
 
 const DefaultLayout = () => {
   return (
-    <div className="bg-background flex min-h-[100vh] flex-col items-center">
+    <div className="bg-background flex min-h-screen flex-col items-center">
       <Header />
-      <main className="mt-16 w-full flex-1 px-4 pt-6 sm:mt-21.5 sm:pt-10">
-        <Container>
+      <main className="mt-16 w-full flex-1 pt-6 sm:mt-21.5 sm:px-4 sm:pt-10">
+        <Container className="max-w-[1280px]">
           <Outlet />
         </Container>
       </main>

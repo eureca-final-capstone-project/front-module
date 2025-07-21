@@ -19,7 +19,7 @@ const Header = () => {
 
   return (
     <header className="bg-gray-10 fixed z-50 flex h-16 w-full items-center p-4 shadow-xs sm:h-21.5">
-      <Container className="flex items-center justify-between gap-4">
+      <Container className="flex max-w-[1280px] items-center justify-between gap-4">
         <div
           onClick={() => {
             setShowMobileSearch(false)
