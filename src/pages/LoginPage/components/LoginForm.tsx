@@ -1,13 +1,14 @@
 import Button from '../../../components/Button/Button'
 import Input from '../../../components/Input/Input'
 import { Controller, useForm } from 'react-hook-form'
-import { loginSchema, LoginSchemaType } from '../../../utils/validation'
+import { loginSchema } from '../../../utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import { useAuthStore } from '../../../store/authStore'
+import { LoginSchemaType } from '../../../types/auth'
 
 const LoginForm = () => {
   const navigate = useNavigate()
