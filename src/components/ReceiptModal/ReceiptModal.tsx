@@ -57,7 +57,7 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
     <AnimatePresence>
       <motion.div
         key="backdrop"
-        className="bg-modal-background fixed inset-0 z-100 flex items-center justify-center"
+        className="bg-modal-background fixed inset-0 z-100 flex cursor-pointer items-center justify-center"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -65,7 +65,10 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
         style={{ backdropFilter: 'blur(1.5px)' }}
       >
         <FadeInUpMotion custom={0} duration={0.3}>
-          <div className="flex w-82 flex-col overflow-hidden rounded-t-md md:w-88">
+          <div
+            className="flex w-82 cursor-default flex-col overflow-hidden rounded-t-md md:w-88"
+            onClick={e => e.stopPropagation()}
+          >
             <div className="bg-gray-10 flex flex-col gap-5 px-4 py-9">
               <div className="flex flex-col gap-[0.5rem]">
                 <div className="-mb-2 flex justify-end">
