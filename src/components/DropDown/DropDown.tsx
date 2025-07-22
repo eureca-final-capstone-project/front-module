@@ -128,7 +128,7 @@ const DropDown = ({
   const renderDropdownMotion = () => {
     const sharedClass = 'dropdown-panel bg-gray-10'
     if (type === 'filter') {
-      return <DropdownMotion className={`${sharedClass} p-2`}>{renderOptions()}</DropdownMotion>
+      return <DropdownMotion className={`${sharedClass}`}>{renderOptions()}</DropdownMotion>
     }
 
     const motionClass =
