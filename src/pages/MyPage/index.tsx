@@ -16,8 +16,8 @@ import PayHistoryPage from './PayHistoryPage'
 import ReportHistoryPage from './ReportHistoryPage'
 
 const tabData = [
-  { id: 'favorites', label: '관심 거래', content: <FavoritesPage /> },
   { id: 'data-charge', label: '데이터 충전권', content: <DataChargePage /> },
+  { id: 'favorites', label: '관심 거래', content: <FavoritesPage /> },
   { id: 'event-coupons', label: '이벤트 쿠폰함', content: <EventCouponPage /> },
   { id: 'transaction-history', label: '거래 내역', content: <TransactionHistoryPage /> },
   { id: 'pay-history', label: '페이 내역', content: <PayHistoryPage /> },
@@ -31,7 +31,7 @@ const MyPage = () => {
 
   useEffect(() => {
     if (!tabData.some(tab => tab.id === tabId)) {
-      navigate('/mypage/favorites', { replace: true })
+      navigate('/mypage/data-charge', { replace: true })
     }
   }, [tabId, navigate])
 
@@ -41,7 +41,7 @@ const MyPage = () => {
   }
 
   if (deviceType === 'mobile') {
-    return selected?.content ? <div className="p-4">{selected.content}</div> : null
+    return selected?.content ? <div>{selected.content}</div> : null
   }
   return (
     <>
