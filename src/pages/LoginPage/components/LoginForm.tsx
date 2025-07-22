@@ -31,12 +31,17 @@ const LoginForm = () => {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: () => {
-      navigate('/')
+    onSuccess: data => {
+      if (data.statusCode === 200) {
+        const accessToken = data.data.accessToken
+        sessionStorage.setItem('accessToken', accessToken)
+        navigate('/')
+      } else {
+        alert('로그인 실패: ' + data.message)
+      }
     },
     onError: error => {
-      alert('로그인 실패')
-      console.error(error)
+      alert('로그인 실패 ' + error.message)
     },
   })
 
