@@ -7,11 +7,13 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
+import { useAuthStore } from '../../../store/authStore'
 
 const LoginForm = () => {
   const navigate = useNavigate()
-
   const deviceType = useDeviceType()
+
+  const setIsLogin = useAuthStore(state => state.setIsLogin)
 
   const {
     control,
@@ -35,6 +37,7 @@ const LoginForm = () => {
       if (data.statusCode === 200) {
         const accessToken = data.data.accessToken
         sessionStorage.setItem('accessToken', accessToken)
+        setIsLogin(true)
         navigate('/')
       } else {
         alert('로그인 실패: ' + data.message)
