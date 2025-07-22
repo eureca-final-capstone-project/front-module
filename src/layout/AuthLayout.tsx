@@ -10,7 +10,7 @@ const AuthLayout = () => {
         <img src={Logo} alt="로고" className="h-full" />
       </header>
 
-      <div className="flex w-full flex-1 items-center justify-center px-4">
+      <div className="flex w-full flex-1 justify-center px-4 sm:items-center">
         {/* 데스크탑 */}
         <div className="relative hidden h-full max-h-[calc(100vh-86px)] lg:flex">
           <img src={HeroImg} alt="히어로 이미지" className="h-full object-cover" />
@@ -35,7 +35,7 @@ const AuthLayout = () => {
         </div>
 
         {/* 모바일 */}
-        <div className="sm:hidden">
+        <div className="mt-[55px] w-full sm:hidden">
           <Outlet />
         </div>
       </div>
