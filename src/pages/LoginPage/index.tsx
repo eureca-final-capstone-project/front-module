@@ -1,5 +1,6 @@
 import Button from '../../components/Button/Button'
 import LoginForm from './components/LoginForm'
+import SocialLogin from './components/SocialLogin'
 
 const LoginPage = () => {
   return (
@@ -13,16 +14,7 @@ const LoginPage = () => {
           <Button text="비밀번호 찾기" onClick={() => {}} shape="underline" />
         </div>
       </div>
-      <div className="space-y-8">
-        <div className="text-gray-30 font-fs14 text-center font-medium sm:text-gray-900">
-          SNS 계정으로 간편하게 시작하기
-        </div>
-        <div className="flex justify-evenly">
-          <div>카카오 로그인</div>
-          <div>구글 로그인</div>
-          <div>애플 로그인</div>
-        </div>
-      </div>
+      <SocialLogin />
     </main>
   )
 }
