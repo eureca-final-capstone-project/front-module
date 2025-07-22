@@ -1,4 +1,4 @@
-import { LoginSchemaType } from '../utils/validation'
+import { LoginSchemaType } from '../types/auth'
 import client from './client'
 
 export const login = async (data: LoginSchemaType) => {
