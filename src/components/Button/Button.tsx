@@ -1,3 +1,6 @@
+import { motion } from 'framer-motion'
+import type { Variants } from 'framer-motion'
+
 interface ButtonProps {
   text: string
   type?: 'button' | 'submit'
@@ -5,8 +8,14 @@ interface ButtonProps {
   disabled?: boolean
   className?: string
   shape?: 'square' | 'underline'
+  smallPadding?: boolean
+  noShadow?: boolean
 }
-
+const scaleDownVariants: Variants = {
+  initial: { scale: 1 },
+  hover: { scale: 0.98, transition: { duration: 0.2, ease: 'easeInOut' } },
+  tap: { scale: 0.96, transition: { duration: 0.1, ease: 'easeInOut' } },
+}
 const Button = ({
   text,
   type = 'button',
@@ -14,16 +23,39 @@ const Button = ({
   disabled = false,
   className = '',
   shape = 'square',
+  smallPadding = false,
+  noShadow = false,
 }: ButtonProps) => {
-  return (
+  const paddingClass =
+    shape === 'underline' ? '' : smallPadding ? 'px-2.5 py-2 sm:px-6 sm:py-2.5 ' : 'p-3.5'
+
+  const baseClass =
+    shape === 'underline'
+      ? ' hover:text-pri-400 underline decoration-current underline-offset-4'
+      : `${noShadow ? '' : 'shadow-button'} rounded-sm leading-none`
+
+  return shape === 'underline' || disabled ? (
     <button
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`${shape === 'underline' ? 'hover:text-pri-400 text-gray-700 underline decoration-current underline-offset-4' : 'shadow-button rounded-sm p-3.5 leading-none'} transition-smooth cursor-pointer disabled:cursor-not-allowed ${className}`}
+      className={`${baseClass} ${paddingClass} transition-smooth cursor-pointer disabled:cursor-not-allowed ${className}`}
     >
       {text}
     </button>
+  ) : (
+    <motion.button
+      variants={scaleDownVariants}
+      initial="initial"
+      whileHover="hover"
+      whileTap="tap"
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      className={`${baseClass} ${paddingClass} transition-smooth cursor-pointer disabled:cursor-not-allowed ${className}`}
+    >
+      {text}
+    </motion.button>
   )
 }
 
