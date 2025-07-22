@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import Button from '../../components/Button/Button'
 import { useDeviceType } from '../../hooks/useDeviceType'
+import CheckBox from '../../components/CheckBox/CheckBox'
 
 const FavoritesPage = () => {
-  const [selectedType, setSelectedType] = useState<'both' | 'deal' | 'bid'>('both')
   const deviceType = useDeviceType()
-  const gridColsClass = deviceType === 'mobile' ? 'grid-cols-1' : 'grid-cols-2'
-
+  const gridColsClass = deviceType === 'mobile' ? 'grid-cols-1 bg-gray-10 p-4 ' : 'grid-cols-2'
+  const [selectedType, setSelectedType] = useState<'both' | 'deal' | 'bid'>('both')
+  const [checked, setChecked] = useState(false)
   const buttonOptions = [
     { label: '전체', value: 'both' },
     { label: '일반 거래', value: 'deal' },
@@ -17,9 +18,9 @@ const FavoritesPage = () => {
     { label: '전체 삭제', value: 'delete-all' },
   ] as const
   return (
-    <>
+    <div className="flex flex-col gap-5">
       {/* 상단 */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between p-4 sm:p-0">
         <div className="flex gap-3">
           {buttonOptions.map(({ label, value }) => {
             const isSelected = selectedType === value
@@ -58,8 +59,25 @@ const FavoritesPage = () => {
         </div>
       </div>
       {/* 콘텐츠 */}
-      <div className={`grid gap-4 ${gridColsClass}`}></div>
-    </>
+      <div className={`grid gap-4 ${gridColsClass}`}>
+        <div className="flex gap-2">
+          <CheckBox
+            checked={checked}
+            onChange={() => setChecked(prev => !prev)}
+            type={deviceType === 'mobile' ? 'smallCheckBox' : 'default'}
+          />
+          <div></div>
+        </div>
+        <div className="flex gap-2">
+          <CheckBox
+            checked={checked}
+            onChange={() => setChecked(prev => !prev)}
+            type={deviceType === 'mobile' ? 'smallCheckBox' : 'default'}
+          />
+          <div></div>
+        </div>
+      </div>
+    </div>
   )
 }
 

@@ -41,7 +41,7 @@ const MyPage = () => {
   }
 
   if (deviceType === 'mobile') {
-    return selected?.content ? <div className="p-4">{selected.content}</div> : null
+    return selected?.content ? <div>{selected.content}</div> : null
   }
   return (
     <>
