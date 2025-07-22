@@ -163,11 +163,11 @@ const SignUpForm = () => {
       <Agreement checked={checked} onChange={handleAgreementChange} />
 
       <Button
-        text="회원가입"
+        text="이메일 인증하고 가입하기"
         type="submit"
         disabled={!isActive}
         className={
-          'border-gray-10 text-gray-10 sm:bg-pri-500 sm:text-gray-10 mt-12.5 border bg-transparent disabled:border-transparent disabled:bg-gray-50/50 disabled:text-gray-200 sm:mt-0 sm:border-none sm:disabled:bg-gray-50 sm:disabled:text-gray-500'
+          'border-gray-10 text-gray-10 sm:bg-pri-500 sm:text-gray-10 border bg-transparent disabled:border-transparent disabled:bg-gray-50/50 disabled:text-gray-200 sm:mt-0 sm:border-none sm:disabled:bg-gray-50 sm:disabled:text-gray-500'
         }
       />
     </form>

@@ -34,7 +34,7 @@ const AuthLayout = () => {
 
         {deviceType === 'mobile' ? (
           /* 모바일 */
-          <div className="mt-[55px] w-full sm:hidden">
+          <div className="mt-11.25 mb-7 w-full sm:hidden">
             <Outlet />
           </div>
         ) : (
