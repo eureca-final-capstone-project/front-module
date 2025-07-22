@@ -15,5 +15,5 @@ export const googleLogin = async () => {
 }
 
 export const naverLogin = async () => {
-  window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/kakao`
+  window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/naver`
 }
