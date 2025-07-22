@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { useDeviceType } from '../../hooks/useDeviceType'
 
 interface TabItem {
   id: string
@@ -15,7 +14,6 @@ interface TabsProps {
 
 const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
   const [selectedTab, setSelectedTab] = useState(defaultTabId || tabs[0]?.id)
-  const deviceType = useDeviceType()
 
   useEffect(() => {
     if (defaultTabId && defaultTabId !== selectedTab) {
@@ -32,7 +30,7 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
 
   return (
     <div className="w-full">
-      <div className="relative flex items-end pt-2">
+      <div className="relative flex items-end">
         {tabs.map(tab => {
           const isSelected = selectedTab === tab.id
 
@@ -47,22 +45,20 @@ const Tabs = ({ tabs, defaultTabId, onTabChange }: TabsProps) => {
                 transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 className={`cursor-pointer rounded-t-md px-2 pb-4 lg:px-4 ${
                   isSelected
-                    ? 'bg-background text-pri-600 border-pri-600 pt-6 font-bold'
+                    ? 'bg-background text-pri-600 border-pri-600 border-x-2 border-t-2 pt-6 font-bold'
                     : 'bg-pri-gradation-small text-gray-10 border-gray-10 pt-4'
                 } border-x border-t`}
               >
-                <span className={`${deviceType === 'desktop' ? 'text-fs18' : 'text-fs14'}`}>
-                  {tab.label}
-                </span>
+                <span className="text-fs14 lg:text-fs18">{tab.label}</span>
               </motion.div>
             </button>
           )
         })}
       </div>
 
-      <div className="mt-4">
+      {/* <div className="mt-4">
         <p>선택된 탭: {tabs.find(t => t.id === selectedTab)?.label}</p>
-      </div>
+      </div> */}
     </div>
   )
 }
