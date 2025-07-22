@@ -5,7 +5,9 @@ import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import DatchaCoinSecondaryIcon from '@/assets/icons/datcha-coin-secondary.svg?react'
 import ProviderBadge from './ProviderBadge'
 import DataBadge from '../Badge/Badge'
+import { formatDataSize, formatAmount } from '../../utils/format'
 import { useDeviceType } from '../../hooks/useDeviceType'
+import { imageData as PostImage } from '../../constants/imageData'
 
 interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
   type: 'row'
@@ -17,18 +19,17 @@ interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
 }
 
 const PostCardRow = ({
-  provider,
-  imageUrl,
-  data,
+  telecomCompany,
+  defaultImageNumber,
+  salesDataAmount,
   title,
   nickname,
-  timestamp,
-  isLiked,
+  createdAt,
+  liked,
   onToggleLike,
-  saleType,
-  price,
-  initialPrice,
-  bidPrice,
+  salesType,
+  salesPrice,
+  currentHeightPrice,
   status,
   onClick,
   imageWrapperClassName,
@@ -60,7 +61,7 @@ const PostCardRow = ({
         className={`relative aspect-square overflow-hidden rounded-md ${imageWrapperClassName ?? 'w-1/3'}`}
       >
         <img
-          src={imageUrl}
+          src={PostImage[defaultImageNumber]}
           alt={title}
           className={`h-full w-full object-cover transition-transform duration-300 ${
             status === 'active' ? 'group-hover:scale-105' : ''
@@ -90,7 +91,7 @@ const PostCardRow = ({
             onToggleLike()
           }}
         >
-          {isLiked ? (
+          {liked ? (
             <HeartFillIcon className="h-full w-full" />
           ) : (
             <HeartIcon className="h-full w-full" />
@@ -99,7 +100,7 @@ const PostCardRow = ({
 
         {/* 통신사 뱃지 */}
         <div className="absolute right-0 bottom-0 h-auto w-[45%]">
-          <ProviderBadge provider={provider} />
+          <ProviderBadge telecomCompany={telecomCompany} />
         </div>
       </div>
 
@@ -113,7 +114,7 @@ const PostCardRow = ({
             {/* 데이터 양 + 제목 / 거래한 사용자 닉네임 */}
             <div className="flex flex-col gap-3">
               <div className="flex gap-1">
-                <DataBadge label={data} />
+                <DataBadge label={formatDataSize(Number(salesDataAmount))} />
                 <span className="text-fs20 truncate whitespace-nowrap" title={title}>
                   {title}
                 </span>
@@ -128,7 +129,7 @@ const PostCardRow = ({
               <div className="flex items-center gap-2">
                 <p className="text-gray-600">거래 유형</p>
                 <span className="text-pri-400">
-                  {saleType === 'deal' ? '일반 거래' : '입찰 거래'}
+                  {salesType === 'deal' ? '일반 거래' : '입찰 거래'}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -144,7 +145,7 @@ const PostCardRow = ({
               <div className="flex flex-col gap-2">
                 {/* 데이터 양 + 제목 */}
                 <div className="flex items-center gap-1">
-                  <DataBadge label={data} size="small" />
+                  <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
                   <span className="truncate whitespace-nowrap" title={title}>
                     {title}
                   </span>
@@ -153,10 +154,10 @@ const PostCardRow = ({
                 {/* 닉네임 + 게시글 작성 time */}
                 <div className="text-fs12 flex items-center gap-1 text-[#666666]">
                   <p>{nickname}</p>
-                  {timestamp && (
+                  {createdAt && (
                     <>
                       <p>·</p>
-                      <p>{timestamp}</p>
+                      <p>{createdAt}</p>
                     </>
                   )}
                 </div>
@@ -166,7 +167,7 @@ const PostCardRow = ({
                 {/* 데이터 양 + 제목 */}
                 <div className="flex items-center gap-1">
                   <DataBadge
-                    label={data}
+                    label={formatDataSize(Number(salesDataAmount))}
                     size={
                       favorite || payhistory
                         ? ['mobile', 'tablet'].includes(deviceType)
@@ -198,10 +199,10 @@ const PostCardRow = ({
                     }`}
                   >
                     <p>{nickname}</p>
-                    {timestamp && (
+                    {createdAt && (
                       <>
                         <p>·</p>
-                        <p>{timestamp}</p>
+                        <p>{createdAt}</p>
                       </>
                     )}
                   </div>
@@ -219,7 +220,7 @@ const PostCardRow = ({
                 <div className="flex items-center gap-2">
                   <p className="text-gray-600">거래 유형</p>
                   <span className="text-pri-400">
-                    {saleType === 'deal' ? '일반 거래' : '입찰 거래'}
+                    {salesType === 'deal' ? '일반 거래' : '입찰 거래'}
                   </span>
                 </div>
 
@@ -241,10 +242,10 @@ const PostCardRow = ({
             <span
               className={`text-pri-600 font-medium ${['mobile', 'tablet'].includes(deviceType) ? '' : 'text-fs20'}`}
             >
-              {payhistorypay?.toLocaleString()}원
+              {formatAmount(payhistorypay ?? 0)}
             </span>
           </div>
-        ) : saleType === 'deal' ? (
+        ) : salesType === 'deal' ? (
           <div className="flex items-center justify-between">
             <p className={`font-bold ${titleFontClass}`}>거래 페이</p>
             <div className="flex items-center gap-1">
@@ -252,18 +253,18 @@ const PostCardRow = ({
               <span
                 className={`text-pri-500 font-bold ${favorite ? (['mobile', 'tablet'].includes(deviceType) ? '' : 'text-fs20') : ''}`}
               >
-                {price?.toLocaleString()}원
+                {formatAmount(salesPrice ?? 0)}
               </span>
             </div>
           </div>
         ) : (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <p className={` ${titleFontClass}`}>최초 등록 페이</p>
+              <p className={`${titleFontClass}`}>최초 등록 페이</p>
               <div className="flex items-center gap-1">
                 <DatchaCoinSecondaryIcon className="h-5 w-5" />
                 <span className={`text-pri-400 font-medium ${titleFontClass}`}>
-                  {initialPrice?.toLocaleString()}원
+                  {formatAmount(salesPrice ?? 0)}
                 </span>
               </div>
             </div>
@@ -272,7 +273,7 @@ const PostCardRow = ({
               <div className="flex items-center gap-1">
                 <DatchaCoinIcon className="h-5 w-5" />
                 <span className={`text-pri-500 font-bold ${titleFontClass}`}>
-                  {bidPrice?.toLocaleString()}원
+                  {formatAmount(currentHeightPrice ?? 0)}
                 </span>
               </div>
             </div>
