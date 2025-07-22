@@ -4,7 +4,7 @@ import LoginForm from './components/LoginForm'
 const LoginPage = () => {
   return (
     <main className="flex flex-col gap-10">
-      <h1 className="text-gray-10 sm:text-pri-900 text-fs24 text-center font-bold">로그인</h1>
+      <h1 className="text-gray-10 sm:text-pri-900 text-fs24 text-center font-semibold">로그인</h1>
       <div className="space-y-4 sm:space-y-7">
         <LoginForm />
         <div className="text-fs14 font-regular space-x-3 text-right text-gray-100 sm:text-gray-700">
