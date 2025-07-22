@@ -1,4 +1,3 @@
-// import ScaleDownMotion from '../Animation/ScaleDownMotion'
 import { motion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
 
@@ -9,7 +8,7 @@ interface ButtonProps {
   disabled?: boolean
   className?: string
   shape?: 'square' | 'underline'
-  paddingSize?: 'sm' | 'md'
+  smallPadding?: boolean
   noShadow?: boolean
 }
 const scaleDownVariants: Variants = {
@@ -24,17 +23,11 @@ const Button = ({
   disabled = false,
   className = '',
   shape = 'square',
-  paddingSize,
+  smallPadding = false,
   noShadow = false,
 }: ButtonProps) => {
   const paddingClass =
-    shape === 'underline'
-      ? ''
-      : paddingSize === 'sm'
-        ? 'px-2.5 py-2'
-        : paddingSize === 'md'
-          ? 'px-6 py-2.5'
-          : 'p-3.5'
+    shape === 'underline' ? '' : smallPadding ? 'px-2.5 py-2 sm:px-6 sm:py-2.5 ' : 'p-3.5'
 
   const baseClass =
     shape === 'underline'
