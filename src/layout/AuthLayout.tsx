@@ -2,8 +2,11 @@ import HeroImg from '@/assets/images/hero.png'
 import Logo from '@/assets/images/logo.svg'
 import BackgroundGridImg from '@/assets/images/background-grid.png'
 import { Outlet } from 'react-router-dom'
+import { useDeviceType } from '../hooks/useDeviceType'
 
 const AuthLayout = () => {
+  const deviceType = useDeviceType()
+
   return (
     <div className="bg-pri-gradation flex h-screen w-full flex-col items-center overflow-hidden">
       <header className="text-gray-10 h-16 w-full max-w-[1280px] p-4 sm:h-21.5">
@@ -29,15 +32,17 @@ const AuthLayout = () => {
           <img src={BackgroundGridImg} alt="그리드 배경" className="h-full w-full object-cover" />
         </div>
 
-        {/* 로그인/회원가입 모달 박스 */}
-        <div className="bg-gray-10 z-10 hidden h-full max-h-[589px] w-full max-w-111 rounded-md p-10 text-center sm:block lg:z-10 lg:-ml-40 lg:flex-shrink-0">
-          <Outlet />
-        </div>
-
-        {/* 모바일 */}
-        <div className="mt-[55px] w-full sm:hidden">
-          <Outlet />
-        </div>
+        {deviceType === 'mobile' ? (
+          /* 모바일 */
+          <div className="mt-[55px] w-full sm:hidden">
+            <Outlet />
+          </div>
+        ) : (
+          /* 로그인 및 회원가입 모달 박스 */
+          <div className="bg-gray-10 z-10 hidden h-full max-h-[589px] w-full max-w-111 rounded-md p-10 text-center sm:block lg:z-10 lg:-ml-40 lg:flex-shrink-0">
+            <Outlet />
+          </div>
+        )}
       </div>
     </div>
   )
