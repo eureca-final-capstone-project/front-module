@@ -77,7 +77,11 @@ const Input = ({
           onClick={() => setShowPassword(prev => !prev)}
           className="cursor-pointer focus:outline-none"
         >
-          {showPassword ? <PasswordOnIcon className="text-pri-500" /> : <PasswordOffIcon />}
+          {showPassword ? (
+            <PasswordOnIcon className="text-pri-500" />
+          ) : (
+            <PasswordOffIcon className="text-gray-400" />
+          )}
         </button>
       )
     }
@@ -103,7 +107,7 @@ const Input = ({
 
   return (
     <div className="flex flex-col">
-      <div className="relative">
+      <div className="group relative">
         {prefix && (
           <div className="pointer-events-none absolute top-1/2 left-4 flex size-6 -translate-y-1/2 items-center">
             {prefix}
