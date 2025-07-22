@@ -1,7 +1,13 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
+
+import Profile from './components/InfoCard/Profile'
+import DataStatus from './components/InfoCard/DataStatus'
+import PayStatus from './components/InfoCard/PayStatus'
+
 import Tabs from '../../components/Tabs/Tabs'
+
 import FavoritesPage from './FavoritesPage'
 import DataChargePage from './DataChargePage'
 import EventCouponPage from './EventCouponPage'
@@ -35,15 +41,15 @@ const MyPage = () => {
   }
 
   if (deviceType === 'mobile') {
-    return selected?.content ?? null
+    return selected?.content ? <div className="p-4">{selected.content}</div> : null
   }
   return (
     <>
       {/* 상단 */}
-      <section>
-        <div className="border-3 px-4 py-3">
-          <p className="text-fs20">top area</p>
-        </div>
+      <section className="mb-10 flex h-[280px] justify-between gap-3 lg:gap-5">
+        <Profile />
+        <DataStatus />
+        <PayStatus />
       </section>
 
       {/* 탭 */}
@@ -51,7 +57,6 @@ const MyPage = () => {
         tabs={tabData}
         defaultTabId={tabId}
         onTabChange={id => {
-          console.log('탭 변경:', id)
           navigate(`/mypage/${id}`)
         }}
       />
