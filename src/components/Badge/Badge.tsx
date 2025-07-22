@@ -32,7 +32,7 @@ const Badge = (props: BadgeProps) => {
   const baseStyle = 'inline-flex items-center justify-center font-medium rounded-full'
 
   const sizeStyle =
-    size === 'small' ? 'text-fs12 px-2 py-1.5' : 'text-fs14 px-2 py-1.5 leading-none'
+    size === 'small' ? 'text-fs12 px-2 py-1.25 leading-none' : 'text-fs14 px-2 py-1.5 leading-none'
 
   let variantStyle = ''
 
