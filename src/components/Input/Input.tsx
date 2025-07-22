@@ -106,7 +106,7 @@ const Input = ({
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-1 flex-col">
       <div className="group relative">
         {prefix && (
           <div className="pointer-events-none absolute top-1/2 left-4 flex size-6 -translate-y-1/2 items-center">
