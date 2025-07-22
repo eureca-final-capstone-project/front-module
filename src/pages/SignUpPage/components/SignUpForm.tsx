@@ -10,8 +10,13 @@ import { useState } from 'react'
 import { agreements } from '../../../constants/agreements'
 import DropDown from '../../../components/DropDown/DropDown'
 import { formatPhoneNumber } from '../../../utils/format'
+import { CARRIER_ID_MAP } from '../../../constants/carrier'
+import { useMutation } from '@tanstack/react-query'
+import { signUp } from '../../../apis/auth'
+import { useNavigate } from 'react-router-dom'
 
 const SignUpForm = () => {
+  const navigate = useNavigate()
   const deviceType = useDeviceType()
 
   const {
@@ -53,8 +58,29 @@ const SignUpForm = () => {
     setChecked(prev => ({ ...prev, [id]: value }))
   }
 
+  const mutation = useMutation({
+    mutationFn: signUp,
+    onSuccess: data => {
+      if (data.statusCode === 200) {
+        navigate('/login')
+      } else {
+        alert('회원가입 실패: ' + data.message)
+      }
+    },
+    onError: error => {
+      alert('회원가입 실패 ' + error.message)
+    },
+  })
+
   const handleSignUp = (data: SignUpSchemaType) => {
-    console.log('회원가입 성공 ', data)
+    const payload = {
+      email: data.email,
+      password: data.password,
+      telecomCompanyId: CARRIER_ID_MAP[data.carrier],
+      phoneNumber: data.phoneNumber.replace(/-/g, ''),
+      provider: '일반',
+    }
+    mutation.mutate(payload)
   }
 
   return (
