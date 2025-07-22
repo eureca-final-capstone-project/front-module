@@ -14,7 +14,6 @@ type CommonProps = {
   onToggleLike: () => void
   salesType: 'deal' | 'bid'
   salesPrice?: number
-  initialPrice?: number
   currentHeightPrice?: number
   status: TradeStatus
   onClick?: () => void

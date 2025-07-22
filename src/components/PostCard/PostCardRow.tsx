@@ -29,7 +29,6 @@ const PostCardRow = ({
   onToggleLike,
   salesType,
   salesPrice,
-  initialPrice,
   currentHeightPrice,
   status,
   onClick,
@@ -265,7 +264,7 @@ const PostCardRow = ({
               <div className="flex items-center gap-1">
                 <DatchaCoinSecondaryIcon className="h-5 w-5" />
                 <span className={`text-pri-400 font-medium ${titleFontClass}`}>
-                  {formatAmount(initialPrice ?? 0)}
+                  {formatAmount(salesPrice ?? 0)}
                 </span>
               </div>
             </div>

@@ -62,11 +62,7 @@ const meta: Meta<typeof PostCard> = {
     },
     salesPrice: {
       control: 'number',
-      description: '`deal`일 때의 거래 페이',
-    },
-    initialPrice: {
-      control: 'number',
-      description: '`bid`일 때의 최초 등록 페이',
+      description: '`deal` = 거래 페이 | `bid` = 최초 등록 페이',
     },
     currentHeightPrice: {
       control: 'number',
@@ -128,7 +124,6 @@ export const ColType: Story = {
     liked: false,
     salesType: 'deal',
     salesPrice: 1000,
-    initialPrice: 1000,
     currentHeightPrice: 2000,
     status: 'active',
   },
@@ -164,7 +159,6 @@ export const RowType: Story = {
     liked: false,
     salesType: 'bid',
     salesPrice: 1000,
-    initialPrice: 1000,
     currentHeightPrice: 2000,
     status: 'active',
     favorite: false,

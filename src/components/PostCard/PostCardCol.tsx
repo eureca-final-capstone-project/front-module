@@ -20,7 +20,6 @@ const PostCardCol = ({
   onToggleLike,
   salesType,
   salesPrice,
-  initialPrice,
   currentHeightPrice,
   status,
   onClick,
@@ -109,7 +108,7 @@ const PostCardCol = ({
               <span>최초 등록 페이</span>
               <div className="flex items-center gap-1">
                 <DatchaCoinSecondaryIcon className="h-5 w-5" />
-                <span className="text-pri-400 font-medium">{formatAmount(initialPrice ?? 0)}</span>
+                <span className="text-pri-400 font-medium">{formatAmount(salesPrice ?? 0)}</span>
               </div>
             </div>
             <div className="flex items-center justify-between">
