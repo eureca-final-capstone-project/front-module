@@ -14,7 +14,7 @@ const DataStatus = () => {
     { label: '판매 가능 데이터', value: dataStatus.sellableDataMb },
   ]
   return (
-    <InfoCard title="내 데이터 정보">
+    <InfoCard title="데이터 정보">
       <>
         <div className="flex flex-col gap-3">
           {items.map(({ label, value }) => (

@@ -27,7 +27,7 @@ const Profile = () => {
   }
 
   return (
-    <InfoCard title="내 정보" showEditBtn={true}>
+    <InfoCard title="프로필" showEditBtn={true}>
       <div>
         <h3 className="text-fs16 lg:text-fs18 font-medium">{profileInfo.nickname}</h3>
         <div className="text-fs14 mt-7 flex flex-col gap-3 text-gray-700">

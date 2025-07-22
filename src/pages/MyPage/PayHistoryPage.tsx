@@ -2,7 +2,7 @@ import FadeInUpMotion from '../../components/Animation/FadeInUpMotion'
 import Badge from '../../components/Badge/Badge'
 import ListTile from '../../components/ListTile/ListTile'
 import { formatAmount } from '../../utils/format'
-
+import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 const dummyPayHistory = [
   { id: 1, type: '데이터 구매', amount: 2500 },
   { id: 2, type: '데이터 판매', amount: 1500 },
@@ -23,7 +23,7 @@ const PayHistoryPage = () => {
     const isIncome = type === '데이터 판매' || type === '다챠페이 충전'
     const sign = isIncome ? '+' : '-'
     const colorClass = isIncome ? 'text-success' : 'text-error'
-    return { text: `${sign} ${formatAmount(amount)}`, colorClass }
+    return { sign, text: formatAmount(amount), colorClass }
   }
   return (
     <div className="flex flex-col gap-5">
@@ -33,7 +33,7 @@ const PayHistoryPage = () => {
       </ListTile>
       <div className="flex flex-col gap-2">
         {dummyPayHistory.map((item, i) => {
-          const { text, colorClass } = getFormattedAmount(item.type, item.amount)
+          const { sign, text, colorClass } = getFormattedAmount(item.type, item.amount)
           return (
             <FadeInUpMotion key={item.id} custom={i} delayUnit={0.07} duration={0.3}>
               <ListTile>
@@ -41,7 +41,13 @@ const PayHistoryPage = () => {
                   <Badge {...getBadgeInfo(item.type)} variant="default" size="medium" />
                   <p>{item.type}</p>
                 </div>
-                <p className={`${colorClass} font-medium`}>{text}</p>
+                <div className={`font-medium ${colorClass} flex items-center gap-1 lg:gap-1.5`}>
+                  <span className="font-medium">{sign}</span>
+                  <div className="flex items-center gap-0.5 lg:gap-1">
+                    <DatchaCoin className="h-4 w-4 stroke-[2.5] lg:h-5 lg:w-5" />
+                    <p>{text}</p>
+                  </div>
+                </div>
               </ListTile>
             </FadeInUpMotion>
           )
