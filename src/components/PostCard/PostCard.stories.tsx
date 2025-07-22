@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import PostCard from './PostCard'
 import type { PostCardProps } from './PostCard'
-import TestImage from '../../assets/images/test-image.png'
 import { useState } from 'react'
 
 const meta: Meta<typeof PostCard> = {
@@ -26,12 +25,12 @@ const meta: Meta<typeof PostCard> = {
       options: ['col', 'row'],
       description: '카드 레이아웃 형태',
     },
-    provider: {
+    telecomCompany: {
       control: 'select',
       options: ['LG U+', 'KT', 'SKT'],
       description: '통신사',
     },
-    data: {
+    salesDataAmount: {
       control: 'text',
       description: '판매 데이터 양',
     },
@@ -48,28 +47,24 @@ const meta: Meta<typeof PostCard> = {
       control: 'text',
       description: '닉네임',
     },
-    timestamp: {
+    createdAt: {
       control: 'text',
       description: '게시 시간',
     },
-    isLiked: {
+    liked: {
       control: 'boolean',
       description: '관심 거래 등록 여부',
     },
-    saleType: {
+    salesType: {
       control: 'radio',
       options: ['deal', 'bid'],
       description: '판매 유형 - `deal` = 일반 | `bid` = 입찰',
     },
-    price: {
+    salesPrice: {
       control: 'number',
-      description: '`deal`일 때의 거래 페이',
+      description: '`deal` = 거래 페이 | `bid` = 최초 등록 페이',
     },
-    initialPrice: {
-      control: 'number',
-      description: '`bid`일 때의 최초 등록 페이',
-    },
-    bidPrice: {
+    currentHeightPrice: {
       control: 'number',
       description: '`bid`일 때의 입찰 페이',
     },
@@ -89,9 +84,9 @@ const meta: Meta<typeof PostCard> = {
       control: 'number',
       description: '(row 전용) 거래된 페이 금액',
     },
-    imageUrl: {
-      control: 'text',
-      description: '이미지 URL',
+    defaultImageNumber: {
+      control: 'number',
+      description: '이미지 번호 (constants/imageData.ts에서 관리됨)',
     },
   },
 }
@@ -101,7 +96,7 @@ type Story = StoryObj<PostCardProps>
 
 export const ColType: Story = {
   render: (args: PostCardProps) => {
-    const [liked, setLiked] = useState(args.isLiked)
+    const [liked, setLiked] = useState(args.liked)
 
     const handleToggleLike = () => {
       const newLiked = !liked
@@ -115,29 +110,28 @@ export const ColType: Story = {
     }
 
     return (
-      <PostCard {...args} isLiked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
+      <PostCard {...args} liked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
     )
   },
   args: {
     type: 'col',
-    provider: 'KT',
-    imageUrl: TestImage,
-    data: '500MB',
+    telecomCompany: 'KT',
+    defaultImageNumber: 1,
+    salesDataAmount: '500',
     title: '데이터 판매합니다.',
     nickname: '몽실몽실 구름빵',
-    timestamp: '2시간 전',
-    isLiked: false,
-    saleType: 'deal',
-    price: 1000,
-    initialPrice: 1000,
-    bidPrice: 2000,
+    createdAt: '2시간 전',
+    liked: false,
+    salesType: 'deal',
+    salesPrice: 1000,
+    currentHeightPrice: 2000,
     status: 'active',
   },
 }
 
 export const RowType: Story = {
   render: (args: PostCardProps) => {
-    const [liked, setLiked] = useState(args.isLiked)
+    const [liked, setLiked] = useState(args.liked)
 
     const handleToggleLike = () => {
       const newLiked = !liked
@@ -151,22 +145,21 @@ export const RowType: Story = {
     }
 
     return (
-      <PostCard {...args} isLiked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
+      <PostCard {...args} liked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
     )
   },
   args: {
     type: 'row',
-    provider: 'KT',
-    imageUrl: TestImage,
-    data: '500MB',
+    telecomCompany: 'KT',
+    defaultImageNumber: 1,
+    salesDataAmount: '500',
     title: '데이터 판매합니다.',
     nickname: '몽실몽실 구름빵',
-    timestamp: '2시간 전',
-    isLiked: false,
-    saleType: 'bid',
-    price: 1000,
-    initialPrice: 1000,
-    bidPrice: 2000,
+    createdAt: '2시간 전',
+    liked: false,
+    salesType: 'bid',
+    salesPrice: 1000,
+    currentHeightPrice: 2000,
     status: 'active',
     favorite: false,
     payhistory: false,
