@@ -45,7 +45,7 @@ const LoginForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-10">
+    <form onSubmit={handleSubmit(handleLogin)} className="flex flex-col gap-5 sm:gap-10">
       <Controller
         name="email"
         control={control}
@@ -87,7 +87,9 @@ const LoginForm = () => {
         text="로그인"
         type="submit"
         disabled={!isActive}
-        className="bg-pri-500 text-gray-10 disabled:bg-gray-50 disabled:text-gray-500"
+        className={
+          'border-gray-10 text-gray-10 sm:bg-pri-500 sm:text-gray-10 mt-15 border bg-transparent disabled:border-transparent disabled:bg-gray-50/50 disabled:text-gray-200 sm:mt-0 sm:border-none sm:disabled:bg-gray-50 sm:disabled:text-gray-500'
+        }
       />
     </form>
   )
