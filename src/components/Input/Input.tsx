@@ -15,6 +15,7 @@ interface InputProps {
   shape?: 'square' | 'floating' | 'underline'
   prefix?: ReactNode
   suffix?: ReactNode
+  suffixAlwaysVisible?: boolean
   className?: string
 }
 
@@ -30,6 +31,7 @@ const Input = ({
   shape = 'square',
   prefix,
   suffix,
+  suffixAlwaysVisible = false,
   className,
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -80,8 +82,12 @@ const Input = ({
       )
     }
 
-    if (suffix && value) {
-      return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
+    if (suffix) {
+      if (suffixAlwaysVisible) {
+        return <div>{suffix}</div>
+      } else if (value) {
+        return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
+      }
     }
 
     if (isClearVisible) {
