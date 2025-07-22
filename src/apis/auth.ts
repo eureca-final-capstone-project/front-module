@@ -6,14 +6,14 @@ export const login = async (data: LoginSchemaType) => {
   return response.data
 }
 
-export const kakaoLogin = async () => {
+export const kakaoLogin = () => {
   window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/kakao`
 }
 
-export const googleLogin = async () => {
+export const googleLogin = () => {
   window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/google`
 }
 
-export const naverLogin = async () => {
+export const naverLogin = () => {
   window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/naver`
 }
