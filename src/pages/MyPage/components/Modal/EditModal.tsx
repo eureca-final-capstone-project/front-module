@@ -68,11 +68,34 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
   const onSubmitPasswordChange = async (data: PasswordChangeSchemaType) => {
     try {
       setPasswordLoading(true)
-      await putUserPassword({ password: data.newPassword })
+      const response = await putUserPassword({
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      })
+
+      if (response.statusCode !== 200) {
+        let userFriendlyMsg = '비밀번호 변경에 실패했습니다.'
+
+        switch (response.statusCode) {
+          case 20005:
+            userFriendlyMsg = '기존 비밀번호를 다시 확인해주세요'
+            break
+          case 20006:
+            userFriendlyMsg = '새 비밀번호는 기존 비밀번호와 달라야 합니다'
+            break
+          default:
+            break
+        }
+
+        showToast({ type: 'error', msg: userFriendlyMsg })
+        return
+      }
+
       resetPasswordForm()
       onClose()
+      showToast({ type: 'success', msg: '비밀번호가 성공적으로 변경되었습니다' })
     } catch {
-      showToast({ type: 'error', msg: '비밀번호 변경에 실패했습니다. 다시 시도해주세요.' })
+      showToast({ type: 'error', msg: '서버 요청에 실패했습니다. 다시 시도해주세요.' })
     } finally {
       setPasswordLoading(false)
     }
