@@ -7,7 +7,7 @@ export const signUp = async (data: SignUpRequestType) => {
 }
 
 export const requestAddtionalInfo = async (data: AddtionalInfoRequestType) => {
-  const response = await client.post('/user/additional-info', data)
+  const response = await client.patch('/user/additional-info', data)
   return response.data
 }
 
