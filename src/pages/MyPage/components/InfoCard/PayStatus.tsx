@@ -17,11 +17,11 @@ const PayStatus = () => {
       <div className="flex gap-2 lg:gap-4">
         <Button
           text="충전하기"
-          className="text-truncate text-fs14 lg:text-fs18 border-pri-600 text-pri-600 w-full border-[1.7px] font-medium"
+          className="text-truncate text-fs14 lg:text-fs18 border-pri-600 text-pri-600 flex-1 border-[1.7px] font-medium"
         />
         <Button
           text="환전하기"
-          className="text-truncate text-fs14 lg:text-fs18 border-pri-600 text-pri-600 w-full border-[1.7px] font-medium"
+          className="text-truncate text-fs14 lg:text-fs18 border-pri-600 text-pri-600 flex-1 border-[1.7px] font-medium"
         />
       </div>
     </InfoCard>

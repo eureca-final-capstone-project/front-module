@@ -5,7 +5,11 @@
  * 단위(MB, GB) 붙여서 반환
  */
 export const formatDataSize = (mb: number): string => {
-  return mb >= 1000 ? `${(mb / 1000).toFixed(1)}GB` : `${mb}MB`
+  if (mb >= 1000) {
+    const gb = mb / 1000
+    return Number.isInteger(gb) ? `${gb}GB` : `${gb.toFixed(1)}GB`
+  }
+  return `${mb}MB`
 }
 
 /* 금액 포맷팅 함수

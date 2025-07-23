@@ -1,8 +1,8 @@
 interface ProviderBadgeProps {
-  provider: 'SKT' | 'LG U+' | 'KT'
+  telecomCompany: 'SKT' | 'LG U+' | 'KT'
 }
 
-const providerStyle = {
+const telecomCompanyStyle = {
   SKT: {
     color: '#3617ce',
     text: 'SKT',
@@ -17,8 +17,8 @@ const providerStyle = {
   },
 }
 
-const ProviderBadge = ({ provider }: ProviderBadgeProps) => {
-  const { color, text } = providerStyle[provider]
+const ProviderBadge = ({ telecomCompany }: ProviderBadgeProps) => {
+  const { color, text } = telecomCompanyStyle[telecomCompany]
 
   return (
     <svg viewBox="0 0 104 74" className="h-auto w-full" xmlns="http://www.w3.org/2000/svg">

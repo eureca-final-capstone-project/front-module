@@ -55,7 +55,7 @@
   --shadow-modal: 0px 8px 24px rgba(0, 0, 0, 0.08);
   --shadow-toast: 0px 3px 16px rgba(0, 0, 0, 0.08);
   --shadow-drop-down: 0px 4px 14px rgba(0, 0, 0, 0.05);
-
+  --shadow-receipt-top: 0px 6px 16px rgba(122, 122, 122, 0.12);
   --shadow-side-filter: 0px 32px 32px -24px rgba(0, 0, 0, 0.1);
   --backdrop-blur-side-filter: 8px;
 

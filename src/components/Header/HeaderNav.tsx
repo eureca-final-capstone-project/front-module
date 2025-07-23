@@ -41,7 +41,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'mypage',
       label: '마이페이지',
-      action: () => navigate('/mypage/favorites'),
+      action: () => navigate('/mypage/data-charge'),
     },
     {
       key: 'profile',
