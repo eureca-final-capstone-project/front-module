@@ -48,7 +48,7 @@ const AddtionalInfoForm = () => {
     mutationFn: requestAddtionalInfo,
     onSuccess: data => {
       if (data.statusCode === 200) {
-        navigate('/login')
+        navigate('/')
       } else {
         alert('회원가입 실패: ' + data.message)
       }
