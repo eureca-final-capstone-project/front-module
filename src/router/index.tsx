@@ -10,6 +10,8 @@ import WritePage from '../pages/WritePage'
 import SignUpPage from '../pages/SignUpPage'
 import OAuthCallbackPage from '../pages/LoginPage/OAuthCallbackPage'
 import AdditionalInfoPage from '../pages/SignUpPage/AdditionalInfoPage'
+import AdminLayout from '../layout/AdminLayout'
+import Dashboard from '../pages/AdminPage/Dashboard'
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +59,15 @@ export const router = createBrowserRouter([
         path: '/write',
         element: <WritePage />,
         handle: { title: '내 데이터 판매' },
+      },
+    ],
+  },
+  {
+    element: <AdminLayout />,
+    children: [
+      {
+        path: '/admin/dashboard',
+        element: <Dashboard />,
       },
     ],
   },

@@ -23,7 +23,7 @@ const Sidebar = () => {
   const handleLogout = () => {}
 
   return (
-    <aside className="bg-gray-10 flex min-h-screen max-w-73 flex-col gap-5 p-5">
+    <aside className="bg-gray-10 flex min-h-screen w-full max-w-73 flex-col gap-5 p-5">
       <div className="h-14">
         <img src={LogoImg} alt="Datcha" />
       </div>
