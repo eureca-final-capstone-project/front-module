@@ -1,6 +1,7 @@
 import { DataCoupon } from '../../../../apis/dataVoucher'
 import ScaleDownMotion from '../../../../components/Animation/ScaleDownMotion'
 import Badge from '../../../../components/Badge/Badge'
+import { formatDataSize } from '../../../../utils/format'
 import { getTelecomBadgeColor } from '../../../../utils/telecom'
 
 interface Props {
@@ -9,6 +10,8 @@ interface Props {
 
 const DataChargeVoucher = ({ coupon }: Props) => {
   const { couponNumber, dataAmount, telecomCompany, expiresAt } = coupon
+  const formatted = formatDataSize(dataAmount)
+  const [value, unit] = formatted.match(/^([\d.]+)([a-zA-Z]+)$/)?.slice(1) || []
 
   return (
     <ScaleDownMotion>
@@ -63,8 +66,8 @@ const DataChargeVoucher = ({ coupon }: Props) => {
         >
           <div className="text-gray-10 flex w-1/3 items-center bg-transparent p-4">
             <div className="-gap-1 flex w-full flex-col text-right">
-              <h2 className="text-fs28 md:text-fs32 font-semibold">{dataAmount}</h2>
-              <p className="text-fs14 md:text-fs16 -mt-1 font-medium">MB</p>
+              <h2 className="text-fs28 md:text-fs32 font-semibold">{value}</h2>
+              <p className="text-fs14 md:text-fs16 -mt-1 font-medium">{unit}</p>
             </div>
           </div>
 
