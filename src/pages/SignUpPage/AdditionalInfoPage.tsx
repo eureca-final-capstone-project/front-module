@@ -3,7 +3,7 @@ import AddtionalInfoForm from './components/AddtionalInfoForm'
 const AdditionalInfoPage = () => {
   return (
     <main className="flex flex-col gap-10">
-      <div>
+      <div className="gap flex flex-col gap-2">
         <h1 className="text-gray-10 sm:text-pri-900 text-fs24 text-center font-semibold">
           회원가입
         </h1>
