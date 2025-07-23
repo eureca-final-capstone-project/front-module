@@ -3,12 +3,18 @@ import Button from '../../../../components/Button/Button'
 import { formatDataSize } from '../../../../utils/format'
 import { useQuery } from '@tanstack/react-query'
 import { getUserDataStatus, UserDataStatus } from '../../../../apis/userInfo'
+import { useNavigate } from 'react-router-dom'
 
 const DataStatus = () => {
   const { data, isLoading, isError } = useQuery<UserDataStatus>({
     queryKey: ['userDataStatus'],
     queryFn: getUserDataStatus,
   })
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate('/change-data')
+  }
 
   if (isLoading) return <div>로딩중</div>
   if (isError) return <div>데이터를 불러오는데 실패했습니다.</div>
@@ -35,7 +41,7 @@ const DataStatus = () => {
         <Button
           text="데이터 전환하기"
           className="text-fs14 lg:text-fs18 border-pri-500 text-pri-500 mt-4 border-[1.7px] font-medium"
-          onClick={() => {}}
+          onClick={handleClick}
         />
       </>
     </InfoCard>
