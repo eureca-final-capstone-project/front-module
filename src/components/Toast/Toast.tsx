@@ -1,4 +1,4 @@
-import { ToastContainer, Bounce } from 'react-toastify'
+import { ToastContainer, Slide } from 'react-toastify'
 import SuccessIcon from '../../assets/icons/toast-success.svg?react'
 import ErrorIcon from '../../assets/icons/toast-error.svg?react'
 
@@ -13,8 +13,9 @@ const Toast = () => {
       draggable={false}
       closeButton={false}
       theme="light"
-      transition={Bounce}
+      transition={Slide}
       limit={1}
+      style={{ top: '40px' }}
       toastClassName={context =>
         [
           'bg-gray-10',

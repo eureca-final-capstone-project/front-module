@@ -82,7 +82,7 @@ const PostCardCol = ({
 
         {/* 닉네임 + 올린 시간 */}
         <div
-          className={`text-fs12 flex items-center text-[#666666] ${deviceType === 'mobile' ? 'gap-0.5' : 'gap-1'}`}
+          className={`text-fs12 sm:text-fs14 flex items-center text-[#666666] ${deviceType === 'mobile' ? 'gap-0.5' : 'gap-1'}`}
         >
           <p>{nickname}</p>
           {createdAt && (
@@ -96,7 +96,7 @@ const PostCardCol = ({
         {/* 판매 페이 */}
         {salesType === 'deal' ? (
           <div className="flex items-center justify-between">
-            <p className="font-bold">거래 페이</p>
+            <span className="font-bold">거래 페이</span>
             <div className="flex items-center gap-1">
               <DatchaCoinIcon className="h-5 w-5" />
               <p className="text-pri-500 font-bold">{formatAmount(salesPrice ?? 0)}</p>
@@ -105,7 +105,7 @@ const PostCardCol = ({
         ) : (
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span>최초 등록 페이</span>
+              <span>등록 페이</span>
               <div className="flex items-center gap-1">
                 <DatchaCoinSecondaryIcon className="h-5 w-5" />
                 <span className="text-pri-400 font-medium">{formatAmount(salesPrice ?? 0)}</span>
