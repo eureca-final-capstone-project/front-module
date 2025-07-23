@@ -8,7 +8,7 @@ const AuthLayout = () => {
   const deviceType = useDeviceType()
 
   return (
-    <div className="bg-pri-gradation flex h-screen w-full flex-col items-center overflow-hidden">
+    <div className="bg-pri-gradation flex min-h-screen w-full flex-col items-center overflow-hidden sm:h-screen">
       <header className="text-gray-10 h-16 w-full max-w-[1280px] p-4 sm:h-21.5">
         <img src={Logo} alt="로고" className="h-full" />
       </header>
@@ -34,12 +34,12 @@ const AuthLayout = () => {
 
         {deviceType === 'mobile' ? (
           /* 모바일 */
-          <div className="mt-[55px] w-full sm:hidden">
+          <div className="mt-11.25 mb-7 w-full sm:hidden">
             <Outlet />
           </div>
         ) : (
           /* 로그인 및 회원가입 모달 박스 */
-          <div className="bg-gray-10 z-10 hidden h-full max-h-[589px] w-full max-w-111 rounded-md p-10 text-center sm:block lg:z-10 lg:-ml-40 lg:flex-shrink-0">
+          <div className="bg-gray-10 z-10 hidden max-h-[80vh] w-full max-w-111 overflow-y-auto rounded-md p-10 text-center sm:block lg:z-10 lg:-ml-40 lg:flex-shrink-0">
             <Outlet />
           </div>
         )}
