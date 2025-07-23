@@ -3,7 +3,7 @@ import client from './client'
 
 export const signUp = async (data: SignUpRequestType) => {
   console.log(data)
-  const response = await client.post('/user', data)
+  const response = await client.post('/user/', data)
   return response.data
 }
 
