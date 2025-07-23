@@ -11,7 +11,8 @@ interface InputProps {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   required?: boolean
   disabled?: boolean
-  error?: string
+  error?: boolean
+  errorMsg?: string
   shape?: 'square' | 'floating' | 'underline'
   prefix?: ReactNode
   suffix?: ReactNode
@@ -27,7 +28,8 @@ const Input = ({
   onChange,
   required = false,
   disabled = false,
-  error = '',
+  error = false,
+  errorMsg = '',
   shape = 'square',
   prefix,
   suffix,
@@ -143,7 +145,7 @@ const Input = ({
         )}
       </div>
 
-      {error && <span className="text-error text-fs12 p-1 text-left">{error}</span>}
+      {error && errorMsg && <span className="text-error text-fs12 p-1 text-left">{errorMsg}</span>}
     </div>
   )
 }

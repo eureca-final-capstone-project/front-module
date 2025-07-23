@@ -97,7 +97,8 @@ const AddtionalInfoForm = () => {
                   const formatted = formatPhoneNumber(e.target.value)
                   field.onChange(formatted)
                 }}
-                error={errors.phoneNumber?.message}
+                error={!!errors.phoneNumber}
+                errorMsg={errors.phoneNumber?.message}
                 shape={deviceType === 'mobile' ? 'square' : 'floating'}
               />
             )}
