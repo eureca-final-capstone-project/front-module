@@ -65,14 +65,14 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
         style={{ backdropFilter: 'blur(1.5px)' }}
       >
         <FadeInUpMotion custom={0} duration={0.3}>
-          <div className="relative flex flex-col items-center">
+          <div
+            onClick={e => e.stopPropagation()}
+            className="relative flex cursor-default flex-col items-center"
+          >
             <div className="shadow-receipt-top bg-pri-100 absolute -top-7 z-10 flex h-14 w-14 items-center justify-center rounded-full">
               <CircleCheckIcon className="h-6.5 w-6.5" />
             </div>
-            <div
-              className="flex w-82 cursor-default flex-col overflow-hidden rounded-t-md md:w-88"
-              onClick={e => e.stopPropagation()}
-            >
+            <div className="flex w-82 flex-col overflow-hidden rounded-t-md md:w-88">
               <div className="bg-gray-10 flex flex-col gap-5 px-4 py-9">
                 <div className="flex flex-col gap-[0.5rem]">
                   <div className="-mb-2 flex justify-end">
