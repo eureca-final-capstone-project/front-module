@@ -26,10 +26,12 @@ const DataChargePage = () => {
   if (isError || !data) return <div>에러가 발생했어요.</div>
 
   return (
-    <div className={`grid ${gridCols} gap-4`}>
-      {data.content.map(coupon => (
-        <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
-      ))}
+    <div>
+      <div className={`grid ${gridCols} gap-4`}>
+        {data.content.map(coupon => (
+          <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
+        ))}
+      </div>
     </div>
   )
 }

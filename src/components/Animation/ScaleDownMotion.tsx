@@ -10,18 +10,23 @@ const scaleDownVariants: Variants = {
 interface ScaleDownMotionProps {
   children: React.ReactNode
   className?: string
+  disabled?: boolean
 }
 
-const ScaleDownMotion = ({ children, className = '' }: ScaleDownMotionProps) => (
-  <motion.div
-    className={className}
-    variants={scaleDownVariants}
-    initial="initial"
-    whileHover="hover"
-    whileTap="tap"
-  >
-    {children}
-  </motion.div>
-)
+const ScaleDownMotion = ({ children, className = '', disabled = false }: ScaleDownMotionProps) => {
+  if (disabled) return <div className={className}>{children}</div>
+
+  return (
+    <motion.div
+      className={className}
+      variants={scaleDownVariants}
+      initial="initial"
+      whileHover="hover"
+      whileTap="tap"
+    >
+      {children}
+    </motion.div>
+  )
+}
 
 export default ScaleDownMotion

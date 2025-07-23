@@ -33,6 +33,11 @@ export const getDataCoupons = async (
   const response = await client.get('/data-coupon', {
     params: { page, size },
   })
-  console.log('🔥 getDataCoupons 응답', response.data)
   return response.data.data
+}
+
+// 데이터 충전권 -> 구매 데이터로 전환
+export const postUseDataCoupon = async (userDataCouponId: number) => {
+  const response = await client.post(`/data-coupon/${userDataCouponId}/use`)
+  return response.data
 }
