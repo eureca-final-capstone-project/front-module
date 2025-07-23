@@ -10,9 +10,9 @@ import { imageData as PostImage } from '../../constants/imageData'
 
 interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
   type: 'row'
-  page?: 'default' | 'favorite' | 'payhistory'
-  payhistorytime?: string
-  payhistorypay?: number
+  page?: 'default' | 'favorite' | 'tradehistory'
+  tradehistorytime?: string
+  tradehistorypay?: number
   imageWrapperClassName?: string
 }
 
@@ -32,8 +32,8 @@ const PostCardRow = ({
   onClick,
   page = 'default',
   imageWrapperClassName,
-  payhistorytime,
-  payhistorypay,
+  tradehistorytime,
+  tradehistorypay,
 }: PostCardRowProps) => {
   const renderImageSection = () => (
     // 이미지 영역
@@ -188,7 +188,7 @@ const PostCardRow = ({
           </div>
         )
 
-      case 'payhistory':
+      case 'tradehistory':
         return (
           // 거래 내역 내용
           <div className="flex h-full min-w-0 flex-col justify-between">
@@ -212,12 +212,12 @@ const PostCardRow = ({
               </div>
               <div className="text-fs12 lg:text-fs14 flex gap-1 sm:gap-2">
                 <span className="text-[#666666]">거래 일시</span>
-                <span className="text-pri-400">{payhistorytime}</span>
+                <span className="text-pri-400">{tradehistorytime}</span>
               </div>
             </div>
             <div className="lg:text-fs18 flex w-full items-center justify-end gap-1">
               <DatchaCoinIcon className="h-5 w-5" />
-              <span className="text-pri-500 font-bold">{formatAmount(payhistorypay ?? 0)}</span>
+              <span className="text-pri-500 font-bold">{formatAmount(tradehistorypay ?? 0)}</span>
             </div>
           </div>
         )
