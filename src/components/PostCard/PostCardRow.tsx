@@ -7,6 +7,7 @@ import ProviderBadge from './ProviderBadge'
 import DataBadge from '../Badge/Badge'
 import { formatDataSize, formatAmount } from '../../utils/format'
 import { imageData as PostImage } from '../../constants/imageData'
+import { getSalesTypeLabel } from '../../utils/salesType'
 
 interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
   type: 'row'
@@ -99,7 +100,7 @@ const PostCardRow = ({
                 <span>{createdAt}</span>
               </div>
             </div>
-            {salesType === 'deal' ? (
+            {salesType === 'normal' ? (
               <div className="mt-auto flex w-full items-center justify-between">
                 <span className="font-bold">거래 페이</span>
                 <div className="flex items-center gap-1">
@@ -150,12 +151,10 @@ const PostCardRow = ({
               </div>
               <div className="text-fs12 lg:text-fs14 hidden gap-2 sm:flex">
                 <span className="text-[#666666]">거래 유형</span>
-                <span className="text-pri-400">
-                  {salesType === 'bid' ? '입찰 거래' : '일반 거래'}
-                </span>
+                <span className="text-pri-400">{getSalesTypeLabel(salesType)}</span>
               </div>
             </div>
-            {salesType === 'deal' ? (
+            {salesType === 'normal' ? (
               <div className="lg:text-fs18 mt-auto flex w-full items-center justify-between">
                 <span className="font-bold">거래 페이</span>
                 <div className="flex items-center gap-1">
@@ -206,9 +205,7 @@ const PostCardRow = ({
             <div className="flex flex-col gap-1 sm:gap-2">
               <div className="text-fs12 lg:text-fs14 flex gap-1 sm:gap-2">
                 <span className="text-[#666666]">거래 유형</span>
-                <span className="text-pri-400">
-                  {salesType === 'bid' ? '입찰 거래' : '일반 거래'}
-                </span>
+                <span className="text-pri-400">{getSalesTypeLabel(salesType)}</span>
               </div>
               <div className="text-fs12 lg:text-fs14 flex gap-1 sm:gap-2">
                 <span className="text-[#666666]">거래 일시</span>

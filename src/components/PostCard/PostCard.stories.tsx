@@ -62,12 +62,12 @@ const meta: Meta<typeof PostCard> = {
     },
     salesType: {
       control: 'radio',
-      options: ['deal', 'bid'],
-      description: '판매 유형 - `deal` = 일반 | `bid` = 입찰',
+      options: ['normal', 'bid'],
+      description: '판매 유형 - `normal` = 일반 | `bid` = 입찰',
     },
     salesPrice: {
       control: 'number',
-      description: '`deal` = 거래 페이 | `bid` = 최초 등록 페이',
+      description: '`normal` = 거래 페이 | `bid` = 최초 등록 페이',
     },
     currentHeightPrice: {
       control: 'number',
@@ -127,7 +127,7 @@ export const ColType: Story = {
     nickname: '몽실몽실 구름빵',
     createdAt: '2시간 전',
     liked: false,
-    salesType: 'deal',
+    salesType: 'normal',
     salesPrice: 1000,
     currentHeightPrice: 2000,
     status: 'active',
@@ -167,7 +167,7 @@ export const RowTypeFavorite: Story = {
     nickname: '데이터장수',
     createdAt: '3일 전',
     liked: true,
-    salesType: 'deal',
+    salesType: 'normal',
     salesPrice: 5000,
     currentHeightPrice: 10000,
     status: 'expired',

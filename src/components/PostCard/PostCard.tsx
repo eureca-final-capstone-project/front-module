@@ -12,7 +12,7 @@ type CommonProps = {
   createdAt?: string
   liked: boolean
   onToggleLike: () => void
-  salesType: 'deal' | 'bid'
+  salesType: 'normal' | 'bid'
   salesPrice?: number
   currentHeightPrice?: number
   status: TradeStatus

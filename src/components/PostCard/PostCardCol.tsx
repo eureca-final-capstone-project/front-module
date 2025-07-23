@@ -94,7 +94,7 @@ const PostCardCol = ({
         </div>
 
         {/* 판매 페이 */}
-        {salesType === 'deal' ? (
+        {salesType === 'normal' ? (
           <div className="flex items-center justify-between">
             <span className="font-bold">거래 페이</span>
             <div className="flex items-center gap-1">
