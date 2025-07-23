@@ -151,10 +151,14 @@ a {
 }
 
 button {
+  cursor: pointer;
   outline: none;
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
+}
+button:disabled {
+  cursor: not-allowed;
 }
 
 img {

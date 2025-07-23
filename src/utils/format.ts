@@ -21,3 +21,14 @@ export const formatDataSize = (mb: number): string => {
 export const formatAmount = (amount: number): string => {
   return `${amount.toLocaleString()}원`
 }
+
+/* 휴대폰 번호 하이픈 자동 삽입 함수 */
+export const formatPhoneNumber = (value: string) => {
+  const number = value.replace(/[^0-9]/g, '')
+
+  if (number.length <= 3) return number
+  if (number.length <= 7) {
+    return `${number.slice(0, 3)}-${number.slice(3)}`
+  }
+  return `${number.slice(0, 3)}-${number.slice(3, 7)}-${number.slice(7, 11)}`
+}

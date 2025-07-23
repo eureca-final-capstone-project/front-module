@@ -15,6 +15,7 @@ interface InputProps {
   shape?: 'square' | 'floating' | 'underline'
   prefix?: ReactNode
   suffix?: ReactNode
+  suffixAlwaysVisible?: boolean
   className?: string
 }
 
@@ -30,6 +31,7 @@ const Input = ({
   shape = 'square',
   prefix,
   suffix,
+  suffixAlwaysVisible = false,
   className,
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -75,13 +77,21 @@ const Input = ({
           onClick={() => setShowPassword(prev => !prev)}
           className="cursor-pointer focus:outline-none"
         >
-          {showPassword ? <PasswordOnIcon className="text-pri-500" /> : <PasswordOffIcon />}
+          {showPassword ? (
+            <PasswordOnIcon className="text-pri-500" />
+          ) : (
+            <PasswordOffIcon className="text-gray-400" />
+          )}
         </button>
       )
     }
 
-    if (suffix && value) {
-      return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
+    if (suffix) {
+      if (suffixAlwaysVisible) {
+        return <div>{suffix}</div>
+      } else if (value) {
+        return <div className="sm:text-fs18 pointer-events-none">{suffix}</div>
+      }
     }
 
     if (isClearVisible) {
@@ -96,8 +106,8 @@ const Input = ({
   }
 
   return (
-    <div className="flex flex-col">
-      <div className="relative">
+    <div className="flex flex-1 flex-col">
+      <div className="group relative">
         {prefix && (
           <div className="pointer-events-none absolute top-1/2 left-4 flex size-6 -translate-y-1/2 items-center">
             {prefix}
