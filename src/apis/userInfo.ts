@@ -20,6 +20,11 @@ interface EditNicknameResponse {
   userId: number
   nickname: string
 }
+export interface UserDataStatus {
+  totalDataMb: number
+  sellableDataMb: number
+  buyerDataMb: number
+}
 
 export const getUserProfile = async (): Promise<UserProfile> => {
   const res = await client.get('/user/profile')
@@ -30,4 +35,8 @@ export const putUserNickname = async (
 ): Promise<EditNicknameResponse> => {
   const response = await client.put('/user/nickname', params)
   return response.data.data
+}
+export const getUserDataStatus = async (): Promise<UserDataStatus> => {
+  const res = await client.get('/user-data/status')
+  return res.data.data
 }

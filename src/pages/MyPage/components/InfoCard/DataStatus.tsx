@@ -1,17 +1,22 @@
 import InfoCard from './InfoCard'
 import Button from '../../../../components/Button/Button'
 import { formatDataSize } from '../../../../utils/format'
+import { useQuery } from '@tanstack/react-query'
+import { getUserDataStatus, UserDataStatus } from '../../../../apis/userInfo'
 
 const DataStatus = () => {
-  const dataStatus = {
-    totalDataMb: 1900,
-    buyerDataMb: 600,
-    sellableDataMb: 300,
-  }
+  const { data, isLoading, isError } = useQuery<UserDataStatus>({
+    queryKey: ['userDataStatus'],
+    queryFn: getUserDataStatus,
+  })
+
+  if (isLoading) return <div>로딩중</div>
+  if (isError) return <div>데이터를 불러오는데 실패했습니다.</div>
+
   const items = [
-    { label: '보유 데이터', value: dataStatus.totalDataMb },
-    { label: '구매 데이터', value: dataStatus.buyerDataMb },
-    { label: '판매 가능 데이터', value: dataStatus.sellableDataMb },
+    { label: '보유 데이터', value: data?.totalDataMb ?? 0 },
+    { label: '구매 데이터', value: data?.buyerDataMb ?? 0 },
+    { label: '판매 가능 데이터', value: data?.sellableDataMb ?? 0 },
   ]
   return (
     <InfoCard title="데이터 정보">
