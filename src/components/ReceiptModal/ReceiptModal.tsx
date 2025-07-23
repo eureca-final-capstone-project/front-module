@@ -94,7 +94,7 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
               </div>
             </div>
 
-            <div>
+            <div className="-mt-0.5">
               <svg
                 className="h-4 w-full"
                 viewBox="0 0 352 16"
