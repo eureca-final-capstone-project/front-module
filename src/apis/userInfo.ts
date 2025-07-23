@@ -20,6 +20,19 @@ interface EditNicknameResponse {
   userId: number
   nickname: string
 }
+
+interface EditPasswordParams {
+  currentPassword: string
+  newPassword: string
+}
+
+interface EditPasswordResponse {
+  statusCode: number
+  message: string
+  data: {
+    userId: number
+  }
+}
 export interface UserDataStatus {
   totalDataMb: number
   sellableDataMb: number
@@ -35,6 +48,14 @@ export const putUserNickname = async (
 ): Promise<EditNicknameResponse> => {
   const response = await client.put('/user/nickname', params)
   return response.data.data
+}
+export const putUserPassword = async (
+  params: EditPasswordParams
+): Promise<EditPasswordResponse> => {
+  const response = await client.put('/user/password', params)
+  console.log('----------------서버 응답:', response.data)
+
+  return response.data
 }
 export const getUserDataStatus = async (): Promise<UserDataStatus> => {
   const res = await client.get('/user-data/status')

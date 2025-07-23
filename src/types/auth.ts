@@ -1,10 +1,18 @@
 import z from 'zod'
-import { addtionalInfoSchema, loginSchema, signUpSchema } from '../utils/validation'
+import {
+  additionalInfoSchema,
+  loginSchema,
+  nicknameSchema,
+  passwordChangeSchema,
+  signUpSchema,
+} from '../utils/validation'
 
 // 스키마 기반 TypeScript 타입 추론
 export type LoginSchemaType = z.infer<typeof loginSchema>
 export type SignUpSchemaType = z.infer<typeof signUpSchema>
-export type AddtionalInfoSchemaTye = z.infer<typeof addtionalInfoSchema>
+export type AdditionalInfoSchemaTye = z.infer<typeof additionalInfoSchema>
+export type PasswordChangeSchemaType = z.infer<typeof passwordChangeSchema>
+export type NicknameSchemaType = z.infer<typeof nicknameSchema>
 
 // 회원가입 request 타입
 export type SignUpRequestType = Omit<
@@ -17,7 +25,7 @@ export type SignUpRequestType = Omit<
 }
 
 // 추가 정보 입력 request 타입
-export type AddtionalInfoRequestType = {
+export type AdditionalInfoRequestType = {
   telecomCompanyId: number
   phoneNumber: string
 }
