@@ -1,7 +1,15 @@
+import { DataCoupon } from '../../../../apis/dataVoucher'
 import ScaleDownMotion from '../../../../components/Animation/ScaleDownMotion'
 import Badge from '../../../../components/Badge/Badge'
+import { getTelecomBadgeColor } from '../../../../utils/telecom'
 
-const DataChargeVoucher = () => {
+interface Props {
+  coupon: DataCoupon
+}
+
+const DataChargeVoucher = ({ coupon }: Props) => {
+  const { couponNumber, dataAmount, telecomCompany, expiresAt } = coupon
+
   return (
     <ScaleDownMotion>
       <div className="relative mx-auto h-40 w-full">
@@ -55,7 +63,7 @@ const DataChargeVoucher = () => {
         >
           <div className="text-gray-10 flex w-1/3 items-center bg-transparent p-4">
             <div className="-gap-1 flex w-full flex-col text-right">
-              <h2 className="text-fs28 md:text-fs32 font-semibold">200</h2>
+              <h2 className="text-fs28 md:text-fs32 font-semibold">{dataAmount}</h2>
               <p className="text-fs14 md:text-fs16 -mt-1 font-medium">MB</p>
             </div>
           </div>
@@ -63,12 +71,18 @@ const DataChargeVoucher = () => {
           <div className="bg-opacity-90 bg-gray-10 flex flex-1 flex-col justify-between p-4 text-right">
             <div className="flex flex-col gap-2 text-left">
               <div className="flex gap-1">
-                <Badge size="small" className="bg-lguplus w-fit leading-[100%]" label="LG U+" />
+                <Badge
+                  size="small"
+                  className={`${getTelecomBadgeColor(telecomCompany.name)} w-fit leading-none`}
+                  label={telecomCompany.name}
+                />
                 <h2 className="text-fs16 md:text-fs20 font-medium">데이터 충전권</h2>
               </div>
-              <p className="text-fs12 md:text-fs14 text-pri-600">XYWSD_DFJADS-KDF</p>
+              <p className="text-fs12 md:text-fs14 text-pri-600">{couponNumber}</p>
             </div>
-            <p className="text-fs12 text-gray-500">유효기간 | 2025년 7월 8일 24:00</p>
+            <p className="text-fs12 text-gray-500">
+              유효기간 | {new Date(expiresAt).toLocaleString('ko-KR')}
+            </p>
           </div>
         </div>
       </div>
