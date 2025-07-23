@@ -13,7 +13,7 @@ const AuthLayout = () => {
       <header className="text-gray-10 h-16 w-full max-w-[1280px] p-4 sm:h-21.5">
         <img
           src={Logo}
-          alt="로고"
+          alt="DATCHA"
           className="h-full cursor-pointer"
           onClick={() => navigate('/')}
         />
