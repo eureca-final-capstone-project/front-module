@@ -8,7 +8,7 @@ import PayChargeResultPage from '../pages/PayChargeResultPage'
 import WebMobileLayout from '../layout/WebMobileLayout'
 import WritePage from '../pages/WritePage'
 import SignUpPage from '../pages/SignUpPage'
-import OAuthCallbackPage from '../pages/OAuthCallbackPage/OAuthCallbackPage'
+import OAuthCallbackPage from '../pages/LoginPage/OAuthCallbackPage'
 
 export const router = createBrowserRouter([
   {
