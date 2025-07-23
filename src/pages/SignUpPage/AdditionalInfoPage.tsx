@@ -1,4 +1,4 @@
-import AddtionalInfoForm from './components/AddtionalInfoForm'
+import AddtionalInfoForm from './components/AdditionalInfoForm'
 
 const AdditionalInfoPage = () => {
   return (
