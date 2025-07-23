@@ -14,7 +14,7 @@ const meta: Meta<typeof PostCard> = {
           'PostCard 컴포넌트는 통신사, 판매 데이터 양, 판매글 제목, 판매자 정보 등을 포함한 카드 UI로, `col`와 `row` 타입에 따라 서로 다른 레이아웃을 제공합니다.\n\n' +
           '- `type: col`은 이미지가 상단에 위치하고 아래에 텍스트가 나열되는 세로형 `PostCard`입니다.\n' +
           '- `type: row`는 이미지가 좌측에, 텍스트 및 정보가 우측에 표시되는 가로형 `PostCard`입니다.\n\n' +
-          '`favorite`, `payhistory`, `payhistorytime`, `payhistorypay` 등은 `row` 타입에서만 사용됩니다.',
+          '`row` 타입은 `default`, `favorite`, `payhistory` 페이지에 따라 내용이 달라집니다.',
       },
     },
   },
@@ -24,6 +24,11 @@ const meta: Meta<typeof PostCard> = {
       control: 'radio',
       options: ['col', 'row'],
       description: '카드 레이아웃 형태',
+    },
+    page: {
+      control: 'radio',
+      options: ['default', 'favorite', 'payhistory'],
+      description: '(row 전용) 페이지 타입',
     },
     telecomCompany: {
       control: 'select',
@@ -68,25 +73,21 @@ const meta: Meta<typeof PostCard> = {
       control: 'number',
       description: '`bid`일 때의 입찰 페이',
     },
-    favorite: {
-      control: 'boolean',
-      description: '(row 전용) 관심 거래 페이지 전용',
-    },
-    payhistory: {
-      control: 'boolean',
-      description: '(row 전용) 거래 내역 페이지 전용',
-    },
     payhistorytime: {
       control: 'text',
-      description: '(row 전용) 거래 일시',
+      description: '(payhistory 전용) 거래 일시',
     },
     payhistorypay: {
       control: 'number',
-      description: '(row 전용) 거래된 페이 금액',
+      description: '(payhistory 전용) 거래된 페이 금액',
     },
     defaultImageNumber: {
       control: 'number',
       description: '이미지 번호 (constants/imageData.ts에서 관리됨)',
+    },
+    transactionFeedId: {
+      control: 'number',
+      description: '거래 글 ID',
     },
   },
 }
@@ -94,27 +95,31 @@ const meta: Meta<typeof PostCard> = {
 export default meta
 type Story = StoryObj<PostCardProps>
 
+const Template = (args: PostCardProps) => {
+  const [liked, setLiked] = useState(args.liked)
+
+  const handleToggleLike = () => {
+    const newLiked = !liked
+    setLiked(newLiked)
+    alert(newLiked ? '관심 거래에 추가되었습니다.' : '관심 거래에서 삭제되었습니다.')
+  }
+
+  const handleClick = () => {
+    alert('카드를 클릭했습니다.')
+  }
+
+  const content = (
+    <PostCard {...args} liked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
+  )
+
+  return args.type === 'row' ? <div className="h-[160px] w-[380px]">{content}</div> : content
+}
+
 export const ColType: Story = {
-  render: (args: PostCardProps) => {
-    const [liked, setLiked] = useState(args.liked)
-
-    const handleToggleLike = () => {
-      const newLiked = !liked
-      setLiked(newLiked)
-
-      alert(newLiked ? '관심 거래에 추가되었습니다.' : '관심 거래에서 삭제되었습니다.')
-    }
-
-    const handleClick = () => {
-      alert('카드를 클릭했습니다.')
-    }
-
-    return (
-      <PostCard {...args} liked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
-    )
-  },
+  render: Template,
   args: {
     type: 'col',
+    transactionFeedId: 1,
     telecomCompany: 'KT',
     defaultImageNumber: 1,
     salesDataAmount: '500',
@@ -129,27 +134,12 @@ export const ColType: Story = {
   },
 }
 
-export const RowType: Story = {
-  render: (args: PostCardProps) => {
-    const [liked, setLiked] = useState(args.liked)
-
-    const handleToggleLike = () => {
-      const newLiked = !liked
-      setLiked(newLiked)
-
-      alert(newLiked ? '관심 거래에 추가되었습니다.' : '관심 거래에서 삭제되었습니다.')
-    }
-
-    const handleClick = () => {
-      alert('카드를 클릭했습니다.')
-    }
-
-    return (
-      <PostCard {...args} liked={liked} onToggleLike={handleToggleLike} onClick={handleClick} />
-    )
-  },
+export const RowTypeDefault: Story = {
+  render: Template,
   args: {
     type: 'row',
+    page: 'default',
+    transactionFeedId: 2,
     telecomCompany: 'KT',
     defaultImageNumber: 1,
     salesDataAmount: '500',
@@ -161,9 +151,46 @@ export const RowType: Story = {
     salesPrice: 1000,
     currentHeightPrice: 2000,
     status: 'active',
-    favorite: false,
-    payhistory: false,
+  },
+}
+
+export const RowTypeFavorite: Story = {
+  render: Template,
+  args: {
+    type: 'row',
+    page: 'favorite',
+    transactionFeedId: 3,
+    telecomCompany: 'SKT',
+    defaultImageNumber: 2,
+    salesDataAmount: '1000',
+    title: 'SKT 데이터 팝니다',
+    nickname: '데이터장수',
+    createdAt: '3일 전',
+    liked: true,
+    salesType: 'deal',
+    salesPrice: 5000,
+    currentHeightPrice: 10000,
+    status: 'expired',
+  },
+}
+
+export const RowTypePayhistory: Story = {
+  render: Template,
+  args: {
+    type: 'row',
+    page: 'payhistory',
+    transactionFeedId: 4,
+    telecomCompany: 'LG U+',
+    defaultImageNumber: 1,
+    salesDataAmount: '2000',
+    title: '거래 완료된 데이터',
+    nickname: '알뜰소비러',
+    liked: false,
+    salesType: 'bid',
+    salesPrice: 1500,
+    currentHeightPrice: 3000,
+    status: 'completed',
     payhistorytime: '07월 03일 오후 04시 19분',
-    payhistorypay: 2000,
+    payhistorypay: 4000,
   },
 }
