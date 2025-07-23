@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
@@ -12,7 +12,10 @@ interface ModalProps {
 }
 
 const Modal = ({ isOpen, onClose, children, positionClassName = '', className }: ModalProps) => {
-  const [scrollLocked, setScrollLocked] = useState(false)
+  const unlockScroll = () => {
+    document.body.style.overflow = ''
+    document.body.style.paddingRight = ''
+  }
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -26,37 +29,31 @@ const Modal = ({ isOpen, onClose, children, positionClassName = '', className }:
       document.body.style.overflow = 'hidden'
       document.body.style.paddingRight = `${scrollBarWidth}px`
       window.addEventListener('keydown', handleEsc)
-      setScrollLocked(true)
+    } else {
+      unlockScroll()
     }
 
     return () => {
       window.removeEventListener('keydown', handleEsc)
+      unlockScroll()
     }
   }, [isOpen, onClose])
 
-  const unlockScroll = () => {
-    if (scrollLocked) {
-      document.body.style.overflow = ''
-      document.body.style.paddingRight = ''
-      setScrollLocked(false)
-    }
-  }
-
   return createPortal(
     <AnimatePresence onExitComplete={unlockScroll}>
-      {isOpen && (
-        <motion.div
-          key="backdrop"
-          className={`bg-modal-background fixed inset-0 z-100 ${
-            positionClassName || 'flex items-center justify-center'
-          }`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={onClose}
-          style={{ backdropFilter: 'blur(1.5px)' }}
-        >
-          <FadeInUpMotion custom={1} duration={0.25}>
+      <motion.div
+        key="backdrop"
+        className={`bg-modal-background fixed inset-0 z-100 transition-opacity ${
+          isOpen ? positionClassName || 'flex items-center justify-center' : 'hidden'
+        }`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        style={{ backdropFilter: 'blur(1.5px)' }}
+      >
+        {isOpen && (
+          <FadeInUpMotion custom={0} duration={0.3}>
             <motion.div
               key="modal"
               className={`bg-gray-10 rounded-custom-m shadow-modal flex min-w-82 flex-col overflow-hidden`}
@@ -70,8 +67,8 @@ const Modal = ({ isOpen, onClose, children, positionClassName = '', className }:
               </div>
             </motion.div>
           </FadeInUpMotion>
-        </motion.div>
-      )}
+        )}
+      </motion.div>
     </AnimatePresence>,
     document.body
   )

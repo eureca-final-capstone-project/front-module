@@ -1,13 +1,14 @@
 import Button from '../../../components/Button/Button'
 import Input from '../../../components/Input/Input'
 import { Controller, useForm } from 'react-hook-form'
-import { loginSchema, LoginSchemaType } from '../../../utils/validation'
+import { loginSchema } from '../../../utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import { useAuthStore } from '../../../store/authStore'
+import { LoginSchemaType } from '../../../types/auth'
 
 const LoginForm = () => {
   const navigate = useNavigate()
@@ -96,7 +97,7 @@ const LoginForm = () => {
         type="submit"
         disabled={!isActive}
         className={
-          'border-gray-10 text-gray-10 sm:bg-pri-500 sm:text-gray-10 mt-12.5 border bg-transparent disabled:border-transparent disabled:bg-gray-50/50 disabled:text-gray-200 sm:mt-0 sm:border-none sm:disabled:bg-gray-50 sm:disabled:text-gray-500'
+          'border-gray-10 text-gray-10 sm:bg-pri-500 sm:text-gray-10 mt-12.5 w-full border bg-transparent disabled:border-transparent disabled:bg-gray-50/50 disabled:text-gray-200 sm:mt-0 sm:border-none sm:disabled:bg-gray-50 sm:disabled:text-gray-500'
         }
       />
     </form>

@@ -1,5 +1,15 @@
-import { LoginSchemaType } from '../utils/validation'
+import { AddtionalInfoRequestType, LoginSchemaType, SignUpRequestType } from '../types/auth'
 import client from './client'
+
+export const signUp = async (data: SignUpRequestType) => {
+  const response = await client.post('/user/', data)
+  return response.data
+}
+
+export const requestAddtionalInfo = async (data: AddtionalInfoRequestType) => {
+  const response = await client.patch('/user/additional-info', data)
+  return response.data
+}
 
 export const login = async (data: LoginSchemaType) => {
   const response = await client.post('/auth/login', data)
@@ -16,4 +26,9 @@ export const googleLogin = () => {
 
 export const naverLogin = () => {
   window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/naver`
+}
+
+export const requestTokenForOAuth = async (data: { authCode: string }) => {
+  const response = await client.post('/oauth/token', data)
+  return response.data
 }

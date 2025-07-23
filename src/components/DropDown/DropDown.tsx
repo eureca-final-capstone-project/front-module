@@ -95,7 +95,7 @@ const DropDown = ({
           const baseClass = `cursor-pointer px-5 py-3 hover:bg-gray-50 ${roundedClass}`
 
           if (type === 'provider') {
-            const colorClass = providerColorMap[option]
+            const colorClass = 'providerColorMap[option]'
             return (
               <div
                 role="option"
@@ -138,13 +138,17 @@ const DropDown = ({
             deviceType === 'mobile' ? 'bg-gray-10 border-gray-200' : 'bg-gray-10 border-gray-400'
           }`
 
-    return <DropdownMotion className={motionClass}>{renderOptions()}</DropdownMotion>
+    return (
+      <DropdownMotion className={`absolute top-full left-0 mt-2 w-full ${motionClass}`}>
+        {renderOptions()}
+      </DropdownMotion>
+    )
   }
 
   return (
     <div
       ref={dropdownRef}
-      className={`flex flex-col ${type !== 'filter' ? 'gap-2' : 'gap-0'} ${className}`}
+      className={`relative flex flex-col ${type !== 'filter' ? 'gap-2' : 'gap-0'} ${className}`}
     >
       {/* 드롭다운 버튼 */}
       <button
