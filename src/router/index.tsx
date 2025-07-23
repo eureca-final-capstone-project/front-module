@@ -28,7 +28,7 @@ export const router = createBrowserRouter([
         element: <SignUpPage />,
       },
       {
-        path: '/addtional-info',
+        path: '/additional-info',
         element: <AdditionalInfoPage />,
       },
       {
