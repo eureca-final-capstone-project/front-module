@@ -23,8 +23,7 @@ export type PostCardProps =
   | ({
       type: 'row'
       imageWrapperClassName?: string
-      favorite?: boolean // destop 관심 거래 페이지에서 거래 유형 보여줄 지 여부
-      payhistory?: boolean // 거래 내역 페이지에서 사용되는 스타일 적용 여부
+      page?: 'default' | 'favorite' | 'payhistory' // favorite - 관심 거래 | payhistory - 거래 내역
       payhistorytime?: string // 거래 완료 일시 (추후 변경 예정)
       payhistorypay?: number // 거래 완료 페이 (추후 변경 예정)
     } & CommonProps)
