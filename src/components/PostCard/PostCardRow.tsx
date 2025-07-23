@@ -86,10 +86,10 @@ const PostCardRow = ({
         return (
           // 게시글 내용
           <div className="flex h-full min-w-0 flex-col justify-between">
-            <div className="flex flex-col gap-2">
+            <div className="flex min-w-0 flex-col gap-2">
               <div className="flex min-w-0 items-center gap-1">
-                <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
-                <span className="truncate font-medium whitespace-nowrap" title={title}>
+                <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
+                <span className="block truncate font-medium whitespace-nowrap" title={title}>
                   {title}
                 </span>
               </div>
@@ -100,7 +100,7 @@ const PostCardRow = ({
               </div>
             </div>
             {salesType === 'deal' ? (
-              <div className="flex items-center justify-between">
+              <div className="mt-auto flex w-full items-center justify-between">
                 <span className="font-bold">거래 페이</span>
                 <div className="flex items-center gap-1">
                   <DatchaCoinIcon className="h-5 w-5 md:hidden lg:block" />
@@ -109,7 +109,7 @@ const PostCardRow = ({
               </div>
             ) : (
               <>
-                <div className="flex flex-col gap-2">
+                <div className="mt-auto flex w-full flex-col gap-2">
                   <div className="flex items-center justify-between font-medium">
                     <span>등록 페이</span>
                     <div className="flex items-center gap-1">
@@ -138,7 +138,7 @@ const PostCardRow = ({
           <div className="flex h-full min-w-0 flex-col justify-between">
             <div className="flex flex-col gap-1.5 sm:gap-2">
               <div className="flex items-center gap-1">
-                <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
+                <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
                 <span className="lg:text-fs18 truncate font-medium whitespace-nowrap" title={title}>
                   {title}
                 </span>
@@ -194,7 +194,7 @@ const PostCardRow = ({
           <div className="flex h-full min-w-0 flex-col justify-between">
             <div className="flex flex-col gap-0 sm:gap-1.5 lg:gap-3">
               <div className="flex items-center gap-1">
-                <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
+                <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
                 <span className="lg:text-fs18 truncate font-medium whitespace-nowrap" title={title}>
                   {title}
                 </span>

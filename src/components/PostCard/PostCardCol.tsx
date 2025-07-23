@@ -74,7 +74,7 @@ const PostCardCol = ({
       <div className={`${deviceType === 'mobile' ? 'space-y-1' : 'space-y-2'}`}>
         {/* 판매 데이터 + 제목 */}
         <div className="flex items-center gap-1">
-          <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
+          <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
           <span className="truncate whitespace-nowrap" title={title}>
             {title}
           </span>

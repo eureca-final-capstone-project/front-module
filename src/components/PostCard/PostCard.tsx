@@ -6,7 +6,7 @@ type CommonProps = {
   transactionFeedId: number
   telecomCompany: 'LG U+' | 'KT' | 'SKT'
   defaultImageNumber: number
-  salesDataAmount: string
+  salesDataAmount: number
   title: string
   nickname: string
   createdAt?: string
