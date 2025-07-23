@@ -7,6 +7,7 @@ import MyPage from '../pages/MyPage'
 import PayChargeResultPage from '../pages/PayChargeResultPage'
 import WebMobileLayout from '../layout/WebMobileLayout'
 import WritePage from '../pages/WritePage'
+import OAuthCallbackPage from '../pages/OAuthCallbackPage/OAuthCallbackPage'
 
 export const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: '/login',
         element: <LoginPage />,
+      },
+      {
+        path: '/oauth/callback',
+        element: <OAuthCallbackPage />,
       },
     ],
   },
