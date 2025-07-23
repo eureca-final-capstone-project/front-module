@@ -1,4 +1,4 @@
-import { AddtionalInfoRequestType, LoginSchemaType, SignUpRequestType } from '../types/auth'
+import { AdditionalInfoRequestType, LoginSchemaType, SignUpRequestType } from '../types/auth'
 import client from './client'
 
 export const signUp = async (data: SignUpRequestType) => {
@@ -6,7 +6,7 @@ export const signUp = async (data: SignUpRequestType) => {
   return response.data
 }
 
-export const requestAddtionalInfo = async (data: AddtionalInfoRequestType) => {
+export const requestAdditionalInfo = async (data: AdditionalInfoRequestType) => {
   const response = await client.patch('/user/additional-info', data)
   return response.data
 }

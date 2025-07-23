@@ -9,6 +9,7 @@ interface ButtonProps {
   className?: string
   shape?: 'square' | 'underline'
   smallPadding?: boolean
+  extraSmallPadding?: boolean
   noShadow?: boolean
 }
 const scaleDownVariants: Variants = {
@@ -24,11 +25,17 @@ const Button = ({
   className = '',
   shape = 'square',
   smallPadding = false,
+  extraSmallPadding = false,
   noShadow = false,
 }: ButtonProps) => {
   const paddingClass =
-    shape === 'underline' ? '' : smallPadding ? 'px-2.5 py-2 sm:px-6 sm:py-2.5 ' : 'p-3.5'
-
+    shape === 'underline'
+      ? ''
+      : extraSmallPadding
+        ? 'px-2 py-1'
+        : smallPadding
+          ? 'px-2.5 py-2 sm:px-6 sm:py-2.5'
+          : 'p-3.5'
   const baseClass =
     shape === 'underline'
       ? ' hover:text-pri-400 underline decoration-current underline-offset-4'
