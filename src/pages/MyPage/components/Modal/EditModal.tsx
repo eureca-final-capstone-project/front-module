@@ -3,6 +3,11 @@ import Button from '../../../../components/Button/Button'
 import Input from '../../../../components/Input/Input'
 import Modal from '../../../../components/Modal/Modal'
 import { putUserPassword, putUserNickname } from '../../../../apis/userInfo'
+import { passwordChangeSchema } from '../../../../utils/validation'
+import { PasswordChangeSchemaType } from '../../../../types/auth'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Controller, useForm } from 'react-hook-form'
+import { passwordFields } from '../config'
 
 interface EditModalProps {
   isOpen: boolean
@@ -16,40 +21,31 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
   const [loading, setLoading] = useState(false)
   const [nicknameError, setNicknameError] = useState<string | null>(null)
   const [passwordError, setPasswordError] = useState<string | null>(null)
-  const [currentPassword, setCurrentPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const passwordFields = [
-    {
-      label: '기존 비밀번호',
-      description: '기존 비밀번호를 입력해주세요',
-      id: 'currentPassword',
-      value: currentPassword,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => setCurrentPassword(e.target.value),
-    },
-    {
-      label: '새 비밀번호',
-      description: '영문, 숫자, 특수문자 조합 8-16자',
-      id: 'newPassword',
-      value: newPassword,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => setNewPassword(e.target.value),
-    },
-    {
-      label: '새 비밀번호 확인',
-      description: '영문, 숫자, 특수문자 조합 8-16자',
-      id: 'confirmPassword',
-      value: confirmPassword,
-      onChange: (e: React.ChangeEvent<HTMLInputElement>) => setConfirmPassword(e.target.value),
-    },
-  ]
 
   useEffect(() => {
     if (isOpen) {
       setNewNickname(nickname)
       setNicknameError(null)
       setPasswordError(null)
+      reset() // 폼 초기화
     }
   }, [isOpen, nickname])
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors, isValid },
+  } = useForm<PasswordChangeSchemaType>({
+    resolver: zodResolver(passwordChangeSchema),
+    mode: 'all',
+  })
+
+  const currentPassword = watch('currentPassword')
+  const newPassword = watch('newPassword')
+  const confirmPassword = watch('confirmPassword')
+  const isPasswordFormIncomplete = !isValid || !currentPassword || !newPassword || !confirmPassword
 
   const handleEditNickname = async () => {
     if (!newNickname || newNickname === nickname) return
@@ -65,24 +61,11 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
     }
   }
 
-  const handleEditPassword = async () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setPasswordError('모든 필드를 입력해주세요.')
-      return
-    }
-
-    if (newPassword !== confirmPassword) {
-      setPasswordError('새 비밀번호가 일치하지 않습니다.')
-      return
-    }
-
+  const onSubmitPasswordChange = async (data: PasswordChangeSchemaType) => {
     try {
       setLoading(true)
-      await putUserPassword({ password: newPassword })
-      // 성공 후 초기화
-      setCurrentPassword('')
-      setNewPassword('')
-      setConfirmPassword('')
+      await putUserPassword({ password: data.newPassword })
+      reset()
       setPasswordError(null)
       onClose()
     } catch {
@@ -91,6 +74,7 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
       setLoading(false)
     }
   }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="flex flex-col gap-7">
       <h2 className="text-fs20 font-semibold">프로필 수정하기</h2>
@@ -125,35 +109,33 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
               extraSmallPadding
               text="변경"
               className={`text-fs12 transition-colors duration-200 ${
-                loading ||
-                !currentPassword ||
-                !newPassword ||
-                !confirmPassword ||
-                newPassword !== confirmPassword
+                loading || isPasswordFormIncomplete
                   ? 'bg-gray-50 text-gray-500'
                   : 'bg-pri-500 text-gray-10'
               }`}
-              onClick={handleEditPassword}
-              disabled={
-                loading ||
-                !currentPassword ||
-                !newPassword ||
-                !confirmPassword ||
-                newPassword !== confirmPassword
-              }
+              onClick={handleSubmit(onSubmitPasswordChange)}
+              disabled={loading || isPasswordFormIncomplete}
             />
           </div>
           <div className="mb-3 flex flex-col gap-5">
-            {passwordFields.map(({ label, description, id, value, onChange }) => (
-              <div key={id}>
+            {passwordFields.map(({ name, label, placeholder }) => (
+              <div key={name}>
                 <h4 className="text-fs12">{label}</h4>
-                <Input
-                  label={description}
-                  id={id}
-                  value={value}
-                  onChange={onChange}
-                  shape="underline"
-                  type="password"
+                <Controller
+                  name={name}
+                  control={control}
+                  defaultValue=""
+                  render={({ field }) => (
+                    <Input
+                      id={name}
+                      label={placeholder}
+                      type="password"
+                      shape="underline"
+                      {...field}
+                      error={!!errors[name]}
+                      errorMsg={errors[name]?.message}
+                    />
+                  )}
                 />
               </div>
             ))}
