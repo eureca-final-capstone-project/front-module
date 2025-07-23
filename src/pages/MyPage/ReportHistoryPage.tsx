@@ -12,27 +12,22 @@ const ReportHistoryPage = () => {
     <div className="flex flex-col gap-3 bg-gray-400 p-10">
       <Button text="버튼" className="bg-pri-700 text-gray-10 w-full flex-2" onClick={openModal} />
       {isModalOpen && (
-        <>
-          <div className="bg-modal-background fixed inset-0 z-40" onClick={closeModal} />
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <ReceiptModal
-              type="buy"
-              pay={1500}
-              info={{
-                post: {
-                  type: '입찰',
-                  data: '500MB',
-                  price: 4500,
-                },
-                id: 'CHG20250719',
-                time: '2025-07-20 03:00',
-                carrier: 'KT',
-                totalPay: 1500,
-              }}
-              onClose={closeModal}
-            />
-          </div>
-        </>
+        <ReceiptModal
+          type="buy"
+          pay={1500}
+          info={{
+            post: {
+              type: '입찰',
+              data: '500MB',
+              price: 4500,
+            },
+            id: 'CHG20250719',
+            time: '2025-07-20 03:00',
+            carrier: 'KT',
+            totalPay: 1500,
+          }}
+          onClose={closeModal}
+        />
       )}
       {/* <ReceiptModal
         type="charge"
