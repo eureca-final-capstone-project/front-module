@@ -3,10 +3,11 @@ import Button from '../../../../components/Button/Button'
 interface InfoCardProps {
   title: string
   showEditBtn?: boolean
+  onEditClick?: () => void
   children?: React.ReactNode
 }
 
-const InfoCard = ({ title, showEditBtn = false, children }: InfoCardProps) => {
+const InfoCard = ({ title, showEditBtn = false, onEditClick, children }: InfoCardProps) => {
   return (
     <div
       className={`rounded-custom-m bg-gray-10 flex h-full w-full flex-col gap-7 border-1 border-gray-200 px-4 py-5 lg:p-5 ${
@@ -18,7 +19,7 @@ const InfoCard = ({ title, showEditBtn = false, children }: InfoCardProps) => {
         {showEditBtn && (
           <Button
             text="수정하기"
-            onClick={() => {}}
+            onClick={onEditClick}
             shape="underline"
             className="text-pri-400 hover:text-pri-600 text-fs12 lg:text-fs14"
           />
