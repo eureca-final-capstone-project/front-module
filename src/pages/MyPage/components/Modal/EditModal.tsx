@@ -3,11 +3,12 @@ import Button from '../../../../components/Button/Button'
 import Input from '../../../../components/Input/Input'
 import Modal from '../../../../components/Modal/Modal'
 import { putUserPassword, putUserNickname } from '../../../../apis/userInfo'
-import { passwordChangeSchema } from '../../../../utils/validation'
-import { PasswordChangeSchemaType } from '../../../../types/auth'
+import { nicknameSchema, passwordChangeSchema } from '../../../../utils/validation'
+import { NicknameSchemaType, PasswordChangeSchemaType } from '../../../../types/auth'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Controller, useForm } from 'react-hook-form'
 import { passwordFields } from '../config'
+import { useToast } from '../../../../hooks/useToast'
 
 interface EditModalProps {
   isOpen: boolean
@@ -17,63 +18,76 @@ interface EditModalProps {
 }
 
 const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => {
-  const [newNickname, setNewNickname] = useState(nickname)
-  const [loading, setLoading] = useState(false)
-  const [nicknameError, setNicknameError] = useState<string | null>(null)
-  const [passwordError, setPasswordError] = useState<string | null>(null)
+  const { showToast } = useToast()
 
-  useEffect(() => {
-    if (isOpen) {
-      setNewNickname(nickname)
-      setNicknameError(null)
-      setPasswordError(null)
-      reset() // 폼 초기화
-    }
-  }, [isOpen, nickname])
+  const [nicknameLoading, setNicknameLoading] = useState(false)
+  const [passwordLoading, setPasswordLoading] = useState(false)
 
   const {
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors, isValid },
+    control: passwordControl,
+    handleSubmit: handlePasswordSubmit,
+    reset: resetPasswordForm,
+    watch: watchPassword,
+    formState: { errors: passwordErrors, isValid: isPasswordValid },
   } = useForm<PasswordChangeSchemaType>({
     resolver: zodResolver(passwordChangeSchema),
     mode: 'all',
   })
+  const {
+    control: nicknameControl,
+    handleSubmit: handleNicknameSubmit,
+    reset: resetNicknameForm,
+    watch: watchNickname,
+    formState: { errors: nicknameErrors, isValid: isNicknameValid },
+  } = useForm<NicknameSchemaType>({
+    resolver: zodResolver(nicknameSchema),
+    defaultValues: { nickname },
+    mode: 'onChange',
+  })
 
-  const currentPassword = watch('currentPassword')
-  const newPassword = watch('newPassword')
-  const confirmPassword = watch('confirmPassword')
-  const isPasswordFormIncomplete = !isValid || !currentPassword || !newPassword || !confirmPassword
+  const nicknameValue = watchNickname('nickname')
+  const isNicknameUnchanged = nicknameValue === nickname
 
-  const handleEditNickname = async () => {
-    if (!newNickname || newNickname === nickname) return
+  const { currentPassword, newPassword, confirmPassword } = watchPassword()
+  const isPasswordFormIncomplete =
+    !isPasswordValid || !currentPassword || !newPassword || !confirmPassword
+
+  const onSubmitNicknameChange = async ({ nickname }: NicknameSchemaType) => {
     try {
-      setLoading(true)
-      await putUserNickname({ nickname: newNickname })
-      onSuccess?.(newNickname)
+      setNicknameLoading(true)
+      await putUserNickname({ nickname })
+      onSuccess?.(nickname)
       onClose()
     } catch {
-      setNicknameError('닉네임 변경에 실패했습니다. 다시 시도해주세요.')
+      showToast({ type: 'error', msg: '닉네임 변경에 실패했습니다. 다시 시도해주세요.' })
     } finally {
-      setLoading(false)
+      setNicknameLoading(false)
     }
   }
 
   const onSubmitPasswordChange = async (data: PasswordChangeSchemaType) => {
     try {
-      setLoading(true)
+      setPasswordLoading(true)
       await putUserPassword({ password: data.newPassword })
-      reset()
-      setPasswordError(null)
+      resetPasswordForm()
       onClose()
     } catch {
-      setPasswordError('비밀번호 변경에 실패했습니다. 다시 시도해주세요.')
+      showToast({ type: 'error', msg: '비밀번호 변경에 실패했습니다. 다시 시도해주세요.' })
     } finally {
-      setLoading(false)
+      setPasswordLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isOpen) {
+      resetPasswordForm({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      })
+      resetNicknameForm({ nickname })
+    }
+  }, [isOpen, nickname, resetPasswordForm, resetNicknameForm])
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="flex flex-col gap-7">
@@ -85,21 +99,28 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
             <Button
               extraSmallPadding
               text="변경"
+              disabled={nicknameLoading || !isNicknameValid || isNicknameUnchanged}
               className={`text-fs12 ${
-                loading || !newNickname || newNickname === nickname
+                nicknameLoading || !isNicknameValid || isNicknameUnchanged
                   ? 'bg-gray-50 text-gray-500'
                   : 'bg-pri-500 text-gray-10'
               }`}
-              onClick={handleEditNickname}
-              disabled={loading || !newNickname || newNickname === nickname}
+              onClick={handleNicknameSubmit(onSubmitNicknameChange)}
             />
           </div>
-          <Input
-            label="변경하실 닉네임을 입력해주세요"
-            id="nickname"
-            value={newNickname}
-            onChange={e => setNewNickname(e.target.value)}
-            shape="underline"
+          <Controller
+            name="nickname"
+            control={nicknameControl}
+            render={({ field }) => (
+              <Input
+                label="변경하실 닉네임을 입력해주세요"
+                id="nickname"
+                shape="underline"
+                {...field}
+                error={!!nicknameErrors.nickname}
+                errorMsg={nicknameErrors.nickname?.message}
+              />
+            )}
           />
         </div>
         <div>
@@ -108,13 +129,13 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
             <Button
               extraSmallPadding
               text="변경"
+              disabled={passwordLoading || isPasswordFormIncomplete}
               className={`text-fs12 transition-colors duration-200 ${
-                loading || isPasswordFormIncomplete
+                passwordLoading || isPasswordFormIncomplete
                   ? 'bg-gray-50 text-gray-500'
                   : 'bg-pri-500 text-gray-10'
               }`}
-              onClick={handleSubmit(onSubmitPasswordChange)}
-              disabled={loading || isPasswordFormIncomplete}
+              onClick={handlePasswordSubmit(onSubmitPasswordChange)}
             />
           </div>
           <div className="mb-3 flex flex-col gap-5">
@@ -123,7 +144,7 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
                 <h4 className="text-fs12">{label}</h4>
                 <Controller
                   name={name}
-                  control={control}
+                  control={passwordControl}
                   defaultValue=""
                   render={({ field }) => (
                     <Input
@@ -132,8 +153,8 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
                       type="password"
                       shape="underline"
                       {...field}
-                      error={!!errors[name]}
-                      errorMsg={errors[name]?.message}
+                      error={!!passwordErrors[name]}
+                      errorMsg={passwordErrors[name]?.message}
                     />
                   )}
                 />
@@ -142,8 +163,6 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
           </div>
         </div>
       </div>
-      {nicknameError && <p className="text-error text-fs12 mt-2">{nicknameError}</p>}
-      {passwordError && <p className="text-error text-fs12 mt-2">{passwordError}</p>}
     </Modal>
   )
 }

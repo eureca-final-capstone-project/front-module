@@ -2,6 +2,7 @@ import z from 'zod'
 import {
   additionalInfoSchema,
   loginSchema,
+  nicknameSchema,
   passwordChangeSchema,
   signUpSchema,
 } from '../utils/validation'
@@ -11,6 +12,7 @@ export type LoginSchemaType = z.infer<typeof loginSchema>
 export type SignUpSchemaType = z.infer<typeof signUpSchema>
 export type AdditionalInfoSchemaTye = z.infer<typeof additionalInfoSchema>
 export type PasswordChangeSchemaType = z.infer<typeof passwordChangeSchema>
+export type NicknameSchemaType = z.infer<typeof nicknameSchema>
 
 // 회원가입 request 타입
 export type SignUpRequestType = Omit<

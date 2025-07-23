@@ -44,3 +44,9 @@ export const passwordChangeSchema = z
     message: '새 비밀번호가 일치하지 않습니다.',
     path: ['confirmPassword'],
   })
+export const nicknameSchema = z.object({
+  nickname: z
+    .string()
+    .nonempty('변경하실 닉네임을 입력해주세요.')
+    .max(8, '닉네임은 최대 8자까지 가능합니다.'),
+})
