@@ -10,6 +10,7 @@ import WritePage from '../pages/WritePage'
 import SignUpPage from '../pages/SignUpPage'
 import OAuthCallbackPage from '../pages/LoginPage/OAuthCallbackPage'
 import AdditionalInfoPage from '../pages/SignUpPage/AdditionalInfoPage'
+import ChangeDataPage from '../pages/ChangeDataPage'
 import AdminLayout from '../layout/AdminLayout'
 import Dashboard from '../pages/AdminPage/Dashboard'
 
@@ -59,6 +60,11 @@ export const router = createBrowserRouter([
         path: '/write',
         element: <WritePage />,
         handle: { title: '내 데이터 판매' },
+      },
+      {
+        path: '/change-data',
+        element: <ChangeDataPage />,
+        handle: { title: '데이터 전환하기' },
       },
     ],
   },

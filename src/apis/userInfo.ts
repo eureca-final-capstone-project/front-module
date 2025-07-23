@@ -33,6 +33,11 @@ interface EditPasswordResponse {
     userId: number
   }
 }
+export interface UserDataStatus {
+  totalDataMb: number
+  sellableDataMb: number
+  buyerDataMb: number
+}
 
 export const getUserProfile = async (): Promise<UserProfile> => {
   const res = await client.get('/user/profile')
@@ -51,4 +56,8 @@ export const putUserPassword = async (
   console.log('----------------서버 응답:', response.data)
 
   return response.data
+}
+export const getUserDataStatus = async (): Promise<UserDataStatus> => {
+  const res = await client.get('/user-data/status')
+  return res.data.data
 }

@@ -35,6 +35,13 @@ const meta: Meta<typeof Badge> = {
       if: { arg: 'variant', eq: 'outline' },
       description: 'variant가 outline일 때만 선택 가능합니다.',
     },
+    label: {
+      control: 'text',
+      description: '뱃지에 표시될 텍스트 또는 숫자입니다. (string 또는 number)',
+      table: {
+        type: { summary: 'string | number' },
+      },
+    },
   },
 }
 
