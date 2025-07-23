@@ -2,6 +2,7 @@ import React from 'react'
 import type { ReceiptProps } from './ReceiptModal'
 import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
+import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 
 const ChargeReceipt = ({ type, pay, info }: ReceiptProps) => {
   const { historyMent, history, payMent, isMinus, extra } = config[type]
@@ -46,8 +47,12 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps) => {
       )}
       <div className="flex flex-col items-center gap-2 text-center">
         <h3 className="text-fs14 text-center text-gray-700">{payMent}</h3>
-        <span className={`${isMinus ? 'text-error' : 'text-success'} text-fs24 font-bold`}>
-          {isMinus ? '-' : '+'} 다챠 {pay.toLocaleString()}원
+        <span
+          className={`${isMinus ? 'text-error' : 'text-success'} text-fs24 flex items-center font-bold`}
+        >
+          {isMinus ? '-' : '+'}
+          <DatchaCoin className="mx-1 h-7.5 w-7.5" strokeWidth={2} />
+          {pay.toLocaleString()}원
         </span>
       </div>
 
