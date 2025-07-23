@@ -17,3 +17,8 @@ export const googleLogin = () => {
 export const naverLogin = () => {
   window.location.href = `${import.meta.env.VITE_CLIENT_BASE_URL}/oauth2/authorization/naver`
 }
+
+export const requestTokenForOAuth = async (data: { authCode: string }) => {
+  const response = await client.post('/oauth/token', data)
+  return response.data
+}
