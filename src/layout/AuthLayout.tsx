@@ -1,16 +1,22 @@
 import HeroImg from '@/assets/images/hero.png'
 import Logo from '@/assets/images/logo.svg'
 import BackgroundGridImg from '@/assets/images/background-grid.png'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 import { useDeviceType } from '../hooks/useDeviceType'
 
 const AuthLayout = () => {
+  const navigate = useNavigate()
   const deviceType = useDeviceType()
 
   return (
     <div className="bg-pri-gradation flex min-h-screen w-full flex-col items-center overflow-hidden sm:h-screen">
       <header className="text-gray-10 h-16 w-full max-w-[1280px] p-4 sm:h-21.5">
-        <img src={Logo} alt="로고" className="h-full" />
+        <img
+          src={Logo}
+          alt="DATCHA"
+          className="h-full cursor-pointer"
+          onClick={() => navigate('/')}
+        />
       </header>
 
       <div className="flex w-full flex-1 justify-center px-4 sm:items-center">
