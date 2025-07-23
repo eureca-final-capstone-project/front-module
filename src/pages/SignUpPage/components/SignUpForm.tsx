@@ -98,7 +98,8 @@ const SignUpForm = () => {
               onChange={e => {
                 field.onChange(e)
               }}
-              error={errors.email?.message}
+              error={!!errors.email}
+              errorMsg={errors.email?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
               suffix={
                 <Button
@@ -127,7 +128,8 @@ const SignUpForm = () => {
               onChange={e => {
                 field.onChange(e)
               }}
-              error={errors.password?.message}
+              error={!!errors.password}
+              errorMsg={errors.password?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
             />
           )}
@@ -145,7 +147,8 @@ const SignUpForm = () => {
               onChange={e => {
                 field.onChange(e)
               }}
-              error={errors.passwordConfirm?.message}
+              error={!!errors.passwordConfirm}
+              errorMsg={errors.passwordConfirm?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
             />
           )}
@@ -178,7 +181,8 @@ const SignUpForm = () => {
                   const formatted = formatPhoneNumber(e.target.value)
                   field.onChange(formatted)
                 }}
-                error={errors.phoneNumber?.message}
+                error={!!errors.phoneNumber}
+                errorMsg={errors.phoneNumber?.message}
                 shape={deviceType === 'mobile' ? 'square' : 'floating'}
               />
             )}

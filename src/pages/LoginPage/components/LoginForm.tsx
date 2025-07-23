@@ -68,7 +68,8 @@ const LoginForm = () => {
               field.onChange(e)
               if (errors.email) clearErrors('email')
             }}
-            error={errors.email?.message}
+            error={!!errors.email}
+            errorMsg={errors.email?.message}
             shape={deviceType === 'mobile' ? 'square' : 'floating'}
           />
         )}
@@ -87,7 +88,8 @@ const LoginForm = () => {
               field.onChange(e)
               if (errors.password) clearErrors('password')
             }}
-            error={errors.password?.message}
+            error={!!errors.password}
+            errorMsg={errors.password?.message}
             shape={deviceType === 'mobile' ? 'square' : 'floating'}
           />
         )}
