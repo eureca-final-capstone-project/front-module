@@ -7,6 +7,7 @@ import ProviderBadge from './ProviderBadge'
 import DataBadge from '../Badge/Badge'
 import { formatDataSize, formatAmount } from '../../utils/format'
 import { imageData as PostImage } from '../../constants/imageData'
+import { getSalesTypeLabel } from '../../utils/salesType'
 
 interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
   type: 'row'
@@ -86,10 +87,10 @@ const PostCardRow = ({
         return (
           // 게시글 내용
           <div className="flex h-full min-w-0 flex-col justify-between">
-            <div className="flex flex-col gap-2">
+            <div className="flex min-w-0 flex-col gap-2">
               <div className="flex min-w-0 items-center gap-1">
-                <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
-                <span className="truncate font-medium whitespace-nowrap" title={title}>
+                <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
+                <span className="block truncate font-medium whitespace-nowrap" title={title}>
                   {title}
                 </span>
               </div>
@@ -99,8 +100,8 @@ const PostCardRow = ({
                 <span>{createdAt}</span>
               </div>
             </div>
-            {salesType === 'deal' ? (
-              <div className="flex items-center justify-between">
+            {salesType === 'normal' ? (
+              <div className="mt-auto flex w-full items-center justify-between">
                 <span className="font-bold">거래 페이</span>
                 <div className="flex items-center gap-1">
                   <DatchaCoinIcon className="h-5 w-5 md:hidden lg:block" />
@@ -109,7 +110,7 @@ const PostCardRow = ({
               </div>
             ) : (
               <>
-                <div className="flex flex-col gap-2">
+                <div className="mt-auto flex w-full flex-col gap-2">
                   <div className="flex items-center justify-between font-medium">
                     <span>등록 페이</span>
                     <div className="flex items-center gap-1">
@@ -138,7 +139,7 @@ const PostCardRow = ({
           <div className="flex h-full min-w-0 flex-col justify-between">
             <div className="flex flex-col gap-1.5 sm:gap-2">
               <div className="flex items-center gap-1">
-                <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
+                <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
                 <span className="lg:text-fs18 truncate font-medium whitespace-nowrap" title={title}>
                   {title}
                 </span>
@@ -150,12 +151,10 @@ const PostCardRow = ({
               </div>
               <div className="text-fs12 lg:text-fs14 hidden gap-2 sm:flex">
                 <span className="text-[#666666]">거래 유형</span>
-                <span className="text-pri-400">
-                  {salesType === 'bid' ? '입찰 거래' : '일반 거래'}
-                </span>
+                <span className="text-pri-400">{getSalesTypeLabel(salesType)}</span>
               </div>
             </div>
-            {salesType === 'deal' ? (
+            {salesType === 'normal' ? (
               <div className="lg:text-fs18 mt-auto flex w-full items-center justify-between">
                 <span className="font-bold">거래 페이</span>
                 <div className="flex items-center gap-1">
@@ -194,7 +193,7 @@ const PostCardRow = ({
           <div className="flex h-full min-w-0 flex-col justify-between">
             <div className="flex flex-col gap-0 sm:gap-1.5 lg:gap-3">
               <div className="flex items-center gap-1">
-                <DataBadge label={formatDataSize(Number(salesDataAmount))} size="small" />
+                <DataBadge label={formatDataSize(salesDataAmount)} size="small" />
                 <span className="lg:text-fs18 truncate font-medium whitespace-nowrap" title={title}>
                   {title}
                 </span>
@@ -206,9 +205,7 @@ const PostCardRow = ({
             <div className="flex flex-col gap-1 sm:gap-2">
               <div className="text-fs12 lg:text-fs14 flex gap-1 sm:gap-2">
                 <span className="text-[#666666]">거래 유형</span>
-                <span className="text-pri-400">
-                  {salesType === 'bid' ? '입찰 거래' : '일반 거래'}
-                </span>
+                <span className="text-pri-400">{getSalesTypeLabel(salesType)}</span>
               </div>
               <div className="text-fs12 lg:text-fs14 flex gap-1 sm:gap-2">
                 <span className="text-[#666666]">거래 일시</span>
