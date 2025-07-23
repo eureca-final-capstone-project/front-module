@@ -23,9 +23,9 @@ export type PostCardProps =
   | ({
       type: 'row'
       imageWrapperClassName?: string
-      page?: 'default' | 'favorite' | 'payhistory' // favorite - 관심 거래 | payhistory - 거래 내역
-      payhistorytime?: string // 거래 완료 일시 (추후 변경 예정)
-      payhistorypay?: number // 거래 완료 페이 (추후 변경 예정)
+      page?: 'default' | 'favorite' | 'tradehistory' // favorite - 관심 거래 | payhistory - 거래 내역
+      tradehistorytime?: string // 거래 완료 일시 (추후 변경 예정)
+      tradehistorypay?: number // 거래 완료 페이 (추후 변경 예정)
     } & CommonProps)
   | ({ type: 'col' } & CommonProps)
 

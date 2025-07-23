@@ -14,7 +14,7 @@ const meta: Meta<typeof PostCard> = {
           'PostCard 컴포넌트는 통신사, 판매 데이터 양, 판매글 제목, 판매자 정보 등을 포함한 카드 UI로, `col`와 `row` 타입에 따라 서로 다른 레이아웃을 제공합니다.\n\n' +
           '- `type: col`은 이미지가 상단에 위치하고 아래에 텍스트가 나열되는 세로형 `PostCard`입니다.\n' +
           '- `type: row`는 이미지가 좌측에, 텍스트 및 정보가 우측에 표시되는 가로형 `PostCard`입니다.\n\n' +
-          '`row` 타입은 `default`, `favorite`, `payhistory` 페이지에 따라 내용이 달라집니다.',
+          '`row` 타입은 `default`, `favorite`, `tradehistory` 페이지에 따라 내용이 달라집니다.',
       },
     },
   },
@@ -27,7 +27,7 @@ const meta: Meta<typeof PostCard> = {
     },
     page: {
       control: 'radio',
-      options: ['default', 'favorite', 'payhistory'],
+      options: ['default', 'favorite', 'tradehistory'],
       description: '(row 전용) 페이지 타입',
     },
     telecomCompany: {
@@ -73,13 +73,13 @@ const meta: Meta<typeof PostCard> = {
       control: 'number',
       description: '`bid`일 때의 입찰 페이',
     },
-    payhistorytime: {
+    tradehistorytime: {
       control: 'text',
-      description: '(payhistory 전용) 거래 일시',
+      description: '(tradehistory 전용) 거래 일시',
     },
-    payhistorypay: {
+    tradehistorypay: {
       control: 'number',
-      description: '(payhistory 전용) 거래된 페이 금액',
+      description: '(tradehistory 전용) 거래된 페이 금액',
     },
     defaultImageNumber: {
       control: 'number',
@@ -178,7 +178,7 @@ export const RowTypePayhistory: Story = {
   render: Template,
   args: {
     type: 'row',
-    page: 'payhistory',
+    page: 'tradehistory',
     transactionFeedId: 4,
     telecomCompany: 'LG U+',
     defaultImageNumber: 1,
@@ -190,7 +190,7 @@ export const RowTypePayhistory: Story = {
     salesPrice: 1500,
     currentHeightPrice: 3000,
     status: 'completed',
-    payhistorytime: '07월 03일 오후 04시 19분',
-    payhistorypay: 4000,
+    tradehistorytime: '07월 03일 오후 04시 19분',
+    tradehistorypay: 4000,
   },
 }
