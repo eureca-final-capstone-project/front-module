@@ -6,13 +6,13 @@ type CommonProps = {
   transactionFeedId: number
   telecomCompany: 'LG U+' | 'KT' | 'SKT'
   defaultImageNumber: number
-  salesDataAmount: string
+  salesDataAmount: number
   title: string
   nickname: string
   createdAt?: string
   liked: boolean
   onToggleLike: () => void
-  salesType: 'deal' | 'bid'
+  salesType: 'normal' | 'bid'
   salesPrice?: number
   currentHeightPrice?: number
   status: TradeStatus

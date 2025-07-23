@@ -4,7 +4,7 @@ type BadgeSize = 'small' | 'medium'
 type BadgeVariant = 'default' | 'secondary' | 'outline'
 
 interface BaseBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
-  label: string
+  label: string | number
   size?: BadgeSize
   variant?: BadgeVariant
   className?: string

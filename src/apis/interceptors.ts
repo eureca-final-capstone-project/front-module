@@ -39,6 +39,7 @@ export const attachResponseInterceptor = (client: AxiosInstance) => {
         error.response?.status === 401 && error.response?.data?.errorCode === 'TOKEN_EXPIRED' // 서버 기준에 맞게 수정 필요
 
       if (isTokenExpired && !originalRequest._retry && originalRequest.url !== '/auth/refresh') {
+        console.log('------------------------토큰 만료')
         originalRequest._retry = true
         try {
           const res = await client.post('/auth/refresh')
