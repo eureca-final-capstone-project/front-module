@@ -1,4 +1,5 @@
 import client from './client'
+import { ServerPostCard } from '../utils/postCardParse'
 
 // 정렬 기준
 export type SortBy = 'LATEST' | 'PRICE_HIGH' | 'PRICE_LOW'
@@ -27,25 +28,9 @@ export interface Pageable {
   sort?: string[]
 }
 
-// 단일 게시글 정보 (서버 응답용)
-export interface TransactionFeed {
-  transactionFeedId: number
-  title: string
-  nickname: string
-  salesPrice: number
-  salesDataAmount: number
-  defaultImageNumber: number
-  createdAt: string
-  liked: boolean
-  telecomCompany: string
-  status: Statuses
-  salesType: 'NORMAL' | 'BID'
-  currentHeightPrice: number | null
-}
-
 // 서버 응답 전체 구조
 export interface TransactionFeedResponse {
-  content: TransactionFeed[]
+  content: ServerPostCard[]
   totalPages: number
   totalElements: number
   number: number
