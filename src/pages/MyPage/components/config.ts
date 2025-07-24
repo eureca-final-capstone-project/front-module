@@ -16,7 +16,7 @@ export const modalTexts = {
 export const buttonOptions = {
   fav: [
     { label: '전체', value: 'both' },
-    { label: '일반 거래', value: 'deal' },
+    { label: '일반 거래', value: 'normal' },
     { label: '입찰 거래', value: 'bid' },
   ] as const,
 

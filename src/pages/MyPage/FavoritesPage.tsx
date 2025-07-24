@@ -10,6 +10,9 @@ import { useToast } from '../../hooks/useToast'
 import useSelect from '../../hooks/useSelect'
 import useModal from '../../hooks/useModal'
 import { allPostCardMockData } from '../../mocks/postData'
+import { getWishList, WishPost } from '../../apis/wish'
+import { transformPostCard } from '../../utils/postCardParse'
+import { useQuery } from '@tanstack/react-query'
 
 type ModalType = 'delete'
 
@@ -25,7 +28,7 @@ const FavoritesPage = () => {
   const postIds = favoritePosts.map(post => post.transactionFeedId)
 
   const { selectedIds, toggleId, selectAll, clearAll, isSelected } = useSelect(postIds)
-  const [selectedType, setSelectedType] = useState<'both' | 'deal' | 'bid'>('both')
+  const [selectedType, setSelectedType] = useState<'both' | 'normal' | 'bid'>('both')
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
 
   useEffect(() => {
@@ -37,7 +40,7 @@ const FavoritesPage = () => {
   const allChecked = postIds.length > 0 && postIds.every(id => selectedIds.includes(id))
 
   const handleSelectType = (value: string) => {
-    if (value === 'both' || value === 'deal' || value === 'bid') {
+    if (value === 'both' || value === 'normal' || value === 'bid') {
       setSelectedType(value)
     }
   }
@@ -71,6 +74,28 @@ const FavoritesPage = () => {
     closeModal()
   }
 
+  const mapFilterToApiParam = (type: 'both' | 'normal' | 'bid'): 'ALL' | 'NORMAL' | 'BID' => {
+    switch (type) {
+      case 'both':
+        return 'ALL'
+      case 'normal':
+        return 'NORMAL'
+      case 'bid':
+        return 'BID'
+    }
+  }
+
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ['wishList', selectedType],
+    queryFn: async () => {
+      const filterParam = mapFilterToApiParam(selectedType)
+      const res = await getWishList({ filter: filterParam, page: 0, size: 20 })
+      return res.data.content.map((item: WishPost) => transformPostCard(item, 'row'))
+    },
+    placeholderData: previousData => previousData,
+    retry: 1,
+  })
+
   return (
     <div className="flex flex-col gap-5">
       {/* 상단 */}
@@ -84,25 +109,33 @@ const FavoritesPage = () => {
       />
       {/* 콘텐츠 */}
       <div className={`grid gap-4 ${gridColsClass}`}>
-        {favoritePosts.map((post, index) => (
-          <React.Fragment key={index}>
-            <div className="flex items-start gap-2">
-              <CheckBox
-                checked={isSelected(post.transactionFeedId)}
-                onChange={() => toggleSelected(post.transactionFeedId)}
-                type={deviceType === 'mobile' ? 'smallCheckBox' : 'default'}
-              />
-              <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
-                <PostCard {...post} />
+        {isPending && <p>로딩중</p>}
+        {isError && (
+          <>
+            {console.log(error)}
+            <p className="text-red-500">로딩 중 에러가 발생했습니다</p>
+          </>
+        )}
+        {!isPending &&
+          !isError &&
+          data &&
+          data.map((post, index) => (
+            <React.Fragment key={post.transactionFeedId}>
+              <div className="flex items-start gap-2">
+                <CheckBox
+                  checked={isSelected(post.transactionFeedId)}
+                  onChange={() => toggleSelected(post.transactionFeedId)}
+                  type={deviceType === 'mobile' ? 'smallCheckBox' : 'default'}
+                />
+                <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
+                  <PostCard {...post} type="row" page="favorite" />
+                </div>
               </div>
-            </div>
-
-            {/* 카드 div 바깥에서 hr 삽입 */}
-            {index < postIds.length - 1 && (
-              <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
-            )}
-          </React.Fragment>
-        ))}
+              {index < data.length - 1 && (
+                <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
+              )}
+            </React.Fragment>
+          ))}
       </div>
       {modalType && (
         <BasicModal
