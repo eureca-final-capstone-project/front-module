@@ -14,6 +14,7 @@ interface DropdownProps {
   placeholder?: string
   children?: React.ReactNode
   defaultOpen?: boolean
+  onOpenChange?: (open: boolean) => void
 }
 
 const providerColorMap: Record<string, string> = {
@@ -32,6 +33,7 @@ const DropDown = ({
   placeholder = '',
   children,
   defaultOpen = false,
+  onOpenChange,
 }: DropdownProps) => {
   const [isOpen, setIsOpen] = useState(defaultOpen)
   const dropdownRef = useRef<HTMLDivElement>(null)
@@ -47,22 +49,32 @@ const DropDown = ({
     [onSelect, type]
   )
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (
-      type !== 'filter' &&
-      dropdownRef.current &&
-      !dropdownRef.current.contains(e.target as Node)
-    ) {
-      setIsOpen(false)
-    }
-  }
+  const handleClickOutside = useCallback(
+    (e: MouseEvent) => {
+      if (
+        type !== 'filter' &&
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false)
+      }
+    },
+    [type]
+  )
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onOpenChange?.(isOpen)
+    }, 0)
+    return () => clearTimeout(timeout)
+  }, [isOpen, onOpenChange])
 
   useEffect(() => {
     if (isOpen) {
       document.addEventListener('pointerdown', handleClickOutside)
     }
     return () => document.removeEventListener('pointerdown', handleClickOutside)
-  }, [isOpen])
+  }, [isOpen, handleClickOutside])
 
   const renderButtonContent = () => {
     if (type === 'provider') {
@@ -97,7 +109,7 @@ const DropDown = ({
           const baseClass = `cursor-pointer px-5 py-3 hover:bg-gray-50 ${roundedClass}`
 
           if (type === 'provider') {
-            const colorClass = 'providerColorMap[option]'
+            const colorClass = providerColorMap[option] || 'text-gray-900'
             return (
               <div
                 role="option"
