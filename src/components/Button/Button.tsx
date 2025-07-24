@@ -38,7 +38,9 @@ const Button = ({
           : 'p-3.5'
   const baseClass =
     shape === 'underline'
-      ? ' hover:text-pri-400 underline decoration-current underline-offset-4'
+      ? disabled
+        ? 'underline decoration-current underline-offset-4 text-gray-400'
+        : 'hover:text-pri-400 underline decoration-current underline-offset-4'
       : `${noShadow ? '' : 'shadow-button'} rounded-sm leading-none`
 
   return shape === 'underline' || disabled ? (

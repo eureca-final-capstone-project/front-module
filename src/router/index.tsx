@@ -13,6 +13,7 @@ import AdditionalInfoPage from '../pages/SignUpPage/AdditionalInfoPage'
 import ChangeDataPage from '../pages/ChangeDataPage'
 import AdminLayout from '../layout/AdminLayout'
 import Dashboard from '../pages/AdminPage/Dashboard'
+import PostPage from '../pages/PostPage'
 import PaymentPage from '../pages/PaymentPage'
 import PaymentSuccessPage from '../pages/PaymentSuccessPage'
 import PaymentFailPage from '../pages/PaymentFailPage'
@@ -46,6 +47,10 @@ export const router = createBrowserRouter([
   {
     element: <DefaultLayout />,
     children: [
+      {
+        path: '/posts',
+        element: <PostPage />,
+      },
       {
         path: '/mypage/:tabId',
         element: <MyPage />,
