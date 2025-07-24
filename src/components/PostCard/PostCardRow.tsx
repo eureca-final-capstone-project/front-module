@@ -8,6 +8,7 @@ import DataBadge from '../Badge/Badge'
 import { formatDataSize, formatAmount } from '../../utils/format'
 import { imageData as PostImage } from '../../constants/imageData'
 import { getSalesTypeLabel } from '../../utils/salesType'
+import { formatRelativeTime, formatFullDate } from '../../utils/time'
 
 interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
   type: 'row'
@@ -99,7 +100,7 @@ const PostCardRow = ({
               <div className="text-fs12 sm:text-fs14 flex items-center gap-0.5 text-[#666666] sm:gap-1">
                 <span>{nickname}</span>
                 <span>·</span>
-                <span>{createdAt}</span>
+                <span>{formatRelativeTime(createdAt)}</span>
               </div>
             </div>
             {salesType === 'normal' ? (
@@ -149,7 +150,7 @@ const PostCardRow = ({
               <div className="text-fs12 lg:text-fs14 flex items-center gap-0.5 text-[#666666] sm:gap-1">
                 <span>{nickname}</span>
                 <span>·</span>
-                <span>{createdAt}</span>
+                <span>{formatRelativeTime(createdAt)}</span>
               </div>
               <div className="text-fs12 lg:text-fs14 hidden gap-2 sm:flex">
                 <span className="text-[#666666]">거래 유형</span>
@@ -211,7 +212,16 @@ const PostCardRow = ({
               </div>
               <div className="text-fs12 lg:text-fs14 flex gap-1 sm:gap-2">
                 <span className="text-[#666666]">거래 일시</span>
-                <span className="text-pri-400">{tradehistorytime}</span>
+                {tradehistorytime ? (
+                  <>
+                    <span className="block lg:hidden">
+                      {formatFullDate(tradehistorytime, 'mobile')}
+                    </span>
+                    <span className="hidden lg:block">
+                      {formatFullDate(tradehistorytime, 'desktop')}
+                    </span>
+                  </>
+                ) : null}
               </div>
             </div>
             <div className="lg:text-fs18 flex w-full items-center justify-end gap-1">
