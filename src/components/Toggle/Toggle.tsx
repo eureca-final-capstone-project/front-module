@@ -19,7 +19,7 @@ const Toggle = ({ initialState = false, onToggle }: ToggleProps) => {
 
   return (
     <label
-      className={`relative inline-block h-6 w-12 cursor-pointer rounded-full transition-colors ${
+      className={`relative block h-6 w-12 cursor-pointer rounded-full transition-colors ${
         isOn ? 'bg-pri-400' : 'bg-gray-200'
       }`}
     >
