@@ -6,8 +6,8 @@ interface TableProps<T> {
   data: T[]
   renderCell?: (key: keyof T, row: T) => ReactNode
   isClickable?: (row: T) => boolean
-  onRowClick?: (row: T, index: number) => void
-  renderDetailTable?: (row: T) => ReactNode
+  onRowClick?: (row: T) => void
+  renderDetailTable?: ReactNode
 }
 
 const Table = <T,>({
@@ -21,7 +21,7 @@ const Table = <T,>({
   const [expandedRowIndex, setExpandedRowIndex] = useState<number | null>(null)
 
   const handleRowClick = (row: T, index: number) => {
-    onRowClick?.(row, index)
+    onRowClick?.(row)
     setExpandedRowIndex(prev => (prev === index ? null : index))
   }
 
@@ -75,7 +75,7 @@ const Table = <T,>({
                     {columns.map(col => (
                       <td
                         key={String(col.key)}
-                        className="px-3 py-4"
+                        className="max-w-47 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap"
                         colSpan={col.key === 'email' ? 3 : 1}
                       >
                         {renderCell ? renderCell(col.key, row) : String(row[col.key])}
@@ -84,7 +84,7 @@ const Table = <T,>({
                   </tr>
 
                   {/* 상세 테이블 내용 */}
-                  {clickable && expandedRowIndex === rowIndex && renderDetailTable?.(row)}
+                  {clickable && expandedRowIndex === rowIndex && renderDetailTable}
                 </Fragment>
               )
             })}
