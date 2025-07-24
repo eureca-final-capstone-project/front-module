@@ -97,7 +97,7 @@ const FavoritesPage = () => {
             {console.error(error)}
             <p className="text-error">로딩 중 에러가 발생했습니다</p>
           </>
-        )}{' '}
+        )}
         {data?.map((post, index) => (
           <React.Fragment key={post.transactionFeedId}>
             <div className="flex items-start gap-2">
