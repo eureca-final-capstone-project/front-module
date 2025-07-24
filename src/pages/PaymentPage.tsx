@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { postPreparePayment } from '../apis/payment'
 import Card from '../components/Card/Card'
-
+import { formatAmount } from '../utils/format'
+// import DropDown from '../components/DropDown/DropDown'
+import DatchaCoin from '@/assets/icons/datcha-coin.svg?react'
+import Button from '../components/Button/Button'
+import { getUserPayStatus } from '../apis/userInfo'
 const PaymentPage = () => {
   const [amount, setAmount] = useState<number>(0)
   const [finalAmount, setFinalAmount] = useState<number>(0)
@@ -39,6 +43,7 @@ const PaymentPage = () => {
       console.error('결제 준비 API 호출 실패', error)
     },
   })
+  const isDisabled = preparePaymentMutation.isPending || finalAmount <= 0
 
   const handlePayment = () => {
     if (amount <= 0) {
@@ -53,10 +58,25 @@ const PaymentPage = () => {
     })
   }
 
+  const { data: userPayStatus } = useQuery({
+    queryKey: ['userPayStatus'],
+    queryFn: getUserPayStatus,
+  })
+
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-4">
       <Card>
-        <h2 className="mb-2 text-lg font-semibold">다차페이 충전</h2>
+        <div className="flex items-center justify-between font-medium">
+          <span className="text-fs18 sm:text-fs20 text-gray-900">보유 다챠페이</span>
+          <div className="flex gap-2">
+            <DatchaCoin className="h-6 w-6" />
+            <span className="text-fs18 sm:text-fs20 text-gray-900">
+              {formatAmount(userPayStatus?.balance ?? 0)}
+            </span>
+          </div>
+        </div>
+      </Card>
+      <Card type="label" labelTitle="다챠페이 충전">
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -69,30 +89,31 @@ const PaymentPage = () => {
           <span className="text-gray-500">원</span>
         </div>
       </Card>
-
-      <Card>
-        <h2 className="mb-2 text-lg font-semibold">결제 예정 정보</h2>
+      <Card type="label" labelTitle="쿠폰 적용">
+        {/* <DropDown selected="적용 안 함" onSelect: (option: string) => void /> */}
+      </Card>
+      <Card type="label" labelTitle="결제 예정 정보">
         <div className="flex justify-between">
-          <span>충전 금액</span>
-          <span>{amount.toLocaleString()}원</span>
+          <span className="text-fs16 text-gray-600">충전 금액</span>
+          <span className="text-fs16 text-gray-800">{formatAmount(amount)}</span>
         </div>
         <div className="flex justify-between">
-          <span>할인 금액</span>
-          <span>0원</span>
+          <span className="text-fs16 text-gray-600">할인 금액</span>
+          <span className="text-fs16 text-gray-800">0원</span>
         </div>
-        <div className="text-pri-600 mt-2 flex justify-between font-bold">
-          <span>최종 결제 금액</span>
-          <span>{finalAmount.toLocaleString()}원</span>
+        <hr className="border-t border-dashed border-gray-100" />
+        <div className="text-fs20 flex items-center justify-between font-semibold">
+          <span className="text-gray-800">최종 결제 금액</span>
+          <span className="text-pri-600">{formatAmount(finalAmount)}</span>
         </div>
       </Card>
 
-      <button
+      <Button
+        text={`${finalAmount.toLocaleString()}원 결제하기`}
         onClick={handlePayment}
-        disabled={preparePaymentMutation.isPending || finalAmount <= 0}
-        className="bg-pri-500 w-full rounded-md py-3 text-lg font-semibold text-white disabled:opacity-50"
-      >
-        {finalAmount.toLocaleString()}원 결제하기
-      </button>
+        disabled={isDisabled}
+        className={`text-fs20 w-full font-medium ${isDisabled ? 'button-disabled' : 'button-active'}`}
+      />
     </div>
   )
 }

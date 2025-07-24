@@ -203,3 +203,9 @@ select:-webkit-autofill:focus {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+.button-active {
+  @apply bg-pri-500 text-gray-10;
+}
+.button-disabled {
+  @apply bg-gray-50 text-gray-500;
+}
