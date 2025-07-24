@@ -35,8 +35,13 @@ export interface CalculateDiscountResponse {
   statusCode: number
   message: string
   data: {
+    originalAmount: number
     discountAmount: number
     finalAmount: number
+    requiredPayType: {
+      payTypeId: number
+      name: string
+    }
   }
 }
 

@@ -1,19 +1,59 @@
 import { useState, useEffect } from 'react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { postPreparePayment } from '../apis/payment'
+import { postCalculateDiscount, postPreparePayment } from '../apis/payment'
+import { getUserPayStatus } from '../apis/userInfo'
+import { getUserEventCoupons, UserEventCoupon } from '../apis/eventCoupon'
 import Card from '../components/Card/Card'
-import { formatAmount } from '../utils/format'
-// import DropDown from '../components/DropDown/DropDown'
+import DropDown from '../components/DropDown/DropDown'
 import DatchaCoin from '@/assets/icons/datcha-coin.svg?react'
 import Button from '../components/Button/Button'
-import { getUserPayStatus } from '../apis/userInfo'
+import { formatAmount } from '../utils/format'
+import Input from '../components/Input/Input'
+
 const PaymentPage = () => {
   const [amount, setAmount] = useState<number>(0)
   const [finalAmount, setFinalAmount] = useState<number>(0)
+  const [discountAmount, setDiscountAmount] = useState<number>(0)
+  const [selectedCouponName, setSelectedCouponName] = useState('적용 안 함')
+  const [selectedCoupon, setSelectedCoupon] = useState<UserEventCoupon | null>(null)
 
-  useEffect(() => {
-    setFinalAmount(amount)
-  }, [amount])
+  const getCouponLabel = (coupon: UserEventCoupon) =>
+    `${coupon.eventCoupon.couponName} ${coupon.eventCoupon.discountRate}%`
+
+  const handleCouponSelect = (selectedName: string) => {
+    setSelectedCouponName(selectedName)
+
+    if (selectedName === '적용 안 함') {
+      setSelectedCoupon(null)
+      setDiscountAmount(0)
+      setFinalAmount(amount)
+      return
+    }
+
+    const matched = eventCouponData?.data.coupons.find(
+      coupon => getCouponLabel(coupon) === selectedName
+    )
+
+    if (matched) {
+      setSelectedCoupon(matched)
+      calculateDiscountMutation.mutate({
+        userEventCouponId: matched.userEventCouponId,
+        originalAmount: amount,
+      })
+    }
+  }
+
+  const handlePayment = () => {
+    if (amount <= 0) {
+      alert('충전할 금액을 입력하세요.')
+      return
+    }
+    preparePaymentMutation.mutate({
+      originalAmount: amount,
+      finalAmount,
+      userEventCouponId: selectedCoupon?.userEventCouponId,
+    })
+  }
 
   const preparePaymentMutation = useMutation({
     mutationFn: postPreparePayment,
@@ -45,75 +85,129 @@ const PaymentPage = () => {
   })
   const isDisabled = preparePaymentMutation.isPending || finalAmount <= 0
 
-  const handlePayment = () => {
-    if (amount <= 0) {
-      alert('충전할 금액을 입력하세요.')
+  const calculateDiscountMutation = useMutation({
+    mutationFn: postCalculateDiscount,
+    onSuccess: data => {
+      const { discountAmount, finalAmount } = data.data
+      setDiscountAmount(discountAmount)
+      setFinalAmount(finalAmount)
+    },
+    onError: error => {
+      console.error('할인 금액 계산 실패', error)
+      setDiscountAmount(0)
+      setFinalAmount(amount)
+    },
+  })
+
+  useEffect(() => {
+    if (!selectedCoupon) {
+      setFinalAmount(amount)
+      setDiscountAmount(0)
       return
     }
 
-    preparePaymentMutation.mutate({
-      // userEventCouponId: 0,
+    calculateDiscountMutation.mutate({
+      userEventCouponId: selectedCoupon.userEventCouponId,
       originalAmount: amount,
-      finalAmount: amount,
     })
-  }
+  }, [amount, selectedCoupon])
 
   const { data: userPayStatus } = useQuery({
     queryKey: ['userPayStatus'],
     queryFn: getUserPayStatus,
   })
 
-  return (
-    <div className="flex flex-col gap-4">
-      <Card>
-        <div className="flex items-center justify-between font-medium">
-          <span className="text-fs18 sm:text-fs20 text-gray-900">보유 다챠페이</span>
-          <div className="flex gap-2">
-            <DatchaCoin className="h-6 w-6" />
-            <span className="text-fs18 sm:text-fs20 text-gray-900">
-              {formatAmount(userPayStatus?.balance ?? 0)}
-            </span>
-          </div>
-        </div>
-      </Card>
-      <Card type="label" labelTitle="다챠페이 충전">
-        <div className="flex items-center gap-2">
-          <input
-            type="number"
-            value={amount === 0 ? '' : amount}
-            onChange={e => setAmount(Number(e.target.value))}
-            placeholder="가격을 입력해주세요."
-            className="flex-1 rounded-md border px-3 py-2"
-            min={0}
-          />
-          <span className="text-gray-500">원</span>
-        </div>
-      </Card>
-      <Card type="label" labelTitle="쿠폰 적용">
-        {/* <DropDown selected="적용 안 함" onSelect: (option: string) => void /> */}
-      </Card>
-      <Card type="label" labelTitle="결제 예정 정보">
-        <div className="flex justify-between">
-          <span className="text-fs16 text-gray-600">충전 금액</span>
-          <span className="text-fs16 text-gray-800">{formatAmount(amount)}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-fs16 text-gray-600">할인 금액</span>
-          <span className="text-fs16 text-gray-800">0원</span>
-        </div>
-        <hr className="border-t border-dashed border-gray-100" />
-        <div className="text-fs20 flex items-center justify-between font-semibold">
-          <span className="text-gray-800">최종 결제 금액</span>
-          <span className="text-pri-600">{formatAmount(finalAmount)}</span>
-        </div>
-      </Card>
+  const {
+    data: eventCouponData,
+    isLoading: isCouponLoading,
+    isError: isCouponError,
+  } = useQuery({
+    queryKey: ['userEventCoupons'],
+    queryFn: getUserEventCoupons,
+  })
 
-      <Button
-        text={`${finalAmount.toLocaleString()}원 결제하기`}
-        onClick={handlePayment}
-        disabled={isDisabled}
-        className={`text-fs20 w-full font-medium ${isDisabled ? 'button-disabled' : 'button-active'}`}
-      />
+  const couponOptions = ['적용 안 함', ...(eventCouponData?.data.coupons.map(getCouponLabel) ?? [])]
+
+  return (
+    <div className="flex-col px-4 pb-20 sm:flex sm:h-[calc(100vh-126px)] sm:justify-between sm:px-0 sm:pb-0">
+      <div className="flex flex-col gap-4">
+        <Card withMotion motionCustom={0}>
+          <div className="flex items-center justify-between font-medium">
+            <span className="text-fs18 sm:text-fs20 text-gray-900">보유 다챠페이</span>
+            <div className="flex gap-1 sm:gap-2">
+              <DatchaCoin className="h-6 w-6" />
+              <span className="text-fs18 sm:text-fs20 text-gray-900">
+                {formatAmount(userPayStatus?.balance ?? 0)}
+              </span>
+            </div>
+          </div>
+        </Card>
+        <Card type="label" labelTitle="다챠페이 충전" withMotion motionCustom={1}>
+          <Input
+            id="amount"
+            label="충전하실 페이 금액을 입력해주세요."
+            type="number"
+            value={amount === 0 ? '' : String(amount)}
+            onChange={e => {
+              const num = Number(e.target.value)
+              setAmount(Number.isNaN(num) ? 0 : num)
+            }}
+            shape="square"
+            suffix="원"
+            suffixAlwaysVisible={true}
+            prefix={<DatchaCoin className="h-6 w-6" />}
+            className="text-fs16 appearance-none"
+            required={true}
+          />
+        </Card>
+        <Card type="label" labelTitle="쿠폰 적용" withMotion motionCustom={2}>
+          {isCouponLoading ? (
+            <p className="text-sm text-gray-500">쿠폰 불러오는 중</p>
+          ) : isCouponError ? (
+            <p className="text-sm text-red-500">쿠폰 불러오기 실패</p>
+          ) : (
+            <DropDown
+              type="default"
+              selected={selectedCouponName}
+              onSelect={handleCouponSelect}
+              options={couponOptions}
+            />
+          )}
+        </Card>
+        <Card type="label" labelTitle="결제 예정 정보" withMotion motionCustom={3}>
+          <div className="flex justify-between">
+            <span className="text-fs16 text-gray-600">충전 금액</span>
+            <span className="text-fs16 text-gray-800">{formatAmount(amount)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-fs16 text-gray-600">할인 금액</span>
+            <span className="text-fs16 text-gray-800">{formatAmount(discountAmount)}</span>
+          </div>
+          <hr className="border-t border-dashed border-gray-100" />
+          <div className="text-fs18 sm:text-fs20 flex items-center justify-between font-semibold">
+            <span className="text-gray-800">최종 결제 금액</span>
+            <span className="text-pri-600">{formatAmount(finalAmount)}</span>
+          </div>
+        </Card>
+      </div>
+
+      <div className="fixed right-0 bottom-4 left-0 block px-4 sm:hidden">
+        <Button
+          text={`${finalAmount.toLocaleString()}원 결제하기`}
+          onClick={handlePayment}
+          disabled={isDisabled}
+          className={`text-fs16 w-full p-4 font-medium ${isDisabled ? 'button-disabled' : 'button-active'}`}
+        />
+      </div>
+
+      <div className="my-4 hidden sm:block">
+        <Button
+          text={`${finalAmount.toLocaleString()}원 결제하기`}
+          onClick={handlePayment}
+          disabled={isDisabled}
+          className={`text-fs18 w-full p-4 font-medium ${isDisabled ? 'button-disabled' : 'button-active'}`}
+        />
+      </div>
     </div>
   )
 }
