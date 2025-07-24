@@ -67,7 +67,7 @@ const Sidebar = () => {
 
               <div className="flex items-center gap-4">
                 <Icon className="h-6 w-6" />
-                <span className="ml-1">{item.label}</span>
+                <span className="text-fs20">{item.label}</span>
               </div>
             </Link>
           )
