@@ -4,11 +4,11 @@ import PostCardGrid from './components/PostCardGrid'
 import type { PostCardProps } from '../../components/PostCard/PostCard'
 import DropDown from '../../components/DropDown/DropDown'
 import { useDeviceType } from '../../hooks/useDeviceType'
-
-const sortOptions = ['최신순', '가격 높은 순', '가격 낮은 순']
+import { SORT_BY, SortLabel } from '../../constants/sortBy'
 
 const PostPage = () => {
-  const [selectedSort, setSelectedSort] = useState(sortOptions[0])
+  const sortLabels = SORT_BY.map(option => option.label) as SortLabel[]
+  const [selectedSort, setSelectedSort] = useState<SortLabel>('최신순')
   const deviceType = useDeviceType()
 
   const mockPosts = useMemo((): PostCardProps[] => {
@@ -72,9 +72,9 @@ const PostPage = () => {
             {/* 정렬 드롭다운 */}
             <DropDown
               className="z-10 w-35 lg:w-40"
-              options={sortOptions}
+              options={sortLabels}
               selected={selectedSort}
-              onSelect={setSelectedSort}
+              onSelect={option => setSelectedSort(option as SortLabel)}
             />
           </div>
 
