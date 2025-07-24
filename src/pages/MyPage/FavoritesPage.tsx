@@ -4,32 +4,39 @@ import CheckBox from '../../components/CheckBox/CheckBox'
 import BasicModal from './components/Modal/BasicModal'
 import { buttonOptions } from './components/config'
 import FavoritesHeader from './components/ButtonHeader/ButtonHeader'
-import PostCard, { PostCardProps } from '../../components/PostCard/PostCard'
+import PostCard from '../../components/PostCard/PostCard'
 import React from 'react'
 import { useToast } from '../../hooks/useToast'
 import useSelect from '../../hooks/useSelect'
 import useModal from '../../hooks/useModal'
-import { allPostCardMockData } from '../../mocks/postData'
-import { getWishList, WishPost } from '../../apis/wish'
+import { deleteWishPosts, getWishList, WishPost } from '../../apis/wish'
 import { transformPostCard } from '../../utils/postCardParse'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 type ModalType = 'delete'
 
 const FavoritesPage = () => {
   const deviceType = useDeviceType()
   const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
-  const favoritePosts = allPostCardMockData.filter(
-    (post): post is Extract<PostCardProps, { type: 'row' }> =>
-      post.type === 'row' && post.page === 'favorite'
-  )
-
-  const postIds = favoritePosts.map(post => post.transactionFeedId)
-
-  const { selectedIds, toggleId, selectAll, clearAll, isSelected } = useSelect(postIds)
   const [selectedType, setSelectedType] = useState<'both' | 'normal' | 'bid'>('both')
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
+
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ['wishList', selectedType],
+    queryFn: async () => {
+      const filterParam = mapFilterToApiParam(selectedType)
+      const res = await getWishList({ filter: filterParam, page: 0, size: 20 })
+      return res.data.content.map((item: WishPost) => transformPostCard(item, 'row'))
+    },
+    placeholderData: previousData => previousData,
+    retry: 1,
+  })
+
+  const postIds = data?.map(post => post.transactionFeedId) || []
+  const { selectedIds, toggleId, selectAll, clearAll, isSelected } = useSelect(postIds)
+  const allChecked = postIds.length > 0 && postIds.every(id => selectedIds.includes(id))
 
   useEffect(() => {
     console.log('--------선택 삭제:', selectedIds)
@@ -37,7 +44,6 @@ const FavoritesPage = () => {
 
   const gridColsClass =
     deviceType === 'mobile' ? 'grid-cols-1 bg-gray-10 p-4 ' : 'grid-cols-1 md:grid-cols-2'
-  const allChecked = postIds.length > 0 && postIds.every(id => selectedIds.includes(id))
 
   const handleSelectType = (value: string) => {
     if (value === 'both' || value === 'normal' || value === 'bid') {
@@ -68,10 +74,21 @@ const FavoritesPage = () => {
     openModal(type)
   }
 
-  const handleConfirmDelete = () => {
-    console.log('---------삭제 완료', selectedIds)
-    // 삭제 API 로직
-    closeModal()
+  const handleConfirmDelete = async () => {
+    try {
+      await deleteWishPosts(selectedIds)
+      showToast({ type: 'success', msg: '삭제가 완료되었습니다.' })
+
+      clearAll()
+
+      queryClient.invalidateQueries({
+        queryKey: ['wishList', selectedType],
+      })
+      closeModal()
+    } catch (error) {
+      showToast({ type: 'error', msg: '삭제 중 오류가 발생했습니다.' })
+      console.error('삭제 오류:', error)
+    }
   }
 
   const mapFilterToApiParam = (type: 'both' | 'normal' | 'bid'): 'ALL' | 'NORMAL' | 'BID' => {
@@ -84,17 +101,6 @@ const FavoritesPage = () => {
         return 'BID'
     }
   }
-
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ['wishList', selectedType],
-    queryFn: async () => {
-      const filterParam = mapFilterToApiParam(selectedType)
-      const res = await getWishList({ filter: filterParam, page: 0, size: 20 })
-      return res.data.content.map((item: WishPost) => transformPostCard(item, 'row'))
-    },
-    placeholderData: previousData => previousData,
-    retry: 1,
-  })
 
   return (
     <div className="flex flex-col gap-5">
