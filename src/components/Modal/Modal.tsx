@@ -53,7 +53,7 @@ const Modal = ({ isOpen, onClose, children, positionClassName = '', className }:
         style={{ backdropFilter: 'blur(1.5px)' }}
       >
         {isOpen && (
-          <FadeInUpMotion custom={1} duration={0.25}>
+          <FadeInUpMotion custom={0} duration={0.3}>
             <motion.div
               key="modal"
               className={`bg-gray-10 rounded-custom-m shadow-modal flex min-w-82 flex-col overflow-hidden`}

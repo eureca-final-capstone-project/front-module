@@ -11,11 +11,11 @@ import Button from '../../../components/Button/Button'
 import { formatPhoneNumber } from '../../../utils/format'
 import Input from '../../../components/Input/Input'
 import DropDown from '../../../components/DropDown/DropDown'
-import { AddtionalInfoSchemaTye } from '../../../types/auth'
-import { addtionalInfoSchema } from '../../../utils/validation'
-import { requestAddtionalInfo } from '../../../apis/auth'
+import { AdditionalInfoSchemaTye } from '../../../types/auth'
+import { additionalInfoSchema } from '../../../utils/validation'
+import { requestAdditionalInfo } from '../../../apis/auth'
 
-const AddtionalInfoForm = () => {
+const AdditionalInfoForm = () => {
   const navigate = useNavigate()
   const deviceType = useDeviceType()
 
@@ -24,8 +24,8 @@ const AddtionalInfoForm = () => {
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<AddtionalInfoSchemaTye>({
-    resolver: zodResolver(addtionalInfoSchema),
+  } = useForm<AdditionalInfoSchemaTye>({
+    resolver: zodResolver(additionalInfoSchema),
     mode: 'all',
   })
 
@@ -45,7 +45,7 @@ const AddtionalInfoForm = () => {
   }
 
   const mutation = useMutation({
-    mutationFn: requestAddtionalInfo,
+    mutationFn: requestAdditionalInfo,
     onSuccess: data => {
       if (data.statusCode === 200) {
         navigate('/')
@@ -58,7 +58,7 @@ const AddtionalInfoForm = () => {
     },
   })
 
-  const handleSignUp = (data: AddtionalInfoSchemaTye) => {
+  const handleSignUp = (data: AdditionalInfoSchemaTye) => {
     const payload = {
       telecomCompanyId: CARRIER_ID_MAP[data.carrier],
       phoneNumber: data.phoneNumber.replace(/-/g, ''),
@@ -97,7 +97,8 @@ const AddtionalInfoForm = () => {
                   const formatted = formatPhoneNumber(e.target.value)
                   field.onChange(formatted)
                 }}
-                error={errors.phoneNumber?.message}
+                error={!!errors.phoneNumber}
+                errorMsg={errors.phoneNumber?.message}
                 shape={deviceType === 'mobile' ? 'square' : 'floating'}
               />
             )}
@@ -119,4 +120,4 @@ const AddtionalInfoForm = () => {
   )
 }
 
-export default AddtionalInfoForm
+export default AdditionalInfoForm

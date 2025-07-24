@@ -14,7 +14,7 @@ const meta: Meta<typeof PostCard> = {
           'PostCard 컴포넌트는 통신사, 판매 데이터 양, 판매글 제목, 판매자 정보 등을 포함한 카드 UI로, `col`와 `row` 타입에 따라 서로 다른 레이아웃을 제공합니다.\n\n' +
           '- `type: col`은 이미지가 상단에 위치하고 아래에 텍스트가 나열되는 세로형 `PostCard`입니다.\n' +
           '- `type: row`는 이미지가 좌측에, 텍스트 및 정보가 우측에 표시되는 가로형 `PostCard`입니다.\n\n' +
-          '`row` 타입은 `default`, `favorite`, `payhistory` 페이지에 따라 내용이 달라집니다.',
+          '`row` 타입은 `default`, `favorite`, `tradehistory` 페이지에 따라 내용이 달라집니다.',
       },
     },
   },
@@ -27,7 +27,7 @@ const meta: Meta<typeof PostCard> = {
     },
     page: {
       control: 'radio',
-      options: ['default', 'favorite', 'payhistory'],
+      options: ['default', 'favorite', 'tradehistory'],
       description: '(row 전용) 페이지 타입',
     },
     telecomCompany: {
@@ -36,7 +36,7 @@ const meta: Meta<typeof PostCard> = {
       description: '통신사',
     },
     salesDataAmount: {
-      control: 'text',
+      control: 'number',
       description: '판매 데이터 양',
     },
     status: {
@@ -62,24 +62,24 @@ const meta: Meta<typeof PostCard> = {
     },
     salesType: {
       control: 'radio',
-      options: ['deal', 'bid'],
-      description: '판매 유형 - `deal` = 일반 | `bid` = 입찰',
+      options: ['normal', 'bid'],
+      description: '판매 유형 - `normal` = 일반 | `bid` = 입찰',
     },
     salesPrice: {
       control: 'number',
-      description: '`deal` = 거래 페이 | `bid` = 최초 등록 페이',
+      description: '`normal` = 거래 페이 | `bid` = 최초 등록 페이',
     },
     currentHeightPrice: {
       control: 'number',
       description: '`bid`일 때의 입찰 페이',
     },
-    payhistorytime: {
+    tradehistorytime: {
       control: 'text',
-      description: '(payhistory 전용) 거래 일시',
+      description: '(tradehistory 전용) 거래 일시',
     },
-    payhistorypay: {
+    tradehistorypay: {
       control: 'number',
-      description: '(payhistory 전용) 거래된 페이 금액',
+      description: '(tradehistory 전용) 거래된 페이 금액',
     },
     defaultImageNumber: {
       control: 'number',
@@ -122,12 +122,12 @@ export const ColType: Story = {
     transactionFeedId: 1,
     telecomCompany: 'KT',
     defaultImageNumber: 1,
-    salesDataAmount: '500',
+    salesDataAmount: 500,
     title: '데이터 판매합니다.',
     nickname: '몽실몽실 구름빵',
     createdAt: '2시간 전',
     liked: false,
-    salesType: 'deal',
+    salesType: 'normal',
     salesPrice: 1000,
     currentHeightPrice: 2000,
     status: 'active',
@@ -142,7 +142,7 @@ export const RowTypeDefault: Story = {
     transactionFeedId: 2,
     telecomCompany: 'KT',
     defaultImageNumber: 1,
-    salesDataAmount: '500',
+    salesDataAmount: 500,
     title: '데이터 판매합니다.',
     nickname: '몽실몽실 구름빵',
     createdAt: '2시간 전',
@@ -162,12 +162,12 @@ export const RowTypeFavorite: Story = {
     transactionFeedId: 3,
     telecomCompany: 'SKT',
     defaultImageNumber: 2,
-    salesDataAmount: '1000',
+    salesDataAmount: 1000,
     title: 'SKT 데이터 팝니다',
     nickname: '데이터장수',
     createdAt: '3일 전',
     liked: true,
-    salesType: 'deal',
+    salesType: 'normal',
     salesPrice: 5000,
     currentHeightPrice: 10000,
     status: 'expired',
@@ -178,11 +178,11 @@ export const RowTypePayhistory: Story = {
   render: Template,
   args: {
     type: 'row',
-    page: 'payhistory',
+    page: 'tradehistory',
     transactionFeedId: 4,
     telecomCompany: 'LG U+',
     defaultImageNumber: 1,
-    salesDataAmount: '2000',
+    salesDataAmount: 2000,
     title: '거래 완료된 데이터',
     nickname: '알뜰소비러',
     liked: false,
@@ -190,7 +190,7 @@ export const RowTypePayhistory: Story = {
     salesPrice: 1500,
     currentHeightPrice: 3000,
     status: 'completed',
-    payhistorytime: '07월 03일 오후 04시 19분',
-    payhistorypay: 4000,
+    tradehistorytime: '07월 03일 오후 04시 19분',
+    tradehistorypay: 4000,
   },
 }
