@@ -38,6 +38,24 @@ export interface UserDataStatus {
   sellableDataMb: number
   buyerDataMb: number
 }
+export interface TransactionHistoryItem {
+  transactionFeedId: number
+  title: string
+  otherPartyNickname: string
+  salesPrice: number
+  transactionFinalPrice: number
+  salesDataAmount: number
+  defaultImageNumber: number
+  transactionDate: string
+  telecomCompany: string
+  salesType: string
+  transactionType: 'PURCHASE' | 'SALE'
+}
+export interface TransactionHistoryResponse {
+  content: TransactionHistoryItem[]
+  totalElements: number
+  totalPages: number
+}
 
 export const getUserProfile = async (): Promise<UserProfile> => {
   const res = await client.get('/user/profile')
@@ -59,5 +77,24 @@ export const putUserPassword = async (
 }
 export const getUserDataStatus = async (): Promise<UserDataStatus> => {
   const res = await client.get('/user-data/status')
+  return res.data.data
+}
+export const getTransactionHistory = async ({
+  type,
+  page = 0,
+  size = 20,
+}: {
+  type: 'ALL' | 'PURCHASE' | 'SALE'
+  page?: number
+  size?: number
+}): Promise<TransactionHistoryResponse> => {
+  const res = await client.get('/transaction-history', {
+    params: {
+      type,
+      page,
+      size,
+      sort: 'transactionDate,DESC',
+    },
+  })
   return res.data.data
 }
