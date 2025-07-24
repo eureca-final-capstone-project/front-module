@@ -18,7 +18,7 @@ const FavoritesPage = () => {
   const { showToast } = useToast()
   const queryClient = useQueryClient()
 
-  const [selectedType, setSelectedType] = useState<'both' | 'normal' | 'bid'>('both')
+  const [selectedType, setSelectedType] = useState<'all' | 'normal' | 'bid'>('all')
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
 
   const { data, isPending, isError, error } = useQuery({
@@ -43,7 +43,7 @@ const FavoritesPage = () => {
   }, [selectedIds])
 
   const handleSelectType = (value: string) => {
-    if (['both', 'normal', 'bid'].includes(value)) setSelectedType(value as typeof selectedType)
+    if (['all', 'normal', 'bid'].includes(value)) setSelectedType(value as typeof selectedType)
   }
   const handleSelectAll = () => {
     const isAllSelected = postIds.every(id => selectedIds.includes(id))
@@ -129,9 +129,9 @@ const FavoritesPage = () => {
   )
 }
 
-const mapFilterToApiParam = (type: 'both' | 'normal' | 'bid'): 'ALL' | 'NORMAL' | 'BID' => {
+const mapFilterToApiParam = (type: 'all' | 'normal' | 'bid'): 'ALL' | 'NORMAL' | 'BID' => {
   switch (type) {
-    case 'both':
+    case 'all':
       return 'ALL'
     case 'normal':
       return 'NORMAL'
