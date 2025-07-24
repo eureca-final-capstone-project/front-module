@@ -186,6 +186,13 @@ select:-webkit-autofill:focus {
   -webkit-text-fill-color: black;
 }
 
+/* number input 스핀 버튼 제거 */
+.input-no-spinner::-webkit-outer-spin-button,
+.input-no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .Toastify__toast-icon {
   position: absolute;
   left: 16px;
