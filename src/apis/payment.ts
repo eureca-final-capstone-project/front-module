@@ -25,7 +25,15 @@ export interface ConfirmPaymentRequest {
   orderId: string
   amount: number
 }
-
+export interface ConfirmPaymentResponse {
+  statusCode: number
+  message: string
+  data: {
+    orderId: string
+    paymentMethod: string
+    completedAt: string // ISO8601 timestamp
+  }
+}
 export interface CalculateDiscountParams {
   userEventCouponId: number
   originalAmount: number
@@ -49,7 +57,9 @@ export const postPreparePayment = async (payload: PreparePaymentRequest) => {
   const response = await client.post('/payment/prepare', payload)
   return response.data as PreparePaymentResponse
 }
-export const postConfirmPayment = async (payload: ConfirmPaymentRequest) => {
+export const postConfirmPayment = async (
+  payload: ConfirmPaymentRequest
+): Promise<ConfirmPaymentResponse> => {
   const response = await client.post('/payment/confirm', payload)
   return response.data
 }
