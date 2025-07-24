@@ -13,6 +13,7 @@ interface DropdownProps {
   paddingClassName?: string
   placeholder?: string
   children?: React.ReactNode
+  defaultOpen?: boolean
 }
 
 const providerColorMap: Record<string, string> = {
@@ -30,8 +31,9 @@ const DropDown = ({
   paddingClassName = '',
   placeholder = '',
   children,
+  defaultOpen = false,
 }: DropdownProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(defaultOpen)
   const dropdownRef = useRef<HTMLDivElement>(null)
   const deviceType = useDeviceType()
 
