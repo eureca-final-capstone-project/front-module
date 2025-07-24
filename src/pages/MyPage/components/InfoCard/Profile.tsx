@@ -4,6 +4,7 @@ import InfoCard from './InfoCard'
 import { getUserProfile } from '../../../../apis/userInfo'
 import { useState } from 'react'
 import EditModal from '../Modal/EditModal'
+import { getTelecomBadgeColor } from '../../../../utils/telecom'
 
 const Profile = () => {
   const queryClient = useQueryClient()
@@ -15,20 +16,6 @@ const Profile = () => {
     queryKey: ['userProfile'],
     queryFn: getUserProfile,
   })
-
-  const getTelecomBadgeColor = (companyName: string) => {
-    switch (companyName) {
-      case 'LGU+':
-      case 'LG U+':
-        return 'bg-lguplus'
-      case 'SKT':
-        return 'bg-skt'
-      case 'KT':
-        return 'bg-kt'
-      default:
-        return 'bg-kt'
-    }
-  }
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 

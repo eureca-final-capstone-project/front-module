@@ -60,19 +60,21 @@ const PostCardRow = ({
       )}
 
       {/* 관심거래 아이콘 */}
-      <div
-        className="absolute top-2.75 left-2.75 z-10 w-4 sm:top-3.75 sm:left-3.75 sm:w-5"
-        onClick={e => {
-          e.stopPropagation()
-          onToggleLike()
-        }}
-      >
-        {liked ? (
-          <HeartFillIcon className="h-full w-full" />
-        ) : (
-          <HeartIcon className="h-full w-full" />
-        )}
-      </div>
+      {page !== 'favorite' && (
+        <div
+          className="absolute top-2.75 left-2.75 z-10 w-4 sm:top-3.75 sm:left-3.75 sm:w-5"
+          onClick={e => {
+            e.stopPropagation()
+            onToggleLike()
+          }}
+        >
+          {liked ? (
+            <HeartFillIcon className="h-full w-full" />
+          ) : (
+            <HeartIcon className="h-full w-full" />
+          )}
+        </div>
+      )}
 
       {/* 통신사 뱃지 */}
       <div className="absolute right-0 bottom-0 h-auto w-[45%]">
