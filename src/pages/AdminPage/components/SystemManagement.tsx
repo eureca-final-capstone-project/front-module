@@ -14,7 +14,7 @@ const ManagementCard = ({ title, stats, icon, iconBgColor }: ManagementCardProps
     <Card className="flex-1">
       <div className="flex items-center justify-between gap-5">
         <div className="space-y-5">
-          <h3 className="font-bold">{title}</h3>
+          <h3 className="text-fs20 font-bold">{title}</h3>
           <div className="flex gap-5">
             {stats.map((stat, idx) => (
               <div className="space-y-3" key={idx}>
