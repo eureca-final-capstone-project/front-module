@@ -53,8 +53,8 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const navLinks = [
     {
       label: '데이터 거래',
-      to: '#',
-      matchPath: '#',
+      to: '/posts',
+      matchPath: '/posts',
     },
     {
       label: '관심 거래',
