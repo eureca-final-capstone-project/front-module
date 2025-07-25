@@ -17,6 +17,7 @@ import PostPage from '../pages/PostPage'
 import PaymentPage from '../pages/PaymentPage'
 import PaymentSuccessPage from '../pages/PaymentSuccessPage'
 import PaymentFailPage from '../pages/PaymentFailPage'
+import DataPurchasePage from '../pages/DataPurchasePage'
 
 export const router = createBrowserRouter([
   {
@@ -88,6 +89,11 @@ export const router = createBrowserRouter([
         path: '/payment-fail',
         element: <PaymentFailPage />,
         handle: { title: '결제 실패' },
+      },
+      {
+        path: '/data-purchase/:transactionFeedId',
+        element: <DataPurchasePage />,
+        handle: { title: '데이터 구매' },
       },
     ],
   },
