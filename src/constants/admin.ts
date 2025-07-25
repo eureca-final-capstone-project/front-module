@@ -21,3 +21,21 @@ export const userColumns: { header: string; key: keyof User }[] = [
   { header: '상태', key: 'status' },
   { header: '차단 관리', key: 'isBlocked' },
 ]
+
+type StatusStyle =
+  | { variant: 'default' }
+  | { variant: 'secondary'; background: 'gray50' | 'gray200' }
+  | { variant: 'outline'; status: 'success' | 'error' }
+  | { className: string }
+
+export const STATUS_STYLE: Record<string, StatusStyle> = {
+  활성: { variant: 'default' },
+  비활성: { variant: 'secondary', background: 'gray50' },
+  검수대기: { variant: 'secondary', background: 'gray200' },
+  AI승인: { variant: 'outline', status: 'success' },
+  AI거절: { variant: 'outline', status: 'error' },
+  관리자승인: { className: 'bg-success' },
+  관리자거절: { className: 'bg-error' },
+  '제재 완료': { variant: 'default' },
+  '제재 대기 중': { variant: 'secondary', background: 'gray200' },
+}
