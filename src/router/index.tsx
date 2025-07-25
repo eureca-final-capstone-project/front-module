@@ -14,6 +14,9 @@ import ChangeDataPage from '../pages/ChangeDataPage'
 import AdminLayout from '../layout/AdminLayout'
 import Dashboard from '../pages/AdminPage/Dashboard'
 import PostPage from '../pages/PostPage'
+import PaymentPage from '../pages/PaymentPage'
+import PaymentSuccessPage from '../pages/PaymentSuccessPage'
+import PaymentFailPage from '../pages/PaymentFailPage'
 
 export const router = createBrowserRouter([
   {
@@ -70,6 +73,21 @@ export const router = createBrowserRouter([
         path: '/change-data',
         element: <ChangeDataPage />,
         handle: { title: '데이터 전환하기' },
+      },
+      {
+        path: '/payment',
+        element: <PaymentPage />,
+        handle: { title: '페이 충전하기' },
+      },
+      {
+        path: '/payment-success',
+        element: <PaymentSuccessPage />,
+        handle: { title: '결제 완료' },
+      },
+      {
+        path: '/payment-fail',
+        element: <PaymentFailPage />,
+        handle: { title: '결제 실패' },
       },
     ],
   },
