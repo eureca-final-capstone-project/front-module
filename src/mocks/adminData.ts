@@ -22,3 +22,27 @@ export const userHistoryData = [
     isBlocked: true,
   },
 ]
+
+export const userReportData = [
+  {
+    reportId: 1,
+    reportType: '욕설 및 비방',
+    content: '채팅에서 심한 욕설 사용',
+    createdAt: '2025-07-01T10:00:00',
+    status: 'AI승인',
+  },
+  {
+    reportId: 2,
+    reportType: '스팸 신고',
+    content: '같은 내용의 광고 메시지 반복 전송',
+    createdAt: '2025-07-05T14:30:00',
+    status: '관리자승인',
+  },
+  {
+    reportId: 3,
+    reportType: '허위 정보',
+    content: '거짓 정보로 사용자 혼란 유발',
+    createdAt: '2025-07-10T09:15:00',
+    status: '검수대기',
+  },
+]
