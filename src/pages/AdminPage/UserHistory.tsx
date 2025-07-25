@@ -12,6 +12,8 @@ const UserHistory = () => {
 
   const renderUserCell = (key: keyof User, row: User) => {
     switch (key) {
+      case 'createdAt':
+        return new Date(row.createdAt).toLocaleDateString()
       case 'status': {
         return <Badge label={row.status} {...STATUS_STYLE[row.status]} />
       }
