@@ -9,3 +9,11 @@ export interface User {
   status: string
   isBlocked: boolean
 }
+
+export interface UserReport {
+  reportId: number
+  reportType: string
+  content: string
+  createdAt: string
+  status: string
+}
