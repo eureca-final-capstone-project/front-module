@@ -32,6 +32,7 @@ export const getUserEventCoupons = async (): Promise<UserEventCouponResponse> =>
   const res = await client.get('/user-event-coupon/available')
   return res.data
 }
+
 // 목데이터용
 export type eventCouponItem = {
   userEventCouponId: number
@@ -57,4 +58,27 @@ export const getEventCoupons = async (): Promise<eventCouponItem[]> => {
   console.log('📦 getEventCoupons response:', response.data)
 
   return response.data.data.coupons
+}
+
+export interface IssueEventCouponResponse {
+  statusCode: number
+  message: string
+  data: {
+    id: number
+  }
+}
+
+export interface ErrorResponseData {
+  statusCode: number
+  message: string
+  data: {
+    statusCode: number
+    statusCodeName: string
+    detailMessage: string
+  }
+}
+
+export const issueEventCoupon = async (couponId: number): Promise<IssueEventCouponResponse> => {
+  const response = await client.post(`/user-event-coupon/${couponId}/issue`)
+  return response.data
 }
