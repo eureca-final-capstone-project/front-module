@@ -6,6 +6,7 @@ import { userHistoryData, userReportData } from '../../mocks/adminData'
 import { User, UserReport } from '../../types/admin'
 import Toggle from '../../components/Toggle/Toggle'
 import UserDetailRow from './components/UserDetailRow'
+import SearchBar from '../../components/SearchBar/SearchBar'
 
 const UserHistory = () => {
   const [reports, setReports] = useState<UserReport[]>([])
@@ -30,16 +31,26 @@ const UserHistory = () => {
   }
 
   return (
-    <div>
-      <Table
-        columns={userColumns}
-        data={userHistoryData}
-        renderCell={renderUserCell}
-        isClickable={row => row.reportCount > 0}
-        onRowClick={handleRowClick}
-        renderDetailTable={<UserDetailRow reports={reports} />}
-      />
-    </div>
+    <main className="space-y-13">
+      <SearchBar onSubmit={keyword => console.log(keyword)} />
+      <section className="space-y-7">
+        <h1 className="text-fs24 font-medium">회원 내역</h1>
+        <div className="relative">
+          <div className="absolute -top-5 right-0 -translate-y-full font-medium">
+            Total <span className="text-pri-400">{120}</span>, Page
+            <span className="text-pri-400"> {1}</span>/{12}
+          </div>
+          <Table
+            columns={userColumns}
+            data={userHistoryData}
+            renderCell={renderUserCell}
+            isClickable={row => row.reportCount > 0}
+            onRowClick={handleRowClick}
+            renderDetailTable={<UserDetailRow reports={reports} />}
+          />
+        </div>
+      </section>
+    </main>
   )
 }
 
