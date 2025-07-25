@@ -20,7 +20,7 @@ const UserDetailRow = ({ reports }: UserDetailRowProps) => {
           reports.length > 0 &&
           reports.map(report => {
             return (
-              <tr key={report.reportId} className="border-t border-gray-100 bg-gray-50">
+              <tr key={report.reportId} className="bg-gray-30 border-t border-gray-100">
                 <td></td>
                 <td className="px-3 py-4">{report.reportId}</td>
                 <td className="px-3 py-4">{report.reportType}</td>
