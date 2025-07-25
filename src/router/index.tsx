@@ -13,6 +13,7 @@ import AdditionalInfoPage from '../pages/SignUpPage/AdditionalInfoPage'
 import ChangeDataPage from '../pages/ChangeDataPage'
 import AdminLayout from '../layout/AdminLayout'
 import Dashboard from '../pages/AdminPage/Dashboard'
+import UserHistory from '../pages/AdminPage/UserHistory'
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: '/admin/dashboard',
         element: <Dashboard />,
+      },
+      {
+        path: '/admin/users',
+        element: <UserHistory />,
       },
     ],
   },
