@@ -6,7 +6,7 @@ export const userHistoryData = Array.from({ length: 150 }, (_, index) => ({
   phoneNumber: `010-${String(1000 + index).padStart(4, '0')}-${String(5678 + index).padStart(4, '0')}`,
   createdAt: `2025-07-${String(1 + (index % 28)).padStart(2, '0')}T10:00:00`,
   reportCount: index % 3,
-  status: ['활성', '비활성', '검수대기'][index % 3],
+  status: ['활성', '비활성'][index % 2],
   isBlocked: index % 2 === 0 ? false : true,
 }))
 
