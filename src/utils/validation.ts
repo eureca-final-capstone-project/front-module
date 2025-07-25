@@ -50,3 +50,24 @@ export const nicknameSchema = z.object({
     .nonempty('변경하실 닉네임을 입력해주세요.')
     .max(8, '닉네임은 최대 8자까지 가능합니다.'),
 })
+
+const getPostposition = (word: string, josa1: string, josa2: string) => {
+  const code = word.charCodeAt(word.length - 1)
+  const hasFinalConsonant = (code - 44032) % 28 !== 0
+  return `${word}${hasFinalConsonant ? josa1 : josa2}`
+}
+
+export const getRangeErrorMessage = (min: string, max: string, unitLabel: string): string => {
+  const numMin = Number(min)
+  const numMax = Number(max)
+
+  if ((min !== '' && numMin < 0) || (max !== '' && numMax < 0)) {
+    return '0 이상 값만 입력해주세요.'
+  }
+
+  if (min !== '' && max !== '' && numMin > numMax) {
+    return `최소 ${getPostposition(unitLabel, '이', '가')} 최대 ${unitLabel}보다 높아요.`
+  }
+
+  return ''
+}
