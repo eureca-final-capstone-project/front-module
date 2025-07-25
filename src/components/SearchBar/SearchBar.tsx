@@ -4,9 +4,10 @@ import SearchIcon from '@/assets/icons/search.svg?react'
 interface SearchBarProps {
   onSubmit: (keyword: string) => void
   defaultValue?: string
+  className?: string
 }
 
-const SearchBar = ({ onSubmit, defaultValue = '' }: SearchBarProps) => {
+const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) => {
   const { register, handleSubmit } = useForm({
     defaultValues: { keyword: defaultValue },
   })
@@ -20,7 +21,7 @@ const SearchBar = ({ onSubmit, defaultValue = '' }: SearchBarProps) => {
       onSubmit={handleSubmit(submit)}
       className="relative z-10 flex flex-1 justify-center self-end sm:translate-y-[6px]"
     >
-      <div className="relative w-full max-w-171">
+      <div className={`relative w-full ${className}`}>
         <SearchIcon className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400" />
         <input
           {...register('keyword')}

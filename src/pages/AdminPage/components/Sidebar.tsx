@@ -2,7 +2,7 @@ import LogoImg from '@/assets/images/logo-primary.svg'
 import AddminIcon from '@/assets/icons/admin.svg'
 import LogoutIcon from '@/assets/icons/logout.svg?react'
 import ActiveBarIcon from '@/assets/icons/active-bar.svg?react'
-import { sidebarMenu } from '../../../constants/adminMenu'
+import { adminSidebarMenu } from '../../../constants/admin'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
@@ -13,7 +13,7 @@ const Sidebar = () => {
   const [prevIndex, setPrevIndex] = useState(0)
 
   // 현재 활성 메뉴의 index 찾기
-  const currentIndex = sidebarMenu.findIndex(item => location.pathname.startsWith(item.path))
+  const currentIndex = adminSidebarMenu.findIndex(item => location.pathname.startsWith(item.path))
 
   // prevIndex 업데이트
   useEffect(() => {
@@ -40,7 +40,7 @@ const Sidebar = () => {
         </button>
       </div>
       <nav className="flex flex-col gap-2">
-        {sidebarMenu.map(item => {
+        {adminSidebarMenu.map(item => {
           const isActive = location.pathname.startsWith(item.path)
           const Icon = item.icon
 
