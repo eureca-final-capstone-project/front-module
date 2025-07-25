@@ -10,10 +10,12 @@ const UserDetailRow = ({ reports }: UserDetailRowProps) => {
   return (
     <table className="w-full">
       <colgroup>
-        <col style={{ width: '3%' }} />
-        <col style={{ width: '3%' }} />
-        <col style={{ width: '16%' }} />
-        <col style={{ width: '35%' }} />
+        <col style={{ width: '3%' }} /> {/* 빈칸 */}
+        <col style={{ width: '3%' }} /> {/* reportId */}
+        <col style={{ width: '15.5%' }} /> {/* reportType */}
+        <col style={{ width: '34%' }} /> {/* content */}
+        <col style={{ width: '21.5%' }} /> {/* createdAt */}
+        <col style={{ width: '18.5%' }} /> {/* status */}
       </colgroup>
       <tbody>
         {reports &&
@@ -24,16 +26,11 @@ const UserDetailRow = ({ reports }: UserDetailRowProps) => {
                 <td></td>
                 <td className="px-3 py-4">{report.reportId}</td>
                 <td className="px-3 py-4">{report.reportType}</td>
-                <td
-                  className="max-w-50 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap"
-                  colSpan={4}
-                >
+                <td className="max-w-50 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap">
                   {report.content}
                 </td>
-                <td className="px-3 py-4" colSpan={2}>
-                  {new Date(report.createdAt).toLocaleDateString()}
-                </td>
-                <td className="px-3 py-4" colSpan={2}>
+                <td className="px-3 py-4">{new Date(report.createdAt).toLocaleDateString()}</td>
+                <td className="px-3 py-4">
                   <Badge label={report.status} {...STATUS_STYLE[report.status]} />
                 </td>
               </tr>
