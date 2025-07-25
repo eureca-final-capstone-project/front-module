@@ -7,9 +7,23 @@ import { User, UserReport } from '../../types/admin'
 import Toggle from '../../components/Toggle/Toggle'
 import UserDetailRow from './components/UserDetailRow'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import { useSearchParams } from 'react-router-dom'
+import Pagination from '../../components/Pagination/Pagination'
 
 const UserHistory = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const pageParam = parseInt(searchParams.get('page') ?? '1', 10)
+
+  const [currentPage, setCurrentPage] = useState(pageParam)
   const [reports, setReports] = useState<UserReport[]>([])
+
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(userHistoryData.length / itemsPerPage)
+
+  const paginatedData = userHistoryData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
 
   const renderUserCell = (key: keyof User, row: User) => {
     switch (key) {
@@ -30,6 +44,11 @@ const UserHistory = () => {
     setReports(userReportData)
   }
 
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage)
+    setSearchParams({ page: String(newPage) })
+  }
+
   return (
     <main className="space-y-13">
       <SearchBar onSubmit={keyword => console.log(keyword)} />
@@ -42,7 +61,7 @@ const UserHistory = () => {
           </div>
           <Table
             columns={userColumns}
-            data={userHistoryData}
+            data={paginatedData}
             renderCell={renderUserCell}
             isClickable={row => row.reportCount > 0}
             onRowClick={handleRowClick}
@@ -50,6 +69,11 @@ const UserHistory = () => {
           />
         </div>
       </section>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </main>
   )
 }
