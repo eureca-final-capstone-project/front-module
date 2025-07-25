@@ -18,11 +18,15 @@ const Table = <T,>({
   onRowClick,
   renderDetailTable,
 }: TableProps<T>) => {
-  const [expandedRowIndex, setExpandedRowIndex] = useState<number | null>(null)
+  const [expandedRows, setExpandedRows] = useState<number[]>([])
 
   const handleRowClick = (row: T, index: number) => {
     onRowClick?.(row)
-    setExpandedRowIndex(prev => (prev === index ? null : index))
+    if (expandedRows.includes(index)) {
+      setExpandedRows(prev => prev.filter(i => i !== index))
+    } else {
+      setExpandedRows(prev => [...prev, index])
+    }
   }
 
   return (
@@ -68,7 +72,7 @@ const Table = <T,>({
                     >
                       <ArrowBottomIcon
                         className={`w-3 text-gray-700 transition-transform duration-300 ease-in-out ${
-                          expandedRowIndex === rowIndex ? '-rotate-180' : ''
+                          expandedRows.includes(rowIndex) ? '-rotate-180' : ''
                         }`}
                       />
                     </td>
@@ -83,13 +87,12 @@ const Table = <T,>({
                     ))}
                   </tr>
 
-                  {/* 상세 테이블 내용 */}
                   {clickable && (
                     <tr>
                       <td colSpan={columns.length + 3}>
                         <div
-                          className={`transition-[max-height,opacity] duration-300 ease-in-out ${
-                            expandedRowIndex === rowIndex
+                          className={`overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out ${
+                            expandedRows.includes(rowIndex)
                               ? 'max-h-screen opacity-100'
                               : 'max-h-0 opacity-0'
                           }`}
