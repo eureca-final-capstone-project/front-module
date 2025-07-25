@@ -29,3 +29,5 @@ export const mapStatusToServer = (status: TradeStatus): string => {
       return 'COMPLETED'
   }
 }
+
+export const TRANSACTION_HISTORY_STATUS: TradeStatus = 'completed'

@@ -15,15 +15,15 @@ export const modalTexts = {
 
 export const buttonOptions = {
   fav: [
-    { label: '전체', value: 'both' },
+    { label: '전체', value: 'all' },
     { label: '일반 거래', value: 'normal' },
     { label: '입찰 거래', value: 'bid' },
   ] as const,
 
   trade: [
-    { label: '전체', value: 'both' },
-    { label: '구매 내역', value: 'purchase' },
-    { label: '판매 내역', value: 'sell' },
+    { label: '전체', value: 'ALL' },
+    { label: '구매 내역', value: 'PURCHASE' },
+    { label: '판매 내역', value: 'SALE' },
   ] as const,
 }
 
