@@ -39,6 +39,10 @@ export interface UserDataStatus {
   buyerDataMb: number
 }
 
+export interface UserPayStatus {
+  balance: number
+}
+
 export const getUserProfile = async (): Promise<UserProfile> => {
   const res = await client.get('/user/profile')
   return res.data.data
@@ -59,5 +63,9 @@ export const putUserPassword = async (
 }
 export const getUserDataStatus = async (): Promise<UserDataStatus> => {
   const res = await client.get('/user-data/status')
+  return res.data.data
+}
+export const getUserPayStatus = async (): Promise<UserPayStatus> => {
+  const res = await client.get('/user-pay')
   return res.data.data
 }

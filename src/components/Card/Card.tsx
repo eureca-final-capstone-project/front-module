@@ -3,6 +3,7 @@ import { useDeviceType } from '../../hooks/useDeviceType'
 import WarningIcon from '../../assets/icons/warning.svg?react'
 import NoticeIcon from '../../assets/icons/notice.svg?react'
 import ArrowRightIcon from '../../assets/icons/arrow-right.svg?react'
+import FadeInUpMotion from '../Animation/FadeInUpMotion'
 
 interface CardProps {
   type?: 'default' | 'label' | 'warning' | 'notice'
@@ -11,6 +12,8 @@ interface CardProps {
   iconTitle?: string
   iconDescription?: string
   children?: React.ReactNode
+  withMotion?: boolean
+  motionCustom?: number
 }
 const typeStyles = {
   warning: {
@@ -34,6 +37,8 @@ const Card = ({
   iconTitle,
   iconDescription,
   children,
+  withMotion = false,
+  motionCustom = 0,
 }: CardProps) => {
   const deviceType = useDeviceType()
   const isIconType = type === 'warning' || type === 'notice'
@@ -55,7 +60,7 @@ const Card = ({
           labelTitle: 'text-fs20',
         }
 
-  return (
+  const cardContent = (
     <div
       className={`shadow-card flex w-full flex-col rounded-md ${responsiveStyles.wrapper} ${
         isIconType ? iconCardStyle?.cardBg : 'bg-gray-10'
@@ -69,6 +74,7 @@ const Card = ({
           <hr className="border-t border-gray-100" />
         </div>
       )}
+
       {isIconType && iconTitle && iconDescription ? (
         <div
           className={`flex w-full items-center gap-3 ${type === 'notice' ? 'justify-between' : ''}`}
@@ -94,6 +100,12 @@ const Card = ({
         children
       )}
     </div>
+  )
+
+  return withMotion ? (
+    <FadeInUpMotion custom={motionCustom ?? 0}>{cardContent}</FadeInUpMotion>
+  ) : (
+    cardContent
   )
 }
 
