@@ -76,8 +76,8 @@ const UserHistory = () => {
         <h1 className="text-fs24 font-medium">회원 내역</h1>
         <div className="relative">
           <div className="absolute -top-5 right-0 -translate-y-full font-medium">
-            Total <span className="text-pri-400">{120}</span>, Page
-            <span className="text-pri-400"> {1}</span>/{12}
+            Total <span className="text-pri-400">{userHistoryData.length}</span>, Page
+            <span className="text-pri-400"> {currentPage}</span>/{totalPages}
           </div>
           <Table
             columns={userColumns}
