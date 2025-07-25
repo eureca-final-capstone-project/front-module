@@ -40,7 +40,7 @@ const Table = <T,>({
             return (
               <th
                 key={String(col.key)}
-                className="text-pri-900 px-4 py-4 text-left font-semibold"
+                className="text-pri-900 px-3 py-4 text-left font-semibold"
                 colSpan={colSpan}
               >
                 {col.header}
@@ -53,7 +53,7 @@ const Table = <T,>({
       <tbody className="bg-gray-10 text-gray-700">
         {data.length === 0 ? (
           <tr>
-            <td colSpan={columns.length + 1} className="px-4 py-4 text-center">
+            <td colSpan={columns.length + 1} className="px-3 py-4 text-center">
               데이터가 없습니다.
             </td>
           </tr>
