@@ -8,6 +8,7 @@ import DataBadge from '../Badge/Badge'
 import { formatDataSize, formatAmount } from '../../utils/format'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import { imageData as PostImage } from '../../constants/imageData'
+import { formatRelativeTime } from '../../utils/time'
 
 const PostCardCol = ({
   telecomCompany,
@@ -84,13 +85,9 @@ const PostCardCol = ({
         <div
           className={`text-fs12 sm:text-fs14 flex items-center text-[#666666] ${deviceType === 'mobile' ? 'gap-0.5' : 'gap-1'}`}
         >
-          <p>{nickname}</p>
-          {createdAt && (
-            <>
-              <p>·</p>
-              <p>{createdAt}</p>
-            </>
-          )}
+          <span>{nickname}</span>
+          <span>·</span>
+          <span>{formatRelativeTime(createdAt)}</span>
         </div>
 
         {/* 판매 페이 */}

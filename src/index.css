@@ -186,6 +186,21 @@ select:-webkit-autofill:focus {
   -webkit-text-fill-color: black;
 }
 
+/* number input 스핀 버튼 제거 */
+.input-no-spinner::-webkit-outer-spin-button,
+.input-no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+}
 .Toastify__toast-icon {
   position: absolute;
   left: 16px;
@@ -202,4 +217,10 @@ select:-webkit-autofill:focus {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.button-active {
+  @apply bg-pri-500 text-gray-10;
+}
+.button-disabled {
+  @apply bg-gray-50 text-gray-500;
 }
