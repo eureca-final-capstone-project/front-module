@@ -38,6 +38,10 @@ export interface UserDataStatus {
   sellableDataMb: number
   buyerDataMb: number
 }
+
+export interface UserPayStatus {
+  balance: number
+}
 export interface TransactionHistoryItem {
   transactionFeedId: number
   title: string
@@ -77,6 +81,10 @@ export const putUserPassword = async (
 }
 export const getUserDataStatus = async (): Promise<UserDataStatus> => {
   const res = await client.get('/user-data/status')
+  return res.data.data
+}
+export const getUserPayStatus = async (): Promise<UserPayStatus> => {
+  const res = await client.get('/user-pay')
   return res.data.data
 }
 export const getTransactionHistory = async ({
