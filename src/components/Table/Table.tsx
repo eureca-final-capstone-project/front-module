@@ -84,7 +84,21 @@ const Table = <T,>({
                   </tr>
 
                   {/* 상세 테이블 내용 */}
-                  {clickable && expandedRowIndex === rowIndex && renderDetailTable}
+                  {clickable && (
+                    <tr>
+                      <td colSpan={columns.length + 3}>
+                        <div
+                          className={`transition-[max-height,opacity] duration-300 ease-in-out ${
+                            expandedRowIndex === rowIndex
+                              ? 'max-h-screen opacity-100'
+                              : 'max-h-0 opacity-0'
+                          }`}
+                        >
+                          {renderDetailTable}
+                        </div>
+                      </td>
+                    </tr>
+                  )}
                 </Fragment>
               )
             })}
