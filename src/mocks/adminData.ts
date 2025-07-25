@@ -1,27 +1,14 @@
-export const userHistoryData = [
-  {
-    userId: '1',
-    email: 'abc@datch.com',
-    nickname: '몽실몽실구름빵',
-    telecomCompany: 'SKT',
-    phoneNumber: '010-1234-5678',
-    createdAt: '2025-07-01T10:00:00',
-    reportCount: 2,
-    status: '활성',
-    isBlocked: false,
-  },
-  {
-    userId: '2',
-    email: 'def@datch.com',
-    nickname: '빛나는별',
-    telecomCompany: 'KT',
-    phoneNumber: '010-2345-6789',
-    createdAt: '2025-07-01T10:00:00',
-    reportCount: 0,
-    status: '비활성',
-    isBlocked: true,
-  },
-]
+export const userHistoryData = Array.from({ length: 150 }, (_, index) => ({
+  userId: index + 1,
+  email: `user${index + 1}@datch.com`,
+  nickname: `닉네임${index + 1}`,
+  telecomCompany: ['SKT', 'KT', 'LGU+'][index % 3],
+  phoneNumber: `010-${String(1000 + index).padStart(4, '0')}-${String(5678 + index).padStart(4, '0')}`,
+  createdAt: `2025-07-${String(1 + (index % 28)).padStart(2, '0')}T10:00:00`,
+  reportCount: index % 3,
+  status: ['활성', '비활성', '검수대기'][index % 3],
+  isBlocked: index % 2 === 0 ? false : true,
+}))
 
 export const userReportData = [
   {
