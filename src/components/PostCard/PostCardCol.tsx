@@ -86,8 +86,12 @@ const PostCardCol = ({
           className={`text-fs12 sm:text-fs14 flex items-center text-[#666666] ${deviceType === 'mobile' ? 'gap-0.5' : 'gap-1'}`}
         >
           <span>{nickname}</span>
-          <span>·</span>
-          <span>{formatRelativeTime(createdAt)}</span>
+          {createdAt && (
+            <>
+              <span>·</span>
+              <span>{formatRelativeTime(createdAt)}</span>
+            </>
+          )}
         </div>
 
         {/* 판매 페이 */}
