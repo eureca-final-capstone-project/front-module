@@ -29,7 +29,7 @@ const Header = () => {
         >
           <img src={LogoPrimary} alt="로고" className="h-full" />
         </div>
-        {deviceType !== 'mobile' && <SearchBar onSubmit={handleSearch} />}
+        {deviceType !== 'mobile' && <SearchBar onSubmit={handleSearch} className="max-w-171" />}
         <HeaderNav deviceType={deviceType} setShowMobileSearch={setShowMobileSearch} />
 
         {/* 모바일일 때, 아래로 내려오는 검색바 */}
