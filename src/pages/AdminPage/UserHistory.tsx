@@ -9,13 +9,15 @@ import UserDetailRow from './components/UserDetailRow'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import { useSearchParams } from 'react-router-dom'
 import Pagination from '../../components/Pagination/Pagination'
+import { getTelecomBadgeColor } from '../../utils/telecom'
 
 const UserHistory = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const pageParam = parseInt(searchParams.get('page') ?? '1', 10)
 
   const [currentPage, setCurrentPage] = useState(pageParam)
-  const [reports, setReports] = useState<UserReport[]>([])
+  const [reportsByUser, setReportsByUser] = useState<Record<number, UserReport[]>>({})
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
 
   const itemsPerPage = 10
   const totalPages = Math.ceil(userHistoryData.length / itemsPerPage)
@@ -27,6 +29,14 @@ const UserHistory = () => {
 
   const renderUserCell = (key: keyof User, row: User) => {
     switch (key) {
+      case 'telecomCompany':
+        return (
+          <Badge
+            label={row.telecomCompany}
+            className={getTelecomBadgeColor(row.telecomCompany)}
+            size="small"
+          />
+        )
       case 'createdAt':
         return new Date(row.createdAt).toLocaleDateString()
       case 'status': {
@@ -40,13 +50,23 @@ const UserHistory = () => {
   }
 
   const handleRowClick = (row: User) => {
-    console.log(row)
-    setReports(userReportData)
+    setSelectedUserId(row.userId)
+    // 이미 데이터가 있으면 재사용
+    if (reportsByUser[row.userId]) {
+      return
+    }
+    // 데이터 없으면 API 호출 후 저장
+    console.log(2)
+    setReportsByUser(prev => ({ ...prev, [row.userId]: userReportData }))
   }
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
     setSearchParams({ page: String(newPage) })
+
+    // 페이지 변경시 리포트 초기화
+    setSelectedUserId(null)
+    setReportsByUser({})
   }
 
   return (
@@ -65,7 +85,11 @@ const UserHistory = () => {
             renderCell={renderUserCell}
             isClickable={row => row.reportCount > 0}
             onRowClick={handleRowClick}
-            renderDetailTable={<UserDetailRow reports={reports} />}
+            renderDetailTable={
+              selectedUserId !== null ? (
+                <UserDetailRow reports={reportsByUser[selectedUserId] ?? []} />
+              ) : null
+            }
           />
         </div>
       </section>
