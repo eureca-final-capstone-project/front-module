@@ -72,7 +72,7 @@ export const getRangeErrorMessage = (min: string, max: string, unitLabel: string
   return ''
 }
 
-export const postSchema = z
+export const postTransactionSchema = z
   .object({
     title: z
       .string()
