@@ -12,6 +12,8 @@ import CurrentDataInfoField from './components/CurrentDataInfoField'
 import DataInput from './components/DataInput'
 import ImageSelect from './components/ImageSelect'
 import { useUserStore } from '../../store/userStore'
+import { useMutation } from '@tanstack/react-query'
+import { postTransactionFeed } from '../../apis/transactionFeed'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -36,6 +38,21 @@ const PostWritePage = () => {
   const watchedFields = watch()
   const allFieldsFilled = Object.values(watchedFields).every(value => value !== '')
 
+  const mutation = useMutation({
+    mutationFn: postTransactionFeed,
+    onSuccess: data => {
+      if (data.statusCode === 200) {
+        console.log(data)
+      } else {
+        alert('판매글 등록 실패: ' + data.detailMessage)
+        console.log(data)
+      }
+    },
+    onError: error => {
+      alert('판매글 등록 실패 ' + error.message)
+    },
+  })
+
   const onSubmit = (data: PostTransactionType) => {
     let amount = 1024
     if (data.unit === 'GB') amount *= data.salesDataAmount
@@ -48,7 +65,8 @@ const PostWritePage = () => {
       telecomCompanyId: telecom?.id,
       salesDataAmount: amount,
     }
-    console.log(postData)
+
+    mutation.mutate(postData)
   }
 
   return (
