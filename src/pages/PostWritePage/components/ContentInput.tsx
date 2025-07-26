@@ -24,7 +24,9 @@ const ContentInput = () => {
             }}
             className={`rounded-sm border ${errors.content ? 'border-error' : field.value ? 'border-pri-500' : 'border-gray-400'} hover:border-pri-500 focus:border-pri-500 h-30 w-full resize-none p-4 text-gray-900 placeholder:text-gray-400 focus:outline-none`}
           />
-          <span>{errors.content?.message?.toString() || ''}</span>
+          <span className="text-error text-fs12 p-1">
+            {errors.content?.message?.toString() || ''}
+          </span>
         </div>
       )}
     />
