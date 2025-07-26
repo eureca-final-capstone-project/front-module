@@ -20,11 +20,11 @@ const WebMobileLayout = () => {
           <h1 className="text-fs20 font-medium">{title}</h1>
         </Container>
       </header>
-      <main className="mt-16 w-full flex-1 pt-6 sm:mt-21.5 sm:pt-10">
+      <div className="mt-16 w-full flex-1 pt-6 sm:mt-21.5 sm:pt-10">
         <Container className="max-w-[640px]">
           <Outlet />
         </Container>
-      </main>
+      </div>
     </div>
   )
 }
