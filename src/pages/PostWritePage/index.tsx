@@ -1,5 +1,4 @@
 import { FormProvider, useForm } from 'react-hook-form'
-import Button from '../../components/Button/Button'
 import TitleInput from './components/TitleInput'
 import { PostTransactionType } from '../../types/transactionFeed'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -14,6 +13,7 @@ import ImageSelect from './components/ImageSelect'
 import { useUserStore } from '../../store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { postTransactionFeed } from '../../apis/transactionFeed'
+import FloatActionButton from '../../components/FloatActionButton'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -72,7 +72,10 @@ const PostWritePage = () => {
   return (
     <main>
       <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <form
+          onSubmit={methods.handleSubmit(onSubmit)}
+          className={`flex flex-col gap-6 ${allFieldsFilled ? 'pb-20' : 'pb-10'}`}
+        >
           {formSections.map(({ label, Component }, index) => (
             <Card
               key={index}
@@ -86,11 +89,12 @@ const PostWritePage = () => {
               <Component />
             </Card>
           ))}
-          <Button
+          <FloatActionButton
+            show={allFieldsFilled}
             text="작성 완료"
             type="submit"
             disabled={!allFieldsFilled}
-            className="bg-pri-500 text-gray-10 disabled:bg-gray-50 disabled:text-gray-400"
+            className={!allFieldsFilled ? 'button-disabled' : 'button-active'}
           />
         </form>
       </FormProvider>
