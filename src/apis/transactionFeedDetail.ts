@@ -25,6 +25,8 @@ export interface TransactionFeedDetailResponse {
   }
   expiredAt: string
   currentHeightPrice?: number
+  rate: number
+  priceCompare: 'NO_STATISTIC' | 'EXPENSIVE' | 'CHEAPER' | 'SAME'
 }
 
 export const getTransactionFeedDetail = async (
