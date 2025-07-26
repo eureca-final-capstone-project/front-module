@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
         element: <PostPage />,
       },
       {
-        path: '/posts/normal/:postId',
+        path: '/posts/normal/:transactionFeedId',
         element: <NormalDetailPage />,
       },
       {
