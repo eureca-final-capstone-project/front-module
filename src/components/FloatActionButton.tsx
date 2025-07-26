@@ -4,7 +4,8 @@ import Button from './Button/Button'
 interface FloatingActionButtonProps {
   show: boolean
   text: string
-  onClick: () => void
+  type?: 'button' | 'submit'
+  onClick?: () => void
   disabled?: boolean
   className?: string
 }
@@ -12,6 +13,7 @@ interface FloatingActionButtonProps {
 const FloatActionButton = ({
   show,
   text,
+  type = 'button',
   onClick,
   disabled = false,
   className = '',
@@ -28,6 +30,7 @@ const FloatActionButton = ({
         >
           <Button
             text={text}
+            type={type}
             onClick={onClick}
             disabled={disabled}
             className={`text-fs16 w-full p-4 font-medium ${className}`}
