@@ -6,11 +6,12 @@ import Button from '../../../components/Button/Button'
 import { useUserStore } from '../../../store/userStore'
 
 const DataInput = () => {
-  const sellableDataMb = useUserStore(state => state.data?.sellableDataMb)
+  const sellableDataMb = useUserStore(state => state.data?.sellableDataMb ?? 0)
 
   const {
     control,
     setValue,
+    setError,
     clearErrors,
     formState: { errors },
   } = useFormContext()
@@ -47,8 +48,21 @@ const DataInput = () => {
               onChange={e => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
                 const numberValue = rawValue === '' ? '' : Number(rawValue)
+
+                // 입력 데이터가 판매 가능 데이터를 초과하면 에러 처리
+                if (
+                  typeof numberValue === 'number' &&
+                  !isNaN(numberValue) &&
+                  numberValue > sellableDataMb
+                ) {
+                  setError('salesDataAmount', {
+                    message: `판매 가능한 데이터 양 범위 내에서 입력해 주세요.`,
+                  })
+                } else {
+                  clearErrors('salesDataAmount') // 조건을 만족하면 에러 초기화
+                }
+
                 field.onChange(numberValue)
-                if (errors.salesDataAmount) clearErrors('salesDataAmount')
               }}
               error={!!errors.salesDataAmount}
               errorMsg={errors.salesDataAmount?.message?.toString() || ''}
