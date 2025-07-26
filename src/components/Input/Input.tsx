@@ -58,7 +58,7 @@ const Input = ({
 
   /* placeholder */
   hover:placeholder-gray-400 focus:placeholder-gray-400
-  sm:placeholder-gray-600 sm:focus:placeholder-gray-600 sm:hover:placeholder-gray-600
+  sm:placeholder-gray-400 sm:focus:placeholder-gray-400 sm:hover:placeholder-gray-400
   ${shape === 'underline' ? 'placeholder-gray-400' : 'placeholder-gray-100'}
 
   /* padding */
