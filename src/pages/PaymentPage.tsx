@@ -6,9 +6,9 @@ import { getUserEventCoupons, UserEventCoupon } from '../apis/eventCoupon'
 import Card from '../components/Card/Card'
 import DropDown from '../components/DropDown/DropDown'
 import DatchaCoin from '@/assets/icons/datcha-coin.svg?react'
-import Button from '../components/Button/Button'
 import { formatAmount } from '../utils/format'
 import Input from '../components/Input/Input'
+import FloatActionButton from '../components/FloatActionButton'
 
 const PaymentPage = () => {
   const [amount, setAmount] = useState<number>(0)
@@ -129,14 +129,15 @@ const PaymentPage = () => {
   const couponOptions = ['적용 안 함', ...(eventCouponData?.data.coupons.map(getCouponLabel) ?? [])]
 
   return (
-    <div className="flex-col px-4 pb-20 sm:flex sm:h-[calc(100vh-126px)] sm:justify-between sm:px-0 sm:pb-0">
+    <div className={`flex flex-col px-4 sm:justify-between sm:px-0 ${amount > 0 ? 'pb-20' : ''}`}>
+      {' '}
       <div className="flex flex-col gap-4">
         <Card withMotion motionCustom={0}>
           <div className="flex items-center justify-between font-medium">
             <span className="text-fs18 sm:text-fs20 text-gray-900">보유 다챠페이</span>
             <div className="flex gap-1 sm:gap-2">
               <DatchaCoin className="h-6 w-6" />
-              <span className="text-fs18 sm:text-fs20 text-gray-900">
+              <span className="text-fs18 sm:text-fs20 text-pri-500 font-semibold">
                 {formatAmount(userPayStatus?.balance ?? 0)}
               </span>
             </div>
@@ -146,11 +147,13 @@ const PaymentPage = () => {
           <Input
             id="amount"
             label="충전하실 페이 금액을 입력해주세요."
-            type="number"
+            type="text"
             value={amount === 0 ? '' : String(amount)}
             onChange={e => {
-              const num = Number(e.target.value)
-              setAmount(Number.isNaN(num) ? 0 : num)
+              const value = e.target.value
+              if (/^\d*$/.test(value)) {
+                setAmount(Number(value))
+              }
             }}
             shape="square"
             suffix="원"
@@ -190,24 +193,13 @@ const PaymentPage = () => {
           </div>
         </Card>
       </div>
-
-      <div className="fixed right-0 bottom-4 left-0 block px-4 sm:hidden">
-        <Button
-          text={`${finalAmount.toLocaleString()}원 결제하기`}
-          onClick={handlePayment}
-          disabled={isDisabled}
-          className={`text-fs16 w-full p-4 font-medium ${isDisabled ? 'button-disabled' : 'button-active'}`}
-        />
-      </div>
-
-      <div className="my-4 hidden sm:block">
-        <Button
-          text={`${finalAmount.toLocaleString()}원 결제하기`}
-          onClick={handlePayment}
-          disabled={isDisabled}
-          className={`text-fs18 w-full p-4 font-medium ${isDisabled ? 'button-disabled' : 'button-active'}`}
-        />
-      </div>
+      <FloatActionButton
+        show={amount > 0}
+        text={`${finalAmount.toLocaleString()}원 결제하기`}
+        onClick={handlePayment}
+        disabled={isDisabled}
+        className={isDisabled ? 'button-disabled' : 'button-active'}
+      />
     </div>
   )
 }
