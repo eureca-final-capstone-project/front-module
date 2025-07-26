@@ -1,3 +1,4 @@
+import { TransactionFeedDetailResponse } from '../apis/transactionFeedDetail'
 import { TransactionHistoryItem } from '../apis/userInfo'
 import type { PostCardProps } from '../components/PostCard/PostCard'
 import { mapSalesTypeFromServer } from './salesType'
@@ -57,4 +58,24 @@ export const transformTransactionPostCard = (
   onToggleLike: () => {},
   tradehistorytime: new Date(data.transactionDate).toLocaleString('ko-KR'),
   tradehistorypay: data.transactionFinalPrice,
+})
+
+export const transformTransactionFeedToPostCard = (
+  data: TransactionFeedDetailResponse,
+  omitCreatedAt = false
+): PostCardProps => ({
+  type: 'row',
+  transactionFeedId: data.transactionFeedId,
+  title: data.title,
+  nickname: data.nickname,
+  salesPrice: data.salesPrice,
+  salesDataAmount: data.salesDataAmount,
+  defaultImageNumber: data.defaultImageNumber,
+  createdAt: omitCreatedAt ? undefined : data.createdAt,
+  liked: data.liked,
+  onToggleLike: () => {},
+  telecomCompany: data.telecomCompany.name,
+  status: mapStatusFromServer(data.status.code),
+  salesType: mapSalesTypeFromServer(data.salesType.name),
+  currentHeightPrice: data.currentHeightPrice,
 })
