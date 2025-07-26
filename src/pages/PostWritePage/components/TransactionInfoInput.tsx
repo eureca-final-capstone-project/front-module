@@ -55,9 +55,9 @@ const TransactionInfoInput = () => {
               id="price"
               value={formattedValue}
               onChange={e => {
-                // 콤마 제거 + 숫자만 필터링
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
-                field.onChange(rawValue)
+                const numberValue = rawValue === '' ? '' : Number(rawValue)
+                field.onChange(numberValue)
                 if (errors.price) clearErrors('price')
               }}
               error={!!errors.price}
