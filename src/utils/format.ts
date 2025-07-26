@@ -22,6 +22,24 @@ export const formatAmount = (amount: number): string => {
   return `${amount.toLocaleString()}원`
 }
 
+/**
+ * 문자열로 된 숫자를 받아서,
+ * 기존에 포함된 콤마(,)를 제거하고,
+ * 유효한 숫자인 경우 천 단위 구분 쉼표(,)가 포함된 문자열로 변환하여 반환
+ * 유효하지 않은 숫자면 빈 문자열을 반환
+ *
+ * 예) "10000" -> "10,000"
+ * 예) "1,0000" -> "10,000"
+ * 예) "abc" -> ""
+ *
+ */
+export const formatNumberWithComma = (value: string) => {
+  if (!value) return ''
+  const numStr = value.replace(/,/g, '')
+  if (isNaN(Number(numStr))) return ''
+  return Number(numStr).toLocaleString('ko-KR')
+}
+
 /* 휴대폰 번호 하이픈 자동 삽입 함수 */
 export const formatPhoneNumber = (value: string) => {
   const number = value.replace(/[^0-9]/g, '')

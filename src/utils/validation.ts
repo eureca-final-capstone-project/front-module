@@ -71,3 +71,39 @@ export const getRangeErrorMessage = (min: string, max: string, unitLabel: string
 
   return ''
 }
+
+export const postTransactionSchema = z
+  .object({
+    title: z
+      .string()
+      .min(1, { message: '제목을 입력해 주세요.' })
+      .max(100, { message: '제목은 100자 이내로 입력해 주세요.' }),
+    content: z.string().nonempty('내용을 입력해 주세요.'),
+    salesTypeId: z.union([z.literal(1), z.literal(2)]),
+    salesPrice: z
+      .number({ message: '가격은 숫자로 입력해 주세요.' })
+      .min(1000, { message: '가격은 1000원 이상이어야 합니다.' }),
+    unit: z.enum(['MB', 'GB']),
+    salesDataAmount: z.number({ message: '데이터 양은 숫자로 입력해 주세요.' }),
+    defaultImageNumber: z.number({ message: '대표 이미지를 선택해 주세요.' }),
+  })
+  // 데이터 최소값 검사
+  .refine(
+    data =>
+      (data.unit === 'MB' && data.salesDataAmount >= 100) ||
+      (data.unit === 'GB' && data.salesDataAmount >= 1),
+    {
+      path: ['salesDataAmount'],
+      message: '데이터는 MB일 경우 100MB 이상, GB일 경우 1GB 이상 입력해야 합니다.',
+    }
+  )
+  // 데이터 단위 조건 검사
+  .refine(
+    data =>
+      (data.unit === 'MB' && data.salesDataAmount % 100 === 0) ||
+      (data.unit === 'GB' && data.salesDataAmount % 1 === 0),
+    {
+      path: ['salesDataAmount'],
+      message: 'MB는 100MB 단위, GB는 1GB 단위로만 입력할 수 있습니다.',
+    }
+  )
