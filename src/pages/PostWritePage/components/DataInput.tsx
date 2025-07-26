@@ -3,11 +3,11 @@ import DropDown from '../../../components/DropDown/DropDown'
 import Input from '../../../components/Input/Input'
 import { formatNumberWithComma } from '../../../utils/format'
 import Button from '../../../components/Button/Button'
-
-const unitOption = ['MB', 'GB']
-const sellableDataMb = 230 // 전역 상태 관리 필요
+import { useUserStore } from '../../../store/userStore'
 
 const DataInput = () => {
+  const sellableDataMb = useUserStore(state => state.data?.sellableDataMb)
+
   const {
     control,
     setValue,
@@ -26,7 +26,7 @@ const DataInput = () => {
             selected={field.value}
             onSelect={field.onChange}
             placeholder="단위"
-            options={unitOption}
+            options={['MB', 'GB']}
             className="w-22"
           />
         )}
