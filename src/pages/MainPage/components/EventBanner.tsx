@@ -1,7 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
 import ScaleDownMotion from '../../../components/Animation/ScaleDownMotion'
-import { issueEventCoupon, ErrorResponseData } from '../../../apis/eventCoupon'
+import { issueEventCoupon } from '../../../apis/eventCoupon'
 import { useToast } from '../../../hooks/useToast'
 
 const EventBanner = () => {
@@ -14,28 +13,20 @@ const EventBanner = () => {
     onSuccess: () => {
       showToast({ type: 'success', msg: '이벤트 쿠폰이 발급되었습니다!' })
     },
-    onError: (error: AxiosError<ErrorResponseData>) => {
-      if (error.response) {
-        const errorData = error.response.data
-        const errorCode = errorData.statusCode
-        const detailMessage = errorData.data?.detailMessage
-
-        switch (errorCode) {
-          case 10004:
-            showToast({ type: 'default', msg: '로그인 후 발급 가능합니다.' })
-            break
-          case 40024:
-            showToast({ type: 'default', msg: detailMessage || '이벤트 쿠폰을 발급받으셨습니다.' })
-            break
-          default:
-            showToast({ type: 'error', msg: '쿠폰 발급에 실패했습니다.' })
-        }
-      } else if (error.request) {
-        showToast({ type: 'error', msg: '잠시 후 다시 시도해주세요.' })
-      } else {
-        showToast({ type: 'error', msg: '오류가 발생했습니다.' })
+    onError: (error: Error & { code?: number }) => {
+      switch (error.code) {
+        case 10004:
+          showToast({ type: 'default', msg: '로그인 후 발급 가능합니다.' })
+          break
+        case 40023:
+          showToast({ type: 'error', msg: '쿠폰이 존재하지 않습니다.' })
+          break
+        case 40024:
+          showToast({ type: 'error', msg: error.message || '이벤트 쿠폰을 발급받으셨습니다.' })
+          break
+        default:
+          showToast({ type: 'error', msg: '쿠폰 발급에 실패했습니다.' })
       }
-      console.error('쿠폰 발급 에러:', error)
     },
   })
 
@@ -44,7 +35,7 @@ const EventBanner = () => {
   }
 
   return (
-    <section className="bg-toss-gradation relative flex h-50 w-full flex-col items-start justify-center overflow-hidden sm:h-90">
+    <section className="bg-toss-gradation relative flex h-40 w-full flex-col items-start justify-center overflow-hidden sm:h-75">
       <div className="relative z-10 mx-auto flex h-full w-full max-w-[1280px] items-center px-4 sm:px-0">
         <div className="flex flex-1 items-center justify-between sm:flex-col sm:items-start sm:pl-8">
           <div className="flex flex-col items-start justify-center">

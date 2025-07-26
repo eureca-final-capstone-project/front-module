@@ -80,5 +80,22 @@ export interface ErrorResponseData {
 
 export const issueEventCoupon = async (couponId: number): Promise<IssueEventCouponResponse> => {
   const response = await client.post(`/user-event-coupon/${couponId}/issue`)
+  const { statusCode, data } = response.data
+
+  if (statusCode !== 200) {
+    const code = data?.statusCode
+    const detailMessage = data?.detailMessage
+
+    const error = new Error(detailMessage) as Error & {
+      code?: number
+      name: string
+    }
+
+    error.code = code
+    error.name = 'IssueEventCouponError'
+
+    throw error
+  }
+
   return response.data
 }
