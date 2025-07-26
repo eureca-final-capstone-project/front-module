@@ -99,8 +99,12 @@ const PostCardRow = ({
               </div>
               <div className="text-fs12 sm:text-fs14 flex items-center gap-0.5 text-[#666666] sm:gap-1">
                 <span>{nickname}</span>
-                <span>·</span>
-                <span>{formatRelativeTime(createdAt)}</span>
+                {createdAt && (
+                  <>
+                    <span>·</span>
+                    <span>{formatRelativeTime(createdAt)}</span>
+                  </>
+                )}
               </div>
             </div>
             {salesType === 'normal' ? (
@@ -149,8 +153,12 @@ const PostCardRow = ({
               </div>
               <div className="text-fs12 lg:text-fs14 flex items-center gap-0.5 text-[#666666] sm:gap-1">
                 <span>{nickname}</span>
-                <span>·</span>
-                <span>{formatRelativeTime(createdAt)}</span>
+                {createdAt && (
+                  <>
+                    <span>·</span>
+                    <span>{formatRelativeTime(createdAt)}</span>
+                  </>
+                )}
               </div>
               <div className="text-fs12 lg:text-fs14 hidden gap-2 sm:flex">
                 <span className="text-[#666666]">거래 유형</span>

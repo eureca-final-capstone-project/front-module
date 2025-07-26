@@ -8,16 +8,29 @@ interface BasicModalProps {
   modalType: keyof typeof modalTexts
   onClickLeft: () => void
   onClickRight: () => void
+  children?: React.ReactNode
+  isWarning?: boolean
 }
 
-const BasicModal = ({ isOpen, onClose, modalType, onClickLeft, onClickRight }: BasicModalProps) => {
+const BasicModal = ({
+  isOpen,
+  onClose,
+  modalType,
+  onClickLeft,
+  onClickRight,
+  children,
+  isWarning = false,
+}: BasicModalProps) => {
   const { title, description, leftButtonText, rightButtonText } = modalTexts[modalType]
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="sm:w-94">
       <div className="flex flex-col gap-4">
         <h2 className="text-fs18 sm:text-fs20 font-medium">{title}</h2>
-        <p className="text-fs14 mb-3 text-gray-500">{description}</p>
+        <p className={`text-fs14 mb-3 ${isWarning ? 'text-error' : 'text-gray-500'}`}>
+          {description}
+        </p>
+        {children}
         <div className="flex gap-4">
           <Button
             className="text-fs16 flex-1 bg-gray-50 font-medium text-gray-800"

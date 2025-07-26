@@ -9,7 +9,7 @@ type CommonProps = {
   salesDataAmount: number
   title: string
   nickname: string
-  createdAt: string
+  createdAt?: string
   liked: boolean
   onToggleLike: () => void
   salesType: 'normal' | 'bid'

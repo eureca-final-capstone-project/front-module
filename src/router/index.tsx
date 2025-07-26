@@ -18,6 +18,8 @@ import PaymentPage from '../pages/PaymentPage'
 import PaymentSuccessPage from '../pages/PaymentSuccessPage'
 import PaymentFailPage from '../pages/PaymentFailPage'
 import UserHistory from '../pages/AdminPage/UserHistory'
+import NormalDetailPage from '../pages/DetailPage/NormalDetailPage'
+import DataPurchasePage from '../pages/DataPurchasePage'
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +53,10 @@ export const router = createBrowserRouter([
       {
         path: '/posts',
         element: <PostPage />,
+      },
+      {
+        path: '/posts/normal/:postId',
+        element: <NormalDetailPage />,
       },
       {
         path: '/mypage/:tabId',
@@ -89,6 +95,11 @@ export const router = createBrowserRouter([
         path: '/payment-fail',
         element: <PaymentFailPage />,
         handle: { title: '결제 실패' },
+      },
+      {
+        path: '/data-purchase/:transactionFeedId',
+        element: <DataPurchasePage />,
+        handle: { title: '데이터 구매' },
       },
     ],
   },

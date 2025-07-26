@@ -14,6 +14,7 @@ interface CardProps {
   children?: React.ReactNode
   withMotion?: boolean
   motionCustom?: number
+  onClick?: () => void
 }
 const typeStyles = {
   warning: {
@@ -25,7 +26,7 @@ const typeStyles = {
   notice: {
     cardBg: 'bg-gray-10',
     icon: NoticeIcon,
-    iconWrapper: 'bg-pri-500 text-pri-100',
+    iconWrapper: 'bg-pri-100 text-pri-500',
     title: 'text-pri-700',
   },
 }
@@ -39,6 +40,7 @@ const Card = ({
   children,
   withMotion = false,
   motionCustom = 0,
+  onClick,
 }: CardProps) => {
   const deviceType = useDeviceType()
   const isIconType = type === 'warning' || type === 'notice'
@@ -62,6 +64,7 @@ const Card = ({
 
   const cardContent = (
     <div
+      onClick={onClick}
       className={`shadow-card flex w-full flex-col rounded-md ${responsiveStyles.wrapper} ${
         isIconType ? iconCardStyle?.cardBg : 'bg-gray-10'
       } ${className}`}
