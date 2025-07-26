@@ -79,12 +79,13 @@ export const postSchema = z
       .min(1, { message: '제목을 입력해 주세요.' })
       .max(100, { message: '제목은 100자 이내로 입력해 주세요.' }),
     content: z.string().nonempty('내용을 입력해 주세요.'),
-    transactionMethod: z.union([z.literal(1), z.literal(2)]),
-    price: z
+    salesTypeId: z.union([z.literal(1), z.literal(2)]),
+    salesPrice: z
       .number({ message: '가격은 숫자로 입력해 주세요.' })
       .min(1000, { message: '가격은 1000원 이상이어야 합니다.' }),
     unit: z.enum(['MB', 'GB']),
     salesDataAmount: z.number({ message: '데이터 양은 숫자로 입력해 주세요.' }),
+    defaultImageNumber: z.number({ message: '대표 이미지를 선택해 주세요.' }),
   })
   // 데이터 최소값 검사
   .refine(
