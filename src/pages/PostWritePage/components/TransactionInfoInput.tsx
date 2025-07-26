@@ -21,7 +21,7 @@ const TransactionInfoInput = () => {
     <div className="space-y-5">
       {/* 거래 방식 선택 */}
       <Controller
-        name="transactionMethod"
+        name="salesTypeId"
         control={control}
         defaultValue={1}
         render={({ field }) => (
@@ -44,7 +44,7 @@ const TransactionInfoInput = () => {
 
       {/* 가격 입력 */}
       <Controller
-        name="price"
+        name="salesPrice"
         control={control}
         defaultValue=""
         render={({ field }) => {
@@ -52,16 +52,16 @@ const TransactionInfoInput = () => {
           return (
             <Input
               label="가격을 입력해주세요"
-              id="price"
+              id="salesPrice"
               value={formattedValue}
               onChange={e => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
                 const numberValue = rawValue === '' ? '' : Number(rawValue)
                 field.onChange(numberValue)
-                if (errors.price) clearErrors('price')
+                if (errors.salesPrice) clearErrors('salesPrice')
               }}
-              error={!!errors.price}
-              errorMsg={errors.price?.message?.toString() || ''}
+              error={!!errors.salesPrice}
+              errorMsg={errors.salesPrice?.message?.toString() || ''}
               prefix={<DatchaCoinIcon className="h-6 w-6" />}
               suffix="원"
             />
