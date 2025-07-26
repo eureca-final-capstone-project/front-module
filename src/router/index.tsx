@@ -6,7 +6,7 @@ import DefaultLayout from '../layout/DefaultLayout'
 import MyPage from '../pages/MyPage'
 import PayChargeResultPage from '../pages/PayChargeResultPage'
 import WebMobileLayout from '../layout/WebMobileLayout'
-import WritePage from '../pages/WritePage'
+import PostWritePage from '../pages/PostWritePage'
 import SignUpPage from '../pages/SignUpPage'
 import OAuthCallbackPage from '../pages/LoginPage/OAuthCallbackPage'
 import AdditionalInfoPage from '../pages/SignUpPage/AdditionalInfoPage'
@@ -17,6 +17,9 @@ import PostPage from '../pages/PostPage'
 import PaymentPage from '../pages/PaymentPage'
 import PaymentSuccessPage from '../pages/PaymentSuccessPage'
 import PaymentFailPage from '../pages/PaymentFailPage'
+import UserHistory from '../pages/AdminPage/UserHistory'
+import NormalDetailPage from '../pages/DetailPage/NormalDetailPage'
+import DataPurchasePage from '../pages/DataPurchasePage'
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +55,10 @@ export const router = createBrowserRouter([
         element: <PostPage />,
       },
       {
+        path: '/posts/normal/:transactionFeedId',
+        element: <NormalDetailPage />,
+      },
+      {
         path: '/mypage/:tabId',
         element: <MyPage />,
       },
@@ -65,8 +72,8 @@ export const router = createBrowserRouter([
     element: <WebMobileLayout />,
     children: [
       {
-        path: '/write',
-        element: <WritePage />,
+        path: '/post-write',
+        element: <PostWritePage />,
         handle: { title: '내 데이터 판매' },
       },
       {
@@ -89,6 +96,11 @@ export const router = createBrowserRouter([
         element: <PaymentFailPage />,
         handle: { title: '결제 실패' },
       },
+      {
+        path: '/data-purchase/:transactionFeedId',
+        element: <DataPurchasePage />,
+        handle: { title: '데이터 구매' },
+      },
     ],
   },
   {
@@ -97,6 +109,10 @@ export const router = createBrowserRouter([
       {
         path: '/admin/dashboard',
         element: <Dashboard />,
+      },
+      {
+        path: '/admin/users',
+        element: <UserHistory />,
       },
     ],
   },

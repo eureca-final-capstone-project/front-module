@@ -1,0 +1,44 @@
+import Badge from '../../../components/Badge/Badge'
+import { STATUS_STYLE } from '../../../constants/admin'
+import { UserReport } from '../../../types/admin'
+
+interface UserDetailRowProps {
+  reports: UserReport[]
+}
+
+const UserDetailRow = ({ reports }: UserDetailRowProps) => {
+  return (
+    <table className="w-full">
+      <colgroup>
+        <col style={{ width: '3%' }} /> {/* 빈칸 */}
+        <col style={{ width: '3%' }} /> {/* reportId */}
+        <col style={{ width: '15.5%' }} /> {/* reportType */}
+        <col style={{ width: '34%' }} /> {/* content */}
+        <col style={{ width: '21.5%' }} /> {/* createdAt */}
+        <col style={{ width: '18.5%' }} /> {/* status */}
+      </colgroup>
+      <tbody>
+        {reports &&
+          reports.length > 0 &&
+          reports.map(report => {
+            return (
+              <tr key={report.reportId} className="bg-gray-30 border-t border-gray-100">
+                <td></td>
+                <td className="px-3 py-4">{report.reportId}</td>
+                <td className="px-3 py-4">{report.reportType}</td>
+                <td className="max-w-50 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap">
+                  {report.content}
+                </td>
+                <td className="px-3 py-4">{new Date(report.createdAt).toLocaleDateString()}</td>
+                <td className="px-3 py-4">
+                  <Badge label={report.status} {...STATUS_STYLE[report.status]} />
+                </td>
+              </tr>
+            )
+          })}
+      </tbody>
+    </table>
+  )
+}
+
+export default UserDetailRow
