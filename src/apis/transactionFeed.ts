@@ -1,5 +1,6 @@
 import client from './client'
 import { ServerPostCard } from '../utils/postCardParse'
+import { PostTransactionPayloadType } from '../types/transactionFeed'
 
 // 정렬 기준
 export type SortBy = 'LATEST' | 'PRICE_HIGH' | 'PRICE_LOW'
@@ -64,5 +65,10 @@ export const getTransactionFeeds = async (
       indexes: null, // 배열 쿼리스트링에서 [] 제거
     },
   })
+  return response.data.data
+}
+
+export const postTransactionFeed = async (data: PostTransactionPayloadType) => {
+  const response = await client.post('/transaction-feed', data)
   return response.data.data
 }
