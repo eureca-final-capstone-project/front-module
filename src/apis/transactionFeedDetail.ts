@@ -25,8 +25,23 @@ export interface TransactionFeedDetailResponse {
   }
   expiredAt: string
   currentHeightPrice?: number
+  rate: number
+  priceCompare: 'NO_STATISTIC' | 'EXPENSIVE' | 'CHEAPER' | 'SAME'
 }
-
+export interface RecommendedPostCard {
+  transactionFeedId: number
+  title: string
+  nickname: string
+  salesPrice: number
+  salesDataAmount: number
+  defaultImageNumber: number
+  createdAt: string
+  liked: boolean
+  telecomCompany: 'LG U+' | 'KT' | 'SKT'
+  status: 'active' | 'completed' | 'expired'
+  salesType: 'normal' | 'bid'
+  currentHeightPrice: number
+}
 export const getTransactionFeedDetail = async (
   transactionFeedId: number
 ): Promise<TransactionFeedDetailResponse> => {
@@ -54,4 +69,10 @@ export const postPurchaseFeed = async (transactionFeedId: number) => {
   }
 
   return data
+}
+export const getRecommendedPosts = async (
+  transactionFeedId: number
+): Promise<RecommendedPostCard[]> => {
+  const res = await client.get(`/recommend/related/${transactionFeedId}`)
+  return res.data.data
 }
