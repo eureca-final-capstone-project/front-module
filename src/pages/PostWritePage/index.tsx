@@ -34,9 +34,17 @@ const PostWritePage = () => {
     reValidateMode: 'onSubmit',
   })
 
-  const { watch } = methods
+  const {
+    watch,
+    clearErrors,
+    formState: { errors },
+  } = methods
   const watchedFields = watch()
+
   const allFieldsFilled = Object.values(watchedFields).every(value => value !== '')
+  const noFieldErrors = Object.keys(errors).length === 0
+
+  const isSubmitEnabled = allFieldsFilled && noFieldErrors
 
   const mutation = useMutation({
     mutationFn: postTransactionFeed,
@@ -54,6 +62,8 @@ const PostWritePage = () => {
   })
 
   const onSubmit = (data: PostTransactionType) => {
+    clearErrors()
+
     let amount = 1024
     if (data.unit === 'GB') amount *= data.salesDataAmount
 
@@ -90,11 +100,11 @@ const PostWritePage = () => {
             </Card>
           ))}
           <FloatActionButton
-            show={allFieldsFilled}
+            show={isSubmitEnabled}
             text="작성 완료"
             type="submit"
-            disabled={!allFieldsFilled}
-            className={!allFieldsFilled ? 'button-disabled' : 'button-active'}
+            disabled={!isSubmitEnabled}
+            className={!isSubmitEnabled ? 'button-disabled' : 'button-active'}
           />
         </form>
       </FormProvider>
