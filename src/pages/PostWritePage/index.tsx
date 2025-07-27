@@ -72,8 +72,8 @@ const PostWritePage = () => {
   const onSubmit = (data: PostTransactionType) => {
     clearErrors()
 
-    let amount = 1000
-    if (data.unit === 'GB') amount *= data.salesDataAmount
+    let amount = data.salesDataAmount
+    if (data.unit === 'GB') amount *= 1000
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { unit, ...rest } = data
@@ -83,6 +83,7 @@ const PostWritePage = () => {
       telecomCompanyId: telecom?.id,
       salesDataAmount: amount,
     }
+    console.log(amount)
 
     mutation.mutate(postData)
   }
