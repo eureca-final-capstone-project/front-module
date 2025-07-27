@@ -8,6 +8,7 @@ import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 const TransactionInfoInput = () => {
   const {
     control,
+    setError,
     clearErrors,
     formState: { errors },
   } = useFormContext()
@@ -56,9 +57,13 @@ const TransactionInfoInput = () => {
               value={formattedValue}
               onChange={e => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
-                const numberValue = rawValue === '' ? '' : Number(rawValue)
-                field.onChange(numberValue)
-                if (errors.salesPrice) clearErrors('salesPrice')
+                const numberValue = rawValue === '' ? NaN : Number(rawValue)
+
+                if (numberValue < 1000)
+                  setError('salesPrice', { message: '가격은 1000원 이상이어야 합니다.' })
+                else clearErrors('salesPrice')
+
+                field.onChange(isNaN(numberValue) ? '' : numberValue)
               }}
               error={!!errors.salesPrice}
               errorMsg={errors.salesPrice?.message?.toString() || ''}

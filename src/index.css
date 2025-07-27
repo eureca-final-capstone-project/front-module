@@ -61,6 +61,7 @@
   --shadow-drop-down: 0px 4px 14px rgba(0, 0, 0, 0.05);
   --shadow-receipt-top: 0px 6px 16px rgba(122, 122, 122, 0.12);
   --shadow-side-filter: 0px 32px 32px -24px rgba(0, 0, 0, 0.1);
+  --shadow-bid-history: 0px 12px 20px rgba(0, 0, 0, 0.2);
   --backdrop-blur-side-filter: 8px;
 
   --shadow-header-modal:
@@ -216,6 +217,7 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield;
 }
+
 .Toastify__toast-icon {
   position: absolute;
   left: 16px;

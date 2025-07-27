@@ -72,38 +72,61 @@ export const getRangeErrorMessage = (min: string, max: string, unitLabel: string
   return ''
 }
 
-export const postTransactionSchema = z
-  .object({
-    title: z
-      .string()
-      .min(1, { message: '제목을 입력해 주세요.' })
-      .max(100, { message: '제목은 100자 이내로 입력해 주세요.' }),
-    content: z.string().nonempty('내용을 입력해 주세요.'),
-    salesTypeId: z.union([z.literal(1), z.literal(2)]),
-    salesPrice: z
-      .number({ message: '가격은 숫자로 입력해 주세요.' })
-      .min(1000, { message: '가격은 1000원 이상이어야 합니다.' }),
-    unit: z.enum(['MB', 'GB']),
-    salesDataAmount: z.number({ message: '데이터 양은 숫자로 입력해 주세요.' }),
-    defaultImageNumber: z.number({ message: '대표 이미지를 선택해 주세요.' }),
-  })
-  // 데이터 최소값 검사
-  .refine(
-    data =>
-      (data.unit === 'MB' && data.salesDataAmount >= 100) ||
-      (data.unit === 'GB' && data.salesDataAmount >= 1),
-    {
-      path: ['salesDataAmount'],
-      message: '데이터는 MB일 경우 100MB 이상, GB일 경우 1GB 이상 입력해야 합니다.',
+export const postTransactionSchema = z.object({
+  title: z.string().min(1, { message: '제목을 입력해 주세요.' }),
+  content: z.string().nonempty('내용을 입력해 주세요.'),
+  salesTypeId: z.union([z.literal(1), z.literal(2)]),
+  salesPrice: z.number({ message: '가격은 숫자로 입력해 주세요.' }),
+  unit: z.enum(['MB', 'GB']),
+  salesDataAmount: z.number({ message: '데이터 양은 숫자로 입력해 주세요.' }),
+  defaultImageNumber: z.number({ message: '대표 이미지를 선택해 주세요.' }),
+})
+
+export const validateSalesDataAmount = (unit: string, amount: number, sellableDataMb: number) => {
+  if (isNaN(amount)) {
+    return { isValid: false, message: '가격은 숫자로 입력해 주세요.' }
+  }
+
+  const unitRules = {
+    MB: {
+      min: 100,
+      step: 100,
+      convert: (val: number) => val,
+      unitLabel: 'MB',
+    },
+    GB: {
+      min: 1,
+      step: 1,
+      convert: (val: number) => val * 1000,
+      unitLabel: 'GB',
+    },
+  } as const
+
+  const rule = unitRules[unit as keyof typeof unitRules]
+  if (!rule) return { isValid: false, message: '유효하지 않은 단위입니다.' }
+
+  const amountInMb = rule.convert(amount)
+
+  if (amountInMb > sellableDataMb) {
+    return {
+      isValid: false,
+      message: '판매 가능한 데이터 양 범위 내에서 입력해 주세요.',
     }
-  )
-  // 데이터 단위 조건 검사
-  .refine(
-    data =>
-      (data.unit === 'MB' && data.salesDataAmount % 100 === 0) ||
-      (data.unit === 'GB' && data.salesDataAmount % 1 === 0),
-    {
-      path: ['salesDataAmount'],
-      message: 'MB는 100MB 단위, GB는 1GB 단위로만 입력할 수 있습니다.',
+  }
+
+  if (amount < rule.min) {
+    return {
+      isValid: false,
+      message: `${rule.unitLabel}는 ${rule.min}${rule.unitLabel} 이상 입력해야 합니다.`,
     }
-  )
+  }
+
+  if (amount % rule.step !== 0) {
+    return {
+      isValid: false,
+      message: `${rule.unitLabel}는 ${rule.step}${rule.unitLabel} 단위로 입력해야 합니다.`,
+    }
+  }
+
+  return { isValid: true }
+}

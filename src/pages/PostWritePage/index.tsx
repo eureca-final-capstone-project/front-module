@@ -14,6 +14,8 @@ import { useUserStore } from '../../store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { postTransactionFeed } from '../../apis/transactionFeed'
 import FloatActionButton from '../../components/FloatActionButton'
+import { useNavigate } from 'react-router-dom'
+import { useToast } from '../../hooks/useToast'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -25,8 +27,15 @@ const formSections = [
   { label: '이미지', Component: ImageSelect },
 ]
 
+const typeMap = {
+  1: 'normal',
+  2: 'bid',
+}
+
 const PostWritePage = () => {
+  const navigate = useNavigate()
   const telecom = useUserStore(state => state.telecom)
+  const { showToast } = useToast()
 
   const methods = useForm<PostTransactionType>({
     resolver: zodResolver(postTransactionSchema),
@@ -34,28 +43,43 @@ const PostWritePage = () => {
     reValidateMode: 'onSubmit',
   })
 
-  const { watch } = methods
+  const {
+    watch,
+    clearErrors,
+    formState: { errors },
+    reset,
+  } = methods
   const watchedFields = watch()
+
   const allFieldsFilled = Object.values(watchedFields).every(value => value !== '')
+  const noFieldErrors = Object.keys(errors).length === 0
+
+  const isSubmitEnabled = allFieldsFilled && noFieldErrors
 
   const mutation = useMutation({
     mutationFn: postTransactionFeed,
-    onSuccess: data => {
+    onSuccess: (data, variables) => {
       if (data.statusCode === 200) {
-        console.log(data)
+        showToast({ type: 'success', msg: '판매글이 성공적으로 등록되었습니다.' })
+        reset()
+        navigate(`/posts/${typeMap[variables.salesTypeId]}/${data.data.id}`)
       } else {
-        alert('판매글 등록 실패: ' + data.detailMessage)
-        console.log(data)
+        showToast({ type: 'error', msg: '판매글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.' })
       }
     },
     onError: error => {
-      alert('판매글 등록 실패 ' + error.message)
+      showToast({
+        type: 'error',
+        msg: error.message || '판매글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
     },
   })
 
   const onSubmit = (data: PostTransactionType) => {
-    let amount = 1024
-    if (data.unit === 'GB') amount *= data.salesDataAmount
+    clearErrors()
+
+    let amount = data.salesDataAmount
+    if (data.unit === 'GB') amount *= 1000
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { unit, ...rest } = data
@@ -65,6 +89,7 @@ const PostWritePage = () => {
       telecomCompanyId: telecom?.id,
       salesDataAmount: amount,
     }
+    console.log(amount)
 
     mutation.mutate(postData)
   }
@@ -90,11 +115,11 @@ const PostWritePage = () => {
             </Card>
           ))}
           <FloatActionButton
-            show={allFieldsFilled}
+            show={isSubmitEnabled}
             text="작성 완료"
             type="submit"
-            disabled={!allFieldsFilled}
-            className={!allFieldsFilled ? 'button-disabled' : 'button-active'}
+            disabled={!isSubmitEnabled}
+            className={!isSubmitEnabled ? 'button-disabled' : 'button-active'}
           />
         </form>
       </FormProvider>
