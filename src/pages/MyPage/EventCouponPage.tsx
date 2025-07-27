@@ -1,24 +1,31 @@
 import EventCoupon from './components/EventCoupon/EventCoupon'
 import { useDeviceType } from '../../hooks/useDeviceType'
-import { dummyCoupons } from '../../mocks/eventData'
-// import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
+import { getUserEventCoupons } from '../../apis/eventCoupon'
 
 const EventCouponPage = () => {
-  // const { data, isLoading, isError } = useQuery<eventCouponItem[]>({
-  //   queryKey: ['eventCoupons'],
-  //   queryFn: getEventCoupons,
-  // })
-  // if (isLoading) return <p>로딩 중...</p>
-  // if (isError) return <p>에러가 발생했습니다.</p>
-  // if (!data || data.length === 0) return <p>사용 가능한 쿠폰이 없습니다.</p>
   const deviceType = useDeviceType()
   const gridColsClass = deviceType === 'mobile' ? 'grid-cols-1' : 'grid-cols-2'
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['userEventCoupons'],
+    queryFn: getUserEventCoupons,
+  })
+
+  const eventCoupons = data?.data.coupons ?? []
+
+  if (isLoading) return <p>쿠폰 불러오는 중</p>
+  if (isError) return <p>쿠폰을 불러오는데 실패했습니다</p>
 
   return (
     <div>
       <div className={`grid gap-4 ${gridColsClass}`}>
-        {dummyCoupons.map(coupon => (
-          <EventCoupon key={coupon.userEventCouponId} coupon={coupon} deviceType={deviceType} />
+        {eventCoupons.map(eventCoupon => (
+          <EventCoupon
+            key={eventCoupon.userEventCouponId}
+            coupon={eventCoupon}
+            deviceType={deviceType}
+          />
         ))}
       </div>
     </div>
