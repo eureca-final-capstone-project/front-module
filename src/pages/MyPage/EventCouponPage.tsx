@@ -18,7 +18,7 @@ const EventCouponPage = () => {
   if (isError) return <p>쿠폰을 불러오는데 실패했습니다</p>
 
   return (
-    <div>
+    <div className="p-4 sm:p-0">
       <div className={`grid gap-4 ${gridColsClass}`}>
         {eventCoupons.map(eventCoupon => (
           <EventCoupon
