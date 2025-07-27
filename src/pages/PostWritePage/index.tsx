@@ -14,6 +14,7 @@ import { useUserStore } from '../../store/userStore'
 import { useMutation } from '@tanstack/react-query'
 import { postTransactionFeed } from '../../apis/transactionFeed'
 import FloatActionButton from '../../components/FloatActionButton'
+import { useNavigate } from 'react-router-dom'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -25,7 +26,13 @@ const formSections = [
   { label: '이미지', Component: ImageSelect },
 ]
 
+const typeMap = {
+  1: 'normal',
+  2: 'bid',
+}
+
 const PostWritePage = () => {
+  const navigate = useNavigate()
   const telecom = useUserStore(state => state.telecom)
 
   const methods = useForm<PostTransactionType>({
@@ -38,6 +45,7 @@ const PostWritePage = () => {
     watch,
     clearErrors,
     formState: { errors },
+    reset,
   } = methods
   const watchedFields = watch()
 
@@ -48,12 +56,12 @@ const PostWritePage = () => {
 
   const mutation = useMutation({
     mutationFn: postTransactionFeed,
-    onSuccess: data => {
+    onSuccess: (data, variables) => {
       if (data.statusCode === 200) {
-        console.log(data)
+        reset()
+        navigate(`/posts/${typeMap[variables.salesTypeId]}/${data.data.id}`)
       } else {
-        alert('판매글 등록 실패: ' + data.detailMessage)
-        console.log(data)
+        alert('판매글 등록 실패: ' + data.data.message)
       }
     },
     onError: error => {
