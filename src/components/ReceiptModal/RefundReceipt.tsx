@@ -8,11 +8,12 @@ import { useDeviceType } from '../../hooks/useDeviceType'
 import { formatFullDate } from '../../utils/time'
 import { formatAmount } from '../../utils/format'
 
-type ChargeDetail = NonNullable<PayHistoryDetailResponse['data']['chargeDetail']>
+type ExchangeDetail = NonNullable<PayHistoryDetailResponse['data']['exchangeDetail']>
 
-const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
+const RefundReceipt = ({ type, pay, info }: ReceiptProps<ExchangeDetail>) => {
   const { historyMent, history, payMent, isMinus, extra } = config[type]
   const device = useDeviceType() as 'desktop' | 'tablet' | 'mobile'
+
   return (
     <div className="flex flex-col gap-8">
       {historyMent && (
@@ -20,8 +21,8 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
           <h3 className="text-fs14 text-center text-gray-700">{historyMent}</h3>
           {history.map((item, i) => {
             const value =
-              item.key && info[item.key as keyof ChargeDetail] != null
-                ? formatAmount(info[item.key as keyof ChargeDetail] as number)
+              item.key && info[item.key as keyof ExchangeDetail] != null
+                ? formatAmount(info[item.key as keyof ExchangeDetail] as number)
                 : '-'
 
             return (
@@ -60,12 +61,12 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
               const i = rowIdx * 2 + colIdx
               const item = extra[i]
               if (!item) return <div key={colIdx} className="flex-1" />
-              const rawValue = info[item.key as keyof ChargeDetail]
+              const rawValue = info[item.key as keyof ExchangeDetail]
               const value =
-                item.key === 'chargedAt'
+                item.key === 'exchangedAt'
                   ? formatFullDate(rawValue as string, device)
                   : typeof rawValue === 'number'
-                    ? formatAmount(rawValue)
+                    ? formatAmount(rawValue as number)
                     : typeof rawValue === 'string'
                       ? rawValue
                       : '-'
@@ -78,4 +79,4 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
   )
 }
 
-export default ChargeReceipt
+export default RefundReceipt
