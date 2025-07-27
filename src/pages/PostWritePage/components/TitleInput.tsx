@@ -4,6 +4,7 @@ import Input from '../../../components/Input/Input'
 const TitleInput = () => {
   const {
     control,
+    setError,
     clearErrors,
     formState: { errors },
   } = useFormContext()
@@ -20,7 +21,9 @@ const TitleInput = () => {
           value={field.value}
           onChange={e => {
             field.onChange(e)
-            if (errors.title) clearErrors('title')
+            if (field.value.length > 20)
+              setError('title', { message: '제목은 20자 이내여야 합니다.' })
+            else clearErrors('title')
           }}
           error={!!errors.title}
           errorMsg={errors.title?.message?.toString() || ''}
