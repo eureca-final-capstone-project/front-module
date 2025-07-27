@@ -2,10 +2,14 @@ import EventCoupon from './components/EventCoupon/EventCoupon'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import { useQuery } from '@tanstack/react-query'
 import { getUserEventCoupons } from '../../apis/eventCoupon'
+import Button from '../../components/Button/Button'
+import { useNavigate } from 'react-router-dom'
+import EventCouponIcon from '@/assets/icons/event-coupon.svg?react'
 
 const EventCouponPage = () => {
   const deviceType = useDeviceType()
   const gridColsClass = deviceType === 'mobile' ? 'grid-cols-1' : 'grid-cols-2'
+  const navigate = useNavigate()
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['userEventCoupons'],
@@ -14,8 +18,40 @@ const EventCouponPage = () => {
 
   const eventCoupons = data?.data.coupons ?? []
 
-  if (isLoading) return <p>쿠폰 불러오는 중</p>
-  if (isError) return <p>쿠폰을 불러오는데 실패했습니다</p>
+  if (isLoading || isError || eventCoupons.length === 0) {
+    let title = ''
+    let subtitle: React.ReactNode = null
+    let textColor = 'text-gray-500'
+
+    if (isLoading) {
+      title = '쿠폰을 불러오는 중이예요'
+      subtitle = null
+    } else if (isError) {
+      title = '쿠폰을 불러오지 못했습니다'
+      subtitle = (
+        <p className="sm:text-fs14 text-fs12 mt-2 text-gray-400">잠시 후 다시 시도해주세요</p>
+      )
+      textColor = 'text-error'
+    } else {
+      title = '보유하신 쿠폰이 없습니다'
+      subtitle = (
+        <div className="sm:text-fs14 text-fs12 mt-2 text-gray-400">
+          <Button text="메인페이지" shape="underline" onClick={() => navigate('/')} />
+
+          <span> 진행 중인 이벤트를 확인하고 쿠폰을 발급받아보세요!</span>
+        </div>
+      )
+    }
+    return (
+      <div
+        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+      >
+        <EventCouponIcon className="h-6 w-8 sm:h-8 sm:w-10" />
+        <p className="sm:text-fs18 text-fs16 pt-3 font-medium">{title}</p>
+        {subtitle}
+      </div>
+    )
+  }
 
   return (
     <div className="p-4 sm:p-0">
