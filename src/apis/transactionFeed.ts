@@ -1,5 +1,6 @@
 import client from './client'
 import { ServerPostCard } from '../utils/postCardParse'
+import { PostTransactionPayloadType } from '../types/transactionFeed'
 
 // 정렬 기준
 export type SortBy = 'LATEST' | 'PRICE_HIGH' | 'PRICE_LOW'
@@ -65,4 +66,9 @@ export const getTransactionFeeds = async (
     },
   })
   return response.data.data
+}
+
+export const postTransactionFeed = async (data: PostTransactionPayloadType) => {
+  const response = await client.post('/transaction-feed', data)
+  return response.data
 }

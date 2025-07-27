@@ -1,4 +1,4 @@
-import { TransactionFeedDetailResponse } from '../apis/transactionFeedDetail'
+import { RecommendedPostCard, TransactionFeedDetailResponse } from '../apis/transactionFeedDetail'
 import { TransactionHistoryItem } from '../apis/userInfo'
 import type { PostCardProps } from '../components/PostCard/PostCard'
 import { mapSalesTypeFromServer } from './salesType'
@@ -78,4 +78,20 @@ export const transformTransactionFeedToPostCard = (
   status: mapStatusFromServer(data.status.code),
   salesType: mapSalesTypeFromServer(data.salesType.name),
   currentHeightPrice: data.currentHeightPrice,
+})
+export const transformRecommendedPost = (data: RecommendedPostCard): PostCardProps => ({
+  type: 'col',
+  transactionFeedId: data.transactionFeedId,
+  title: data.title,
+  nickname: data.nickname,
+  salesPrice: data.salesPrice,
+  salesDataAmount: data.salesDataAmount,
+  defaultImageNumber: data.defaultImageNumber,
+  createdAt: data.createdAt,
+  liked: data.liked,
+  telecomCompany: data.telecomCompany,
+  status: mapStatusFromServer(data.status),
+  salesType: mapSalesTypeFromServer(data.salesType),
+  currentHeightPrice: data.currentHeightPrice,
+  onToggleLike: () => {},
 })
