@@ -4,15 +4,13 @@ import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import type { PayHistoryDetailResponse } from '../../apis/userInfo'
-import { useDeviceType } from '../../hooks/useDeviceType'
-import { formatFullDate } from '../../utils/time'
 import { formatAmount } from '../../utils/format'
+import { formatCompactDateTime } from '../../utils/time'
 
 type ExchangeDetail = NonNullable<PayHistoryDetailResponse['data']['exchangeDetail']>
 
 const RefundReceipt = ({ type, pay, info }: ReceiptProps<ExchangeDetail>) => {
   const { historyMent, history, payMent, isMinus, extra } = config[type]
-  const device = useDeviceType() as 'desktop' | 'tablet' | 'mobile'
 
   return (
     <div className="flex flex-col gap-8">
@@ -63,13 +61,23 @@ const RefundReceipt = ({ type, pay, info }: ReceiptProps<ExchangeDetail>) => {
               if (!item) return <div key={colIdx} className="flex-1" />
               const rawValue = info[item.key as keyof ExchangeDetail]
               const value =
-                item.key === 'exchangedAt'
-                  ? formatFullDate(rawValue as string, device)
-                  : typeof rawValue === 'number'
-                    ? formatAmount(rawValue as number)
-                    : typeof rawValue === 'string'
-                      ? rawValue
-                      : '-'
+                item.key === 'exchangedAt' ? (
+                  formatCompactDateTime(info.exchangedAt)
+                ) : item.key === 'exchangeAccountWithBank' ? (
+                  <>
+                    {info.bankName}
+                    <br />
+                    {info.exchangeAccount}
+                  </>
+                ) : item.key === 'exchangeHistoryId' ? (
+                  String(rawValue)
+                ) : typeof rawValue === 'number' ? (
+                  formatAmount(rawValue as number)
+                ) : typeof rawValue === 'string' ? (
+                  rawValue
+                ) : (
+                  '-'
+                )
               return <ReceiptInfo key={colIdx} label={item.label} value={value} />
             })}
           </div>

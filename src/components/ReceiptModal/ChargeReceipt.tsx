@@ -4,15 +4,13 @@ import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import type { PayHistoryDetailResponse } from '../../apis/userInfo'
-import { useDeviceType } from '../../hooks/useDeviceType'
-import { formatFullDate } from '../../utils/time'
+import { formatCompactDateTime } from '../../utils/time'
 import { formatAmount } from '../../utils/format'
 
 type ChargeDetail = NonNullable<PayHistoryDetailResponse['data']['chargeDetail']>
 
 const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
   const { historyMent, history, payMent, isMinus, extra } = config[type]
-  const device = useDeviceType() as 'desktop' | 'tablet' | 'mobile'
   return (
     <div className="flex flex-col gap-8">
       {historyMent && (
@@ -63,7 +61,7 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
               const rawValue = info[item.key as keyof ChargeDetail]
               const value =
                 item.key === 'chargedAt'
-                  ? formatFullDate(rawValue as string, device)
+                  ? formatCompactDateTime(rawValue as string)
                   : typeof rawValue === 'number'
                     ? formatAmount(rawValue)
                     : typeof rawValue === 'string'

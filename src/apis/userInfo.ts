@@ -156,6 +156,7 @@ export interface PayHistoryDetailResponse {
       chargedPay: number
       chargedAt: string
       payTypeName: string
+      finalUserPay: number
     } | null
     exchangeDetail: {
       exchangeHistoryId: number
@@ -166,6 +167,7 @@ export interface PayHistoryDetailResponse {
       exchangedAt: string
       bankName: string
       exchangeAccount: string
+      finalUserPay: number
     } | null
     transactionDetail: {
       transactionHistoryId: number
@@ -174,6 +176,7 @@ export interface PayHistoryDetailResponse {
       transactionPay: number
       transactedAt: string
       telecom: string
+      finalUserPay: number
     } | null
   }
 }

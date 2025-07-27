@@ -3,15 +3,13 @@ import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import type { PayHistoryDetailResponse } from '../../apis/userInfo'
-import { useDeviceType } from '../../hooks/useDeviceType'
-import { formatFullDate } from '../../utils/time'
+import { formatCompactDateTime } from '../../utils/time'
 import { formatAmount } from '../../utils/format'
 
 type TransactionDetail = NonNullable<PayHistoryDetailResponse['data']['transactionDetail']>
 
 const TradeReceipt = ({ type, pay, info }: ReceiptProps<TransactionDetail>) => {
   const { payMent, isMinus, extra } = config[type]
-  const device = useDeviceType() as 'desktop' | 'tablet' | 'mobile'
 
   const postDetails = [
     { label: '거래 유형', value: info.transactionType ?? '-' },
@@ -59,7 +57,7 @@ const TradeReceipt = ({ type, pay, info }: ReceiptProps<TransactionDetail>) => {
               const rawValue = info[item.key as keyof TransactionDetail]
               const value =
                 item.key === 'transactedAt'
-                  ? formatFullDate(rawValue as string, device)
+                  ? formatCompactDateTime(rawValue as string)
                   : typeof rawValue === 'number'
                     ? item.key === 'transactionHistoryId'
                       ? rawValue.toString()
