@@ -56,7 +56,7 @@ export const transformTransactionPostCard = (
   salesType: mapSalesTypeFromServer(data.salesType),
   currentHeightPrice: undefined,
   onToggleLike: () => {},
-  tradehistorytime: new Date(data.transactionDate).toLocaleString('ko-KR'),
+  tradehistorytime: data.transactionDate,
   tradehistorypay: data.transactionFinalPrice,
 })
 
