@@ -38,7 +38,7 @@ const EventCouponPage = () => {
         <div className="sm:text-fs14 text-fs12 mt-2 text-gray-400">
           <Button text="메인페이지" shape="underline" onClick={() => navigate('/')} />
 
-          <span> 진행 중인 이벤트를 확인하고 쿠폰을 발급받아보세요!</span>
+          <span>에서 진행 중인 이벤트를 확인하고 쿠폰을 발급받아보세요!</span>
         </div>
       )
     }
