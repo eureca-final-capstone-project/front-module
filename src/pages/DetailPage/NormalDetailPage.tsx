@@ -72,6 +72,30 @@ const NormalDetailPage = () => {
     },
   })
 
+  const deleteWishMutation = useMutation({
+    mutationFn: deleteWishPosts,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg:
+              data.data.detailMessage ||
+              '관심 거래 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+          })
+      }
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '관심 거래 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    },
+  })
+
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
 
