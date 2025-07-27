@@ -1,6 +1,7 @@
 import PostCardCol from './PostCardCol'
 import PostCardRow from './PostCardRow'
 import type { TradeStatus } from '../../utils/status'
+import { useNavigate } from 'react-router-dom'
 
 type CommonProps = {
   transactionFeedId: number
@@ -30,10 +31,20 @@ export type PostCardProps =
   | ({ type: 'col' } & CommonProps)
 
 const PostCard = (props: PostCardProps) => {
-  if (props.type === 'row') {
-    return <PostCardRow {...props} />
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    if (props.onClick) {
+      props.onClick()
+    } else {
+      navigate(`/posts/${props.salesType}/${props.transactionFeedId}`)
+    }
   }
-  return <PostCardCol {...props} />
+
+  if (props.type === 'row') {
+    return <PostCardRow {...props} onClick={handleClick} />
+  }
+  return <PostCardCol {...props} onClick={handleClick} />
 }
 
 export default PostCard

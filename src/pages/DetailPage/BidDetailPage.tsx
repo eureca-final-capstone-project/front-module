@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { imageData as PostImage } from '../../constants/imageData'
 import ProviderBadge from '../../components/PostCard/ProviderBadge'
@@ -22,6 +22,7 @@ import PriceGraph from './components/PriceGraph'
 import BidHistory from './components/BidHistory'
 import BidModal from './components/BidModal'
 import { useToast } from '../../hooks/useToast'
+import { mapSalesTypeFromServer } from '../../utils/salesType'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
@@ -65,7 +66,15 @@ const BidDetailPage = () => {
   }
 
   if (isLoading) return <p>로딩 중</p>
-  if (isError || !data) return <p>에러</p>
+  if (isError || !data) {
+    return <Navigate to="/404" replace />
+  }
+
+  const actualType = mapSalesTypeFromServer(data.salesType.name)
+
+  if (actualType !== 'bid') {
+    return <Navigate to="/404" replace />
+  }
 
   return (
     <main className="mb-18.75">
