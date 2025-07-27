@@ -20,6 +20,7 @@ import PaymentFailPage from '../pages/PaymentFailPage'
 import UserHistory from '../pages/AdminPage/UserHistory'
 import NormalDetailPage from '../pages/DetailPage/NormalDetailPage'
 import DataPurchasePage from '../pages/DataPurchasePage'
+import BidDetailPage from '../pages/DetailPage/BidDetailPage'
 
 export const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ export const router = createBrowserRouter([
       {
         path: '/posts/normal/:postId',
         element: <NormalDetailPage />,
+      },
+      {
+        path: '/posts/bid/:transactionFeedId',
+        element: <BidDetailPage />,
       },
       {
         path: '/mypage/:tabId',
