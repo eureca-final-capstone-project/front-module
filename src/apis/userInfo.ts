@@ -140,3 +140,45 @@ export const getPayHistory = async (page = 0, size = 20): Promise<PayHistoryItem
   })
   return res.data.data.content
 }
+export interface PayHistoryDetailResponse {
+  statusCode: number
+  message: string
+  data: {
+    payHistoryId: number
+    changeType: '충전' | '환전' | '구매' | '판매'
+    finalUserPay: number
+    createdAt: string
+    chargeDetail: {
+      orderId: string
+      paymentAmount: number
+      discountAmount: number
+      finalPaymentAmount: number
+      chargedPay: number
+      chargedAt: string
+      payTypeName: string
+    } | null
+    exchangeDetail: {
+      exchangeHistoryId: number
+      exchangeAmount: number
+      fee: number
+      finalExchangeAmount: number
+      exchangedPay: number
+      exchangedAt: string
+      bankName: string
+      exchangeAccount: string
+    } | null
+    transactionDetail: {
+      transactionHistoryId: number
+      transactionType: '구매' | '판매'
+      dataTitle: string
+      transactionPay: number
+      transactedAt: string
+      telecom: string
+    } | null
+  }
+}
+
+export const getPayHistoryDetail = async (payHistoryId: number) => {
+  const res = await client.get<PayHistoryDetailResponse>(`/pay-history/${payHistoryId}`)
+  return res.data.data
+}
