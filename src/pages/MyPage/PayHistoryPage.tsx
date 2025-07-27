@@ -4,7 +4,9 @@ import Badge from '../../components/Badge/Badge'
 import ListTile from '../../components/ListTile/ListTile'
 import { formatAmount } from '../../utils/format'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
-import { getPayHistory } from '../../apis/userInfo'
+import { getPayHistory, getPayHistoryDetail, PayHistoryDetailResponse } from '../../apis/userInfo'
+import { useState } from 'react'
+import ReceiptModal, { ReceiptProps } from '../../components/ReceiptModal/ReceiptModal'
 
 const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
   if (type === '구매' || type === '판매') {
@@ -17,6 +19,40 @@ const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
 }
 
 const PayHistoryPage = () => {
+  const [selectedId, setSelectedId] = useState<number | null>(null)
+
+  const { data: detail, isSuccess: isDetailSuccess } = useQuery({
+    queryKey: ['payHistoryDetail', selectedId],
+    queryFn: () => getPayHistoryDetail(selectedId!),
+    enabled: !!selectedId,
+  })
+
+  const parseToReceipt = (detail: PayHistoryDetailResponse['data']): ReceiptProps | null => {
+    if (detail.chargeDetail) {
+      return {
+        type: 'charge',
+        pay: detail.chargeDetail.chargedPay,
+        info: detail.chargeDetail,
+      }
+    } else if (detail.exchangeDetail) {
+      return {
+        type: 'refund',
+        pay: detail.exchangeDetail.exchangedPay,
+        info: detail.exchangeDetail,
+      }
+    } else if (detail.transactionDetail) {
+      const mappedType =
+        detail.changeType === '구매' ? 'buy' : detail.changeType === '판매' ? 'sell' : 'sell'
+
+      return {
+        type: mappedType,
+        pay: detail.transactionDetail.transactionPay,
+        info: detail.transactionDetail,
+      }
+    }
+    return null
+  }
+
   const {
     data: payHistory = [],
     isLoading,
@@ -56,7 +92,7 @@ const PayHistoryPage = () => {
 
           return (
             <FadeInUpMotion key={item.payHistoryId} custom={i} delayUnit={0.07} duration={0.3}>
-              <ListTile>
+              <ListTile onClick={() => setSelectedId(item.payHistoryId)}>
                 <div className="flex gap-2">
                   <Badge {...getBadgeInfo(item.changeType)} variant="default" size="medium" />
                   <p>{labelText}</p>
@@ -73,6 +109,9 @@ const PayHistoryPage = () => {
           )
         })}
       </div>
+      {selectedId && isDetailSuccess && detail && (
+        <ReceiptModal {...parseToReceipt(detail)!} onClose={() => setSelectedId(null)} />
+      )}
     </div>
   )
 }
