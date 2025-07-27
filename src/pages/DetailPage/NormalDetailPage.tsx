@@ -7,7 +7,7 @@ import Button from '../../components/Button/Button'
 import ReportStrokeIcon from '@/assets/icons/report-stroke.svg?react'
 import UserIcon from '@/assets/icons/user.svg?react'
 import TimeIcon from '@/assets/icons/time.svg?react'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getRecommendedPosts,
   getTransactionFeedDetail,
@@ -21,7 +21,6 @@ import { useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
 import { addWishPost, deleteWishPosts } from '../../apis/wish'
-import { queryClient } from '../../main'
 import { useToast } from '../../hooks/useToast'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
@@ -32,6 +31,7 @@ const NormalDetailPage = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const deviceType = useDeviceType()
   const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
