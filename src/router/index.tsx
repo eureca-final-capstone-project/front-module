@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import MainPage from '../pages/MainPage'
 import LoginPage from '../pages/LoginPage'
 import AuthLayout from '../layout/AuthLayout'
@@ -21,6 +21,7 @@ import UserHistory from '../pages/AdminPage/UserHistory'
 import NormalDetailPage from '../pages/DetailPage/NormalDetailPage'
 import DataPurchasePage from '../pages/DataPurchasePage'
 import BidDetailPage from '../pages/DetailPage/BidDetailPage'
+import NotFoundPage from '../pages/NotFoundPage'
 
 export const router = createBrowserRouter([
   {
@@ -120,5 +121,13 @@ export const router = createBrowserRouter([
         element: <UserHistory />,
       },
     ],
+  },
+  {
+    path: '/404',
+    element: <NotFoundPage />,
+  },
+  {
+    path: '*',
+    element: <Navigate to="/404" replace />,
   },
 ])
