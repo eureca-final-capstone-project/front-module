@@ -49,25 +49,23 @@ const NormalDetailPage = () => {
         case 200:
           queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
           break
+        case 10004:
+          showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
+          break
         case 30007:
-          showToast({
-            type: 'error',
-            msg: data.data.detailMessage,
-          })
+          showToast({ type: 'error', msg: '이미 관심 거래에 등록된 판매글입니다.' })
           break
         default:
           showToast({
             type: 'error',
-            msg:
-              data.data.detailMessage ||
-              '관심 거래 추가에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+            msg: '관심 거래 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
           })
       }
     },
     onError: () => {
       showToast({
         type: 'error',
-        msg: '관심 거래 추가에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+        msg: '관심 거래 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
       })
     },
   })
@@ -79,19 +77,20 @@ const NormalDetailPage = () => {
         case 200:
           queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
           break
+        case 10004:
+          showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
+          break
         default:
           showToast({
             type: 'error',
-            msg:
-              data.data.detailMessage ||
-              '관심 거래 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+            msg: '관심 거래 등록 취소에 실패했습니다. 잠시 후 다시 시도해 주세요.',
           })
       }
     },
     onError: () => {
       showToast({
         type: 'error',
-        msg: '관심 거래 삭제에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+        msg: '관심 거래 등록 취소에 실패했습니다. 잠시 후 다시 시도해 주세요.',
       })
     },
   })
