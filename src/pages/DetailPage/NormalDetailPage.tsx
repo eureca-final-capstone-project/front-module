@@ -7,7 +7,7 @@ import Button from '../../components/Button/Button'
 import ReportStrokeIcon from '@/assets/icons/report-stroke.svg?react'
 import UserIcon from '@/assets/icons/user.svg?react'
 import TimeIcon from '@/assets/icons/time.svg?react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   getRecommendedPosts,
   getTransactionFeedDetail,
@@ -20,12 +20,16 @@ import { transformRecommendedPost } from '../../utils/postCardParse'
 import { useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
+import { addWishPost, deleteWishPosts } from '../../apis/wish'
+import { queryClient } from '../../main'
+import { useToast } from '../../hooks/useToast'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const deviceType = useDeviceType()
+  const { showToast } = useToast()
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
@@ -37,8 +41,47 @@ const NormalDetailPage = () => {
     queryFn: () => getRecommendedPosts(Number(transactionFeedId)),
     enabled: !!transactionFeedId,
   })
+
+  const addWishMutation = useMutation({
+    mutationFn: addWishPost,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+          break
+        case 30007:
+          showToast({
+            type: 'error',
+            msg: data.data.detailMessage,
+          })
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg:
+              data.data.detailMessage ||
+              '관심 거래 추가에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+          })
+      }
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '관심 거래 추가에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    },
+  })
+
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
+
+  const handleWishClick = () => {
+    if (data.liked) {
+      deleteWishMutation.mutate([Number(transactionFeedId)])
+      return
+    }
+    addWishMutation.mutate(Number(transactionFeedId))
+  }
 
   return (
     <main>
@@ -164,16 +207,15 @@ const NormalDetailPage = () => {
                   onClick={() => {
                     if (deviceType === 'mobile') {
                       setIsSheetOpen(true)
-                    } else {
-                      // PC에서는 ㄴㄴ
                     }
+                    handleWishClick()
                   }}
                 />
                 {/* Row 일때 관심 버튼 */}
                 <Button
                   text={`관심 거래 ${data.likedCount}`}
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
-                  onClick={() => {}}
+                  onClick={handleWishClick}
                 />
                 <Button
                   onClick={() => navigate(`/data-purchase/${data.transactionFeedId}`)}
