@@ -64,7 +64,7 @@ const PostWritePage = () => {
   const onSubmit = (data: PostTransactionType) => {
     clearErrors()
 
-    let amount = 1024
+    let amount = 1000
     if (data.unit === 'GB') amount *= data.salesDataAmount
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
