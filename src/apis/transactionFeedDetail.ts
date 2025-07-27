@@ -1,4 +1,5 @@
 import client from './client'
+import { BID_ERROR_MESSAGES } from '../constants/bidErrorMessage'
 
 export interface TransactionFeedDetailResponse {
   transactionFeedId: number
@@ -24,7 +25,21 @@ export interface TransactionFeedDetailResponse {
     name: '일반 판매' | '입찰 판매'
   }
   expiredAt: string
+  rate: number
+  priceCompare: 'NO_STATISTIC' | 'EXPENSIVE' | 'CHEAPER' | 'SAME'
   currentHeightPrice?: number
+}
+
+export interface Bids {
+  bidId: number
+  bidderNickname: string
+  bidAmount: number
+  bidAt: string
+}
+
+export interface BidRequest {
+  transactionFeedId: number
+  bidAmount: number
 }
 
 export const getTransactionFeedDetail = async (
@@ -49,6 +64,37 @@ export const postPurchaseFeed = async (transactionFeedId: number) => {
 
     error.code = code
     error.name = 'PurchaseError'
+
+    throw error
+  }
+
+  return data
+}
+
+export const getBidHistory = async (transactionFeedId: number): Promise<Bids[]> => {
+  const res = await client.get(`/bid/${transactionFeedId}`)
+  return res.data.data.bids
+}
+
+export const postBid = async (transactionFeedId: number, bidAmount: number): Promise<void> => {
+  const res = await client.post('/bid', {
+    transactionFeedId,
+    bidAmount,
+  })
+
+  const { statusCode, data } = res.data
+
+  if (statusCode !== 200) {
+    const code = data?.statusCode
+    const errorMessage = BID_ERROR_MESSAGES[code] || '입찰에 실패했습니다.'
+
+    const error = new Error(errorMessage) as Error & {
+      code?: number
+      name: string
+    }
+
+    error.code = code
+    error.name = 'BidError'
 
     throw error
   }
