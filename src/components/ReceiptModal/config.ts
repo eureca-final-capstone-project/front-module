@@ -1,6 +1,6 @@
 export const config = {
   charge: {
-    title: '페이 충전 및 환전 내역',
+    title: '페이 충전 내역',
     description: '충전 일시와 금액을 한눈에 확인해보세요.',
     historyMent: '결제 내역',
     history: [
@@ -14,11 +14,11 @@ export const config = {
       { label: '결제 번호', key: 'orderId' },
       { label: '충전 시간', key: 'chargedAt' },
       { label: '충전 방식', key: 'payTypeName' },
-      { label: '총 다챠페이', key: 'chargedPay' },
+      { label: '총 다챠페이', key: 'finalUserPay' },
     ],
   },
   refund: {
-    title: '페이 충전 및 환전 내역',
+    title: '페이 환전 내역',
     description: '환전 일시와 금액을 한눈에 확인해보세요.',
     historyMent: '환전 내역',
     history: [
@@ -31,8 +31,8 @@ export const config = {
     extra: [
       { label: '환전 번호', key: 'exchangeHistoryId' },
       { label: '환전 시간', key: 'exchangedAt' },
-      { label: '환전 계좌', key: 'exchangeAccount' },
-      { label: '총 다챠페이', key: 'exchangedPay' },
+      { label: '환전 계좌', key: 'exchangeAccountWithBank' },
+      { label: '총 다챠페이', key: 'finalUserPay' },
     ],
   },
   buy: {
@@ -47,7 +47,7 @@ export const config = {
       { label: '거래 번호', key: 'transactionHistoryId' },
       { label: '거래 시간', key: 'transactedAt' },
       { label: '통신사', key: 'telecom' },
-      { label: '총 다챠페이', key: 'transactionPay' },
+      { label: '총 다챠페이', key: 'finalUserPay' },
     ],
   },
   sell: {
@@ -62,7 +62,7 @@ export const config = {
       { label: '거래 번호', key: 'transactionHistoryId' },
       { label: '거래 시간', key: 'transactedAt' },
       { label: '통신사', key: 'telecom' },
-      { label: '총 다챠페이', key: 'transactionPay' },
+      { label: '총 다챠페이', key: 'finalUserPay' },
     ],
   },
 } as const
