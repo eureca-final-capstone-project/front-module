@@ -15,6 +15,7 @@ import { useMutation } from '@tanstack/react-query'
 import { postTransactionFeed } from '../../apis/transactionFeed'
 import FloatActionButton from '../../components/FloatActionButton'
 import { useNavigate } from 'react-router-dom'
+import { useToast } from '../../hooks/useToast'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -34,6 +35,7 @@ const typeMap = {
 const PostWritePage = () => {
   const navigate = useNavigate()
   const telecom = useUserStore(state => state.telecom)
+  const { showToast } = useToast()
 
   const methods = useForm<PostTransactionType>({
     resolver: zodResolver(postTransactionSchema),
@@ -58,14 +60,18 @@ const PostWritePage = () => {
     mutationFn: postTransactionFeed,
     onSuccess: (data, variables) => {
       if (data.statusCode === 200) {
+        showToast({ type: 'success', msg: '판매글이 성공적으로 등록되었습니다.' })
         reset()
         navigate(`/posts/${typeMap[variables.salesTypeId]}/${data.data.id}`)
       } else {
-        alert('판매글 등록 실패: ' + data.data.message)
+        showToast({ type: 'error', msg: '판매글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.' })
       }
     },
     onError: error => {
-      alert('판매글 등록 실패 ' + error.message)
+      showToast({
+        type: 'error',
+        msg: error.message || '판매글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
     },
   })
 
