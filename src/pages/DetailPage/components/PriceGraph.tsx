@@ -9,7 +9,7 @@ const PriceGraph = () => {
       <div className="block border-1 border-gray-200 md:hidden" />
 
       <div className="sm:bg-gray-10 rounded-none bg-transparent py-4 sm:rounded-md">
-        <Graph type="line" data={lineData} yKeys={['u+', 'kt', 'skt']} height={315} />
+        <Graph type="line" data={lineData} yKeys={['LG U+', 'KT', 'SKT']} height={315} />
       </div>
     </section>
   )

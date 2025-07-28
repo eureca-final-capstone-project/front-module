@@ -27,9 +27,9 @@ interface GraphProps {
 
 const colors: Record<string, string> = {
   default: '#2F8C8E',
-  'u+': '#E6007E',
-  kt: '#3617CE',
-  skt: '#D71826',
+  'LG U+': '#E6007E',
+  KT: '#3617CE',
+  SKT: '#D71826',
 }
 
 const Graph = ({ type, data, width = '100%', height = 300, xKey = 'hour', yKeys }: GraphProps) => {
