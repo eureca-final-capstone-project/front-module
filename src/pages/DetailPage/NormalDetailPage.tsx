@@ -7,7 +7,7 @@ import Button from '../../components/Button/Button'
 import ReportStrokeIcon from '@/assets/icons/report-stroke.svg?react'
 import UserIcon from '@/assets/icons/user.svg?react'
 import TimeIcon from '@/assets/icons/time.svg?react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
   getRecommendedPosts,
   getTransactionFeedDetail,
@@ -20,12 +20,18 @@ import { transformRecommendedPost } from '../../utils/postCardParse'
 import { useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
+import { addWishPost, deleteWishPosts } from '../../apis/wish'
+import { useToast } from '../../hooks/useToast'
+import WishIcon from '@/assets/icons/heart.svg?react'
+import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const deviceType = useDeviceType()
+  const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
@@ -37,8 +43,70 @@ const NormalDetailPage = () => {
     queryFn: () => getRecommendedPosts(Number(transactionFeedId)),
     enabled: !!transactionFeedId,
   })
+
+  const addWishMutation = useMutation({
+    mutationFn: addWishPost,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+          break
+        case 10004:
+          showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
+          break
+        case 30007:
+          showToast({ type: 'error', msg: '이미 관심 거래에 등록된 판매글입니다.' })
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg: '관심 거래 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+          })
+      }
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '관심 거래 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    },
+  })
+
+  const deleteWishMutation = useMutation({
+    mutationFn: deleteWishPosts,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+          break
+        case 10004:
+          showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg: '관심 거래 등록 취소에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+          })
+      }
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '관심 거래 등록 취소에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    },
+  })
+
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
+
+  const handleWishClick = () => {
+    if (data.liked) {
+      deleteWishMutation.mutate([Number(transactionFeedId)])
+      return
+    }
+    addWishMutation.mutate(Number(transactionFeedId))
+  }
 
   return (
     <main>
@@ -159,26 +227,37 @@ const NormalDetailPage = () => {
               <div className="bg-background fixed right-0 bottom-0 left-0 z-25 flex w-full gap-3 border-t-[0.5px] border-gray-200 px-4 pt-3 pb-4 md:static md:w-48 md:flex-col md:gap-4 md:border-none md:bg-transparent md:p-0 lg:w-67">
                 {/* Col 일때 관심 버튼 */}
                 <Button
-                  text={`관심 ${data.likedCount}`}
-                  className="text-fs18 lg:text-fs20 min-w-22 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
+                  text={
+                    <div className="flex items-center justify-center gap-1">
+                      {data.liked ? <WishFillIcon /> : <WishIcon />}
+                      <span>관심</span>
+                      <span className="text-gray-600">{data.likedCount}</span>
+                    </div>
+                  }
+                  className="text-fs18 lg:text-fs20 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
                   onClick={() => {
                     if (deviceType === 'mobile') {
                       setIsSheetOpen(true)
-                    } else {
-                      // PC에서는 ㄴㄴ
                     }
+                    handleWishClick()
                   }}
                 />
                 {/* Row 일때 관심 버튼 */}
                 <Button
-                  text={`관심 거래 ${data.likedCount}`}
+                  text={
+                    <div className="flex min-w-36 items-center justify-center gap-1 lg:min-w-full lg:gap-2">
+                      {data.liked ? <WishFillIcon /> : <WishIcon />}
+                      <span>관심 거래</span>
+                      <span>{data.likedCount}</span>
+                    </div>
+                  }
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
-                  onClick={() => {}}
+                  onClick={handleWishClick}
                 />
                 <Button
                   onClick={() => navigate(`/data-purchase/${data.transactionFeedId}`)}
                   text="구매하기"
-                  className="bg-pri-500 text-gray-10 text-fs18 lg:text-fs20 w-full p-3.5 font-medium md:hidden"
+                  className="bg-pri-500 text-gray-10 text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden"
                 />
                 <Button
                   onClick={() => navigate(`/data-purchase/${data.transactionFeedId}`)}
