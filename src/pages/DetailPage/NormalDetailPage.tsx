@@ -118,7 +118,7 @@ const NormalDetailPage = () => {
             alt={'이미지'}
             className={`h-full w-full object-cover`}
           />
-          {data.status.code !== 'ACTIVE' && (
+          {data.status.code !== 'ON_SALE' && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/70">
               <span className="text-fs16 text-gray-10 font-semibold transition-transform duration-200 group-hover:scale-105">
                 {data.status.code === 'COMPLETED' ? '거래 완료' : '기간 만료'}
