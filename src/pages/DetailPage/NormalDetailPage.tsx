@@ -15,7 +15,6 @@ import {
 } from '../../apis/transactionFeedDetail'
 import { useNavigate, useParams } from 'react-router-dom'
 import { formatRelativeTime } from '../../utils/time'
-import PostCardCol from '../../components/PostCard/PostCardCol'
 import { transformRecommendedPost } from '../../utils/postCardParse'
 import { useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
@@ -24,6 +23,7 @@ import { addWishPost, deleteWishPosts } from '../../apis/wish'
 import { useToast } from '../../hooks/useToast'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
+import PostCard from '../../components/PostCard/PostCard'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -280,7 +280,11 @@ const NormalDetailPage = () => {
           ) : recommendedData && recommendedData.length > 0 ? (
             <div className="grid grid-cols-2 gap-7 md:grid-cols-4">
               {recommendedData.map(post => (
-                <PostCardCol key={post.transactionFeedId} {...transformRecommendedPost(post)} />
+                <PostCard
+                  key={post.transactionFeedId}
+                  {...transformRecommendedPost(post)}
+                  type="col"
+                />
               ))}
             </div>
           ) : (
@@ -295,7 +299,11 @@ const NormalDetailPage = () => {
             ) : recommendedData && recommendedData.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
                 {recommendedData.map(post => (
-                  <PostCardCol key={post.transactionFeedId} {...transformRecommendedPost(post)} />
+                  <PostCard
+                    key={post.transactionFeedId}
+                    {...transformRecommendedPost(post)}
+                    type="col"
+                  />
                 ))}
               </div>
             ) : (
