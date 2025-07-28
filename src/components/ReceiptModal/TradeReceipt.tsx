@@ -4,7 +4,7 @@ import ReceiptInfo from './ReceiptInfo'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import type { PayHistoryDetailResponse } from '../../apis/userInfo'
 import { formatCompactDateTime } from '../../utils/time'
-import { formatAmount } from '../../utils/format'
+import { formatAmount, formatDataSize } from '../../utils/format'
 
 type TransactionDetail = NonNullable<PayHistoryDetailResponse['data']['transactionDetail']>
 
@@ -14,11 +14,14 @@ const TradeReceipt = ({ type, pay, info }: ReceiptProps<TransactionDetail>) => {
   const postDetails = [
     { label: '거래 유형', value: info.transactionType ?? '-' },
     {
+      label: '거래 데이터',
+      value: typeof info.dataAmount === 'number' ? formatDataSize(info.dataAmount) : '-',
+    },
+    {
       label: '거래 페이',
       value:
         typeof info.transactionPay === 'number' ? formatAmount(Math.abs(info.transactionPay)) : '-',
     },
-    { label: '거래 데이터', value: info.dataTitle ?? '-' },
   ]
 
   return (
