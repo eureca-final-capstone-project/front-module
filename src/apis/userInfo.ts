@@ -170,7 +170,7 @@ export interface PayHistoryDetailResponse {
     transactionDetail: {
       transactionHistoryId: number
       transactionType: '구매' | '판매'
-      dataTitle: string
+      dataAmount: number
       transactionPay: number
       transactedAt: string
       telecom: string
