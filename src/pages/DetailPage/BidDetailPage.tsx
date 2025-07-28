@@ -23,6 +23,9 @@ import BidHistory from './components/BidHistory'
 import BidModal from './components/BidModal'
 import { useToast } from '../../hooks/useToast'
 import { mapSalesTypeFromServer } from '../../utils/salesType'
+import { useWishMutation } from '../../hooks/useWishMutation'
+import WishIcon from '@/assets/icons/heart.svg?react'
+import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
@@ -39,6 +42,8 @@ const BidDetailPage = () => {
     queryFn: () => getTransactionFeedDetail(Number(transactionFeedId)),
     enabled: !!transactionFeedId,
   })
+
+  const { addWishMutation, deleteWishMutation } = useWishMutation(Number(transactionFeedId))
 
   const bidMutation = useMutation({
     mutationFn: ({ id, amount }: { id: number; amount: number }) => postBid(id, amount),
@@ -74,6 +79,14 @@ const BidDetailPage = () => {
 
   if (actualType !== 'bid') {
     return <Navigate to="/404" replace />
+  }
+
+  const handleWishClick = () => {
+    if (data.liked) {
+      deleteWishMutation.mutate([Number(transactionFeedId)])
+      return
+    }
+    addWishMutation.mutate(Number(transactionFeedId))
   }
 
   return (
@@ -233,19 +246,32 @@ const BidDetailPage = () => {
               <div className="bg-background fixed right-0 bottom-0 left-0 z-10 flex w-full gap-3 border-t-[0.5px] border-gray-200 px-4 pt-3 pb-4 md:static md:w-48 md:flex-col md:gap-4 md:border-none md:bg-transparent md:p-0 lg:w-67">
                 {/* Col 일때 관심 버튼 */}
                 <Button
-                  text={`관심 ${data.likedCount}`}
-                  className="text-fs18 lg:text-fs20 min-w-22 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
+                  text={
+                    <div className="flex items-center justify-center gap-1">
+                      {data.liked ? <WishFillIcon /> : <WishIcon />}
+                      <span>관심</span>
+                      <span className="text-gray-600">{data.likedCount}</span>
+                    </div>
+                  }
+                  className="text-fs18 lg:text-fs20 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
+                  onClick={handleWishClick}
                 />
                 {/* Row 일때 관심 버튼 */}
                 <Button
-                  text={`관심 거래 ${data.likedCount}`}
+                  text={
+                    <div className="flex min-w-36 items-center justify-center gap-1 lg:min-w-full lg:gap-2">
+                      {data.liked ? <WishFillIcon /> : <WishIcon />}
+                      <span>관심 거래</span>
+                      <span>{data.likedCount}</span>
+                    </div>
+                  }
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
+                  onClick={handleWishClick}
                 />
-
                 <Button
                   text="입찰하기"
                   onClick={openModal}
-                  className="bg-pri-500 text-gray-10 text-fs18 lg:text-fs20 w-full p-3.5 font-medium md:hidden"
+                  className="bg-pri-500 text-gray-10 text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden"
                 />
                 <Button
                   text="입찰하기"

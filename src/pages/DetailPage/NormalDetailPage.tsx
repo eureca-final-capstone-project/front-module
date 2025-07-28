@@ -7,7 +7,7 @@ import Button from '../../components/Button/Button'
 import ReportStrokeIcon from '@/assets/icons/report-stroke.svg?react'
 import UserIcon from '@/assets/icons/user.svg?react'
 import TimeIcon from '@/assets/icons/time.svg?react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import {
   getRecommendedPosts,
   getTransactionFeedDetail,
@@ -19,20 +19,17 @@ import { transformRecommendedPost } from '../../utils/postCardParse'
 import { useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
-import { addWishPost, deleteWishPosts } from '../../apis/wish'
-import { useToast } from '../../hooks/useToast'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 import PostCard from '../../components/PostCard/PostCard'
 import { mapSalesTypeFromServer } from '../../utils/salesType'
+import { useWishMutation } from '../../hooks/useWishMutation'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const deviceType = useDeviceType()
-  const { showToast } = useToast()
-  const queryClient = useQueryClient()
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
@@ -45,58 +42,7 @@ const NormalDetailPage = () => {
     enabled: !!transactionFeedId,
   })
 
-  const addWishMutation = useMutation({
-    mutationFn: addWishPost,
-    onSuccess: data => {
-      switch (data.statusCode) {
-        case 200:
-          queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
-          break
-        case 10004:
-          showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
-          break
-        case 30007:
-          showToast({ type: 'error', msg: '이미 관심 거래에 등록된 판매글입니다.' })
-          break
-        default:
-          showToast({
-            type: 'error',
-            msg: '관심 거래 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
-          })
-      }
-    },
-    onError: () => {
-      showToast({
-        type: 'error',
-        msg: '관심 거래 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
-      })
-    },
-  })
-
-  const deleteWishMutation = useMutation({
-    mutationFn: deleteWishPosts,
-    onSuccess: data => {
-      switch (data.statusCode) {
-        case 200:
-          queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
-          break
-        case 10004:
-          showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
-          break
-        default:
-          showToast({
-            type: 'error',
-            msg: '관심 거래 등록 취소에 실패했습니다. 잠시 후 다시 시도해 주세요.',
-          })
-      }
-    },
-    onError: () => {
-      showToast({
-        type: 'error',
-        msg: '관심 거래 등록 취소에 실패했습니다. 잠시 후 다시 시도해 주세요.',
-      })
-    },
-  })
+  const { addWishMutation, deleteWishMutation } = useWishMutation(Number(transactionFeedId))
 
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
