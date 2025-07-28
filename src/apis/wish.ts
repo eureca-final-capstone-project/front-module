@@ -63,6 +63,14 @@ export const getWishList = async (params: GetWishListParams): Promise<WishListRe
   const response = await client.get('/wish', { params })
   return response.data
 }
+
+export const addWishPost = async (transactionFeedId: number) => {
+  const response = await client.post('/wish/wish', {
+    transactionFeedId,
+  })
+  return response.data
+}
+
 export const deleteWishPosts = async (transactionFeedIds: number[]) => {
   const response = await client.delete('/wish/wish', {
     data: { transactionFeedIds },

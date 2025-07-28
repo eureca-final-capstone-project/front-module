@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion'
 import type { Variants } from 'framer-motion'
+import { ReactNode } from 'react'
 
 interface ButtonProps {
-  text: string
+  text: ReactNode
   type?: 'button' | 'submit'
   onClick?: () => void
   disabled?: boolean
