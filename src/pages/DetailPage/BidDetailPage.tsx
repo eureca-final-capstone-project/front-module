@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { imageData as PostImage } from '../../constants/imageData'
 import ProviderBadge from '../../components/PostCard/ProviderBadge'
@@ -27,11 +27,13 @@ import { useWishMutation } from '../../hooks/useWishMutation'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 import { getTokenParsed } from '../../apis/tokenParsed'
+import { toast } from 'react-toastify'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
   const { transactionFeedId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const navigate = useNavigate()
 
   const openModal = () => setIsModalOpen(true)
   const closeModal = () => setIsModalOpen(false)
@@ -84,6 +86,7 @@ const BidDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  const isLoggedIn = !!userInfo
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
   const isBuyDisabled = isMyPost || !hasTransactionPermission
@@ -95,6 +98,12 @@ const BidDetailPage = () => {
   }
 
   const handleWishClick = () => {
+    if (!isLoggedIn) {
+      toast.info('로그인이 필요한 기능입니다.')
+      navigate('/login')
+      return
+    }
+
     if (data.liked) {
       deleteWishMutation.mutate([Number(transactionFeedId)])
       return
@@ -188,7 +197,19 @@ const BidDetailPage = () => {
                   ) : (
                     <>
                       <ReportStrokeIcon className="text-error" />
-                      <Button text="신고하기" className="text-gray-700" shape="underline" />
+                      <Button
+                        text="신고하기"
+                        className="text-gray-700"
+                        shape="underline"
+                        onClick={() => {
+                          if (!isLoggedIn) {
+                            toast.info('로그인이 필요한 기능입니다.')
+                            navigate('/login')
+                            return
+                          }
+                          // 신고 처리 로직
+                        }}
+                      />{' '}
                     </>
                   )}
                 </div>
@@ -232,6 +253,14 @@ const BidDetailPage = () => {
                           text="신고하기"
                           shape="underline"
                           className="text-fs14 sm:text-fs16 text-gray-700"
+                          onClick={() => {
+                            if (!isLoggedIn) {
+                              toast.info('로그인이 필요한 기능입니다.')
+                              navigate('/login')
+                              return
+                            }
+                            // 신고 처리 로직
+                          }}
                         />
                       </>
                     )}

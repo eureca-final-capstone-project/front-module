@@ -25,6 +25,7 @@ import PostCard from '../../components/PostCard/PostCard'
 import { mapSalesTypeFromServer } from '../../utils/salesType'
 import { useWishMutation } from '../../hooks/useWishMutation'
 import { getTokenParsed } from '../../apis/tokenParsed'
+import { toast } from 'react-toastify'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -56,6 +57,7 @@ const NormalDetailPage = () => {
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
 
+  const isLoggedIn = !!userInfo
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
   const isBuyDisabled = isMyPost || !hasTransactionPermission
@@ -67,11 +69,26 @@ const NormalDetailPage = () => {
   }
 
   const handleWishClick = () => {
+    if (!isLoggedIn) {
+      toast.info('로그인이 필요한 기능입니다.')
+      navigate('/login')
+      return
+    }
+
     if (data.liked) {
       deleteWishMutation.mutate([Number(transactionFeedId)])
       return
     }
     addWishMutation.mutate(Number(transactionFeedId))
+  }
+
+  const handleBuyClick = () => {
+    if (!isLoggedIn) {
+      toast.info('로그인 후 구매할 수 있습니다.')
+      navigate('/login')
+      return
+    }
+    navigate(`/data-purchase/${data.transactionFeedId}`)
   }
 
   return (
@@ -148,7 +165,19 @@ const NormalDetailPage = () => {
                   ) : (
                     <>
                       <ReportStrokeIcon className="text-error" />
-                      <Button text="신고하기" className="text-gray-700" shape="underline" />
+                      <Button
+                        text="신고하기"
+                        className="text-gray-700"
+                        shape="underline"
+                        onClick={() => {
+                          if (!isLoggedIn) {
+                            toast.info('로그인이 필요한 기능입니다.')
+                            navigate('/login')
+                            return
+                          }
+                          // 신고 처리 로직
+                        }}
+                      />
                     </>
                   )}
                 </div>
@@ -192,6 +221,14 @@ const NormalDetailPage = () => {
                           text="신고하기"
                           shape="underline"
                           className="text-fs14 sm:text-fs16 text-gray-700"
+                          onClick={() => {
+                            if (!isLoggedIn) {
+                              toast.info('로그인이 필요한 기능입니다.')
+                              navigate('/login')
+                              return
+                            }
+                            // 신고 처리 로직
+                          }}
                         />
                       </>
                     )}
@@ -263,13 +300,13 @@ const NormalDetailPage = () => {
                   onClick={handleWishClick}
                 />
                 <Button
-                  onClick={() => navigate(`/data-purchase/${data.transactionFeedId}`)}
+                  onClick={handleBuyClick}
                   text="구매하기"
                   disabled={isBuyDisabled}
                   className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
                 />
                 <Button
-                  onClick={() => navigate(`/data-purchase/${data.transactionFeedId}`)}
+                  onClick={handleBuyClick}
                   text="구매하기"
                   disabled={isBuyDisabled}
                   className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
