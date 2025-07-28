@@ -130,3 +130,7 @@ export const validateSalesDataAmount = (unit: string, amount: number, sellableDa
 
   return { isValid: true }
 }
+
+export const forgotPasswordSchema = z.object({
+  email: z.email('올바른 이메일 형식을 입력해 주세요.'),
+})
