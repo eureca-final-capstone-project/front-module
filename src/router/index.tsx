@@ -23,6 +23,7 @@ import DataPurchasePage from '../pages/DataPurchasePage'
 import BidDetailPage from '../pages/DetailPage/BidDetailPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import PasswordResetPage from '../pages/PasswordResetPage'
+import CompletePage from '../pages/CompletePage'
 
 export const router = createBrowserRouter([
   {
@@ -127,6 +128,16 @@ export const router = createBrowserRouter([
   {
     path: '/404',
     element: <NotFoundPage />,
+  },
+  {
+    path: '/verify-email-complete',
+    element: <CompletePage />,
+    handle: { text: '회원가입이 완료된었습니다.' },
+  },
+  {
+    path: '/reset-password-complete',
+    element: <CompletePage />,
+    handle: { text: '비밀번호가 성공적으로 변경되었습니다.' },
   },
   {
     path: '*',
