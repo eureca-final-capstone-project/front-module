@@ -94,7 +94,18 @@ const PostPage = () => {
   }
 
   if (flattenedPosts.length === 0 && !isLoading) {
-    return <div className="py-10 text-center text-gray-600">조회된 게시글이 없습니다.</div>
+    return (
+      <div className="py-10 text-center text-gray-600">
+        {keyword ? (
+          <>
+            <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색 결과가
+            없습니다.
+          </>
+        ) : (
+          '조회된 게시글이 없습니다.'
+        )}
+      </div>
+    )
   }
 
   return (
@@ -116,9 +127,16 @@ const PostPage = () => {
             {deviceType !== 'mobile' && (
               <div className="flex flex-col gap-2">
                 <h2 className="text-fs20 md:text-fs24 font-medium">데이터 거래</h2>
-                <p className="text-fs14 lg:text-fs16 hidden text-gray-800 md:block">
-                  필터를 사용해 조건에 맞는 데이터를 찾아보세요!
-                </p>
+                {keyword ? (
+                  <p className="text-fs14 lg:text-fs16 hidden text-gray-800 md:block">
+                    <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색
+                    결과입니다.
+                  </p>
+                ) : (
+                  <p className="text-fs14 lg:text-fs16 hidden text-gray-800 md:block">
+                    필터를 사용해 조건에 맞는 데이터를 찾아보세요!
+                  </p>
+                )}
               </div>
             )}
             {/* 정렬 드롭다운 */}
