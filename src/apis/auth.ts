@@ -1,4 +1,9 @@
-import { AdditionalInfoRequestType, LoginSchemaType, SignUpRequestType } from '../types/auth'
+import {
+  AdditionalInfoRequestType,
+  ForgotPasswordSchemaType,
+  LoginSchemaType,
+  SignUpRequestType,
+} from '../types/auth'
 import client from './client'
 
 export const signUp = async (data: SignUpRequestType) => {
@@ -30,5 +35,10 @@ export const naverLogin = () => {
 
 export const requestTokenForOAuth = async (data: { authCode: string }) => {
   const response = await client.post('/oauth/token', data)
+  return response.data
+}
+
+export const forgotPassword = async (data: ForgotPasswordSchemaType) => {
+  const response = await client.post('/user/password-reset/request', data)
   return response.data
 }
