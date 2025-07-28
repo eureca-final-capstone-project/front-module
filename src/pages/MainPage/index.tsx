@@ -49,7 +49,12 @@ const MainPage = () => {
                       시세 정보를 불러오는 중입니다...
                     </p>
                   ) : (
-                    <Graph type="line" data={graphData} yKeys={['u+', 'kt', 'skt']} height={300} />
+                    <Graph
+                      type="line"
+                      data={graphData}
+                      yKeys={['LG U+', 'KT', 'SKT']}
+                      height={300}
+                    />
                   )}
                 </Card>
               </div>
