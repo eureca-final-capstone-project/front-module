@@ -34,4 +34,6 @@ export type AdditionalInfoRequestType = {
 }
 
 // 비밀번호 재설정 request 타입
-export type PasswordRestRequestType = Omit<PasswordResetSchemaType, 'confirmPassword'>
+export type PasswordRestRequestType = Omit<PasswordResetSchemaType, 'confirmPassword'> & {
+  token: string
+}
