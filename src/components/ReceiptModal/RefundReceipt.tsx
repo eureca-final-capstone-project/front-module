@@ -4,13 +4,14 @@ import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import type { PayHistoryDetailResponse } from '../../apis/userInfo'
-import { formatCompactDateTime } from '../../utils/time'
 import { formatAmount } from '../../utils/format'
+import { formatCompactDateTime } from '../../utils/time'
 
-type ChargeDetail = NonNullable<PayHistoryDetailResponse['data']['chargeDetail']>
+type ExchangeDetail = NonNullable<PayHistoryDetailResponse['data']['exchangeDetail']>
 
-const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
+const RefundReceipt = ({ type, pay, info }: ReceiptProps<ExchangeDetail>) => {
   const { historyMent, history, payMent, isMinus, extra } = config[type]
+
   return (
     <div className="flex flex-col gap-8">
       {historyMent && (
@@ -18,8 +19,8 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
           <h3 className="text-fs14 text-center text-gray-700">{historyMent}</h3>
           {history.map((item, i) => {
             const value =
-              item.key && info[item.key as keyof ChargeDetail] != null
-                ? formatAmount(info[item.key as keyof ChargeDetail] as number)
+              item.key && info[item.key as keyof ExchangeDetail] != null
+                ? formatAmount(info[item.key as keyof ExchangeDetail] as number)
                 : '-'
 
             return (
@@ -58,15 +59,25 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
               const i = rowIdx * 2 + colIdx
               const item = extra[i]
               if (!item) return <div key={colIdx} className="flex-1" />
-              const rawValue = info[item.key as keyof ChargeDetail]
+              const rawValue = info[item.key as keyof ExchangeDetail]
               const value =
-                item.key === 'chargedAt'
-                  ? formatCompactDateTime(rawValue as string)
-                  : typeof rawValue === 'number'
-                    ? formatAmount(rawValue)
-                    : typeof rawValue === 'string'
-                      ? rawValue
-                      : '-'
+                item.key === 'exchangedAt' ? (
+                  formatCompactDateTime(info.exchangedAt)
+                ) : item.key === 'exchangeAccountWithBank' ? (
+                  <>
+                    {info.bankName}
+                    <br />
+                    {info.exchangeAccount}
+                  </>
+                ) : item.key === 'exchangeHistoryId' ? (
+                  String(rawValue)
+                ) : typeof rawValue === 'number' ? (
+                  formatAmount(rawValue as number)
+                ) : typeof rawValue === 'string' ? (
+                  rawValue
+                ) : (
+                  '-'
+                )
               return <ReceiptInfo key={colIdx} label={item.label} value={value} />
             })}
           </div>
@@ -76,4 +87,4 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
   )
 }
 
-export default ChargeReceipt
+export default RefundReceipt
