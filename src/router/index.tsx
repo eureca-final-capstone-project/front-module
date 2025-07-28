@@ -132,7 +132,7 @@ export const router = createBrowserRouter([
   {
     path: '/verify-email-complete',
     element: <CompletePage />,
-    handle: { text: '회원가입이 완료된었습니다.' },
+    handle: { text: '회원가입이 완료되었습니다.' },
   },
   {
     path: '/reset-password-complete',
