@@ -50,3 +50,7 @@ export const resetPassword = async (data: PasswordRestRequestType) => {
   const response = await client.post('/user/password-reset/confirm', data)
   return response.data
 }
+export const logout = async () => {
+  const response = await client.post('/auth/logout')
+  return response.data
+}

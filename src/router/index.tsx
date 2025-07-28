@@ -24,6 +24,7 @@ import BidDetailPage from '../pages/DetailPage/BidDetailPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import PasswordResetPage from '../pages/PasswordResetPage'
 import CompletePage from '../pages/CompletePage'
+import MyPostPage from '../pages/MyPostPage'
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: '/charge-result',
         element: <PayChargeResultPage />,
+      },
+      {
+        path: '/my-posts',
+        element: <MyPostPage />,
       },
     ],
   },

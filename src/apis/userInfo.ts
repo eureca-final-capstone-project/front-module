@@ -75,8 +75,6 @@ export const putUserPassword = async (
   params: EditPasswordParams
 ): Promise<EditPasswordResponse> => {
   const response = await client.put('/user/password', params)
-  console.log('----------------서버 응답:', response.data)
-
   return response.data
 }
 export const getUserDataStatus = async (): Promise<UserDataStatus> => {

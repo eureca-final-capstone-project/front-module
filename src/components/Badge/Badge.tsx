@@ -1,6 +1,6 @@
 import React from 'react'
 
-type BadgeSize = 'small' | 'medium'
+type BadgeSize = 'extra-small' | 'small' | 'medium'
 type BadgeVariant = 'default' | 'secondary' | 'outline'
 
 interface BaseBadgeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -32,8 +32,11 @@ const Badge = (props: BadgeProps) => {
   const baseStyle = 'inline-flex items-center justify-center font-medium rounded-full'
 
   const sizeStyle =
-    size === 'small' ? 'text-fs12 px-2 py-1.25 leading-none' : 'text-fs14 px-2 py-1.5 leading-none'
-
+    size === 'extra-small'
+      ? 'text-fs12 px-1.5 py-0.75 leading-none'
+      : size === 'small'
+        ? 'text-fs12 px-2 py-1.25 leading-none'
+        : 'text-fs14 px-2 py-1.5 leading-none'
   let variantStyle = ''
 
   switch (variant) {

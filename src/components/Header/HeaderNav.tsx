@@ -4,6 +4,12 @@ import SearchIcon from '@/assets/icons/search.svg?react'
 import NotificationIcon from '@/assets/icons/notification.svg?react'
 import NotificationActiveIcon from '@/assets/icons/notification-active.svg?react'
 import MenuIcon from '@/assets/icons/menu.svg?react'
+import { useQuery } from '@tanstack/react-query'
+import { getUserProfile } from '../../apis/userInfo'
+import TriangleIcon from '@/assets/icons/triangle.svg?react'
+import UserInfoModal from './UserInfoModal'
+import { AnimatePresence } from 'framer-motion'
+import DropdownMotion from '../Animation/DropDownMotion'
 
 interface HeaderNavProps {
   deviceType: string
@@ -15,8 +21,18 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const location = useLocation()
 
   const [activeNav, setActiveNav] = useState<string | null>(null)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
 
-  const isLoggedIn = true
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile'],
+    queryFn: getUserProfile,
+  })
+
+  const nickname = userProfile?.nickname ?? ''
+  const email = userProfile?.email ?? ''
+  const telecomCompany = userProfile?.telecomCompany?.name ?? ''
+
+  const isLoggedIn = !!userProfile && !!userProfile.nickname
   const notifications = [{ sample1: 'sample1' }]
   const hasUnreadNotifications = notifications.length > 0
 
@@ -45,8 +61,14 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     },
     {
       key: 'profile',
-      label: isLoggedIn ? '닉네임' : '로그인',
-      action: () => alert('사용자 정보 모달 오픈'),
+      label: isLoggedIn ? userProfile.nickname : '로그인',
+      action: () => {
+        if (isLoggedIn) {
+          setIsProfileOpen(prev => !prev)
+        } else {
+          navigate('/login')
+        }
+      },
     },
   ]
 
@@ -60,6 +82,11 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       label: '관심 거래',
       to: isLoggedIn ? '/mypage/favorites' : '/login',
       matchPath: '/mypage/favorites',
+    },
+    {
+      label: '내 판매글',
+      to: isLoggedIn ? '/my-posts' : '/login',
+      matchPath: '/my-posts',
     },
   ]
 
@@ -105,17 +132,39 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       <nav className="text-fs12">
         <ul className="flex gap-4">
           {navButtons.map(({ key, label, action, badge }) => (
-            <li key={key}>
+            <li key={key} className="relative">
               <button
                 type="button"
                 onClick={handleAction(key, action)}
                 className={`hover:text-pri-500 relative cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
               >
-                <span>{label}</span>
+                {key === 'profile' && isLoggedIn ? (
+                  <div className="flex items-center gap-0.5">
+                    <span>{label}</span>
+                    <TriangleIcon
+                      className={`transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`}
+                    />
+                  </div>
+                ) : (
+                  <span>{label}</span>
+                )}
                 {badge && (
                   <span className="bg-error absolute -right-[0.3125rem] h-1 w-1 rounded-full" />
                 )}
               </button>
+
+              {key === 'profile' && isProfileOpen && isLoggedIn && (
+                <AnimatePresence>
+                  <DropdownMotion className="absolute top-full right-0 z-50 mt-3">
+                    <UserInfoModal
+                      nickname={nickname}
+                      email={email}
+                      telecomCompany={telecomCompany}
+                      onClose={() => setIsProfileOpen(false)}
+                    />
+                  </DropdownMotion>
+                </AnimatePresence>
+              )}
             </li>
           ))}
         </ul>
