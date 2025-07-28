@@ -33,7 +33,7 @@ const Badge = (props: BadgeProps) => {
 
   const sizeStyle =
     size === 'extra-small'
-      ? 'text-fs12 px-2 py-0.5 leading-none'
+      ? 'text-fs12 px-1.5 py-0.75 leading-none'
       : size === 'small'
         ? 'text-fs12 px-2 py-1.25 leading-none'
         : 'text-fs14 px-2 py-1.5 leading-none'
