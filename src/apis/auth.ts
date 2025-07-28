@@ -39,6 +39,11 @@ export const requestTokenForOAuth = async (data: { authCode: string }) => {
   return response.data
 }
 
+export const checkEmailDuplicate = async (email: string) => {
+  const response = await client.get(`/user/check-email?email=${email}`)
+  return response.data
+}
+
 // 비밀번호 재설정 안내 이메일 요청
 export const forgotPassword = async (data: ForgotPasswordSchemaType) => {
   const response = await client.post('/user/password-reset/request', data)
