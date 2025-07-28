@@ -12,18 +12,22 @@ import DropDown from '../../../components/DropDown/DropDown'
 import { formatPhoneNumber } from '../../../utils/format'
 import { CARRIER_ID_MAP } from '../../../constants/carrier'
 import { useMutation } from '@tanstack/react-query'
-import { signUp } from '../../../apis/auth'
+import { checkEmailDuplicate, signUp } from '../../../apis/auth'
 import { useNavigate } from 'react-router-dom'
+import { useToast } from '../../../hooks/useToast'
 
 const SignUpForm = () => {
   const navigate = useNavigate()
   const deviceType = useDeviceType()
 
+  const { showToast } = useToast()
+
   const {
     control,
     handleSubmit,
     watch,
-
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<SignUpSchemaType>({
     resolver: zodResolver(signUpSchema),
@@ -36,11 +40,13 @@ const SignUpForm = () => {
   const carrier = watch('carrier')
   const phoneNumberValue = watch('phoneNumber')
 
-  const [checked, setChecked] = useState<Record<string, boolean>>({})
+  const [isEmailChecked, setIsEmailChecked] = useState<boolean | null>(null)
+  const [isEmailDuplicated, setIsEmailDuplicated] = useState<boolean | null>(null)
+  const [agreemnetChecked, setAgreementChecked] = useState<Record<string, boolean>>({})
 
   const requiredAgreementsChecked = agreements
     .filter(item => item.required)
-    .every(item => checked[item.id])
+    .every(item => agreemnetChecked[item.id])
 
   const isActive =
     emailValue &&
@@ -55,24 +61,63 @@ const SignUpForm = () => {
     requiredAgreementsChecked
 
   const handleAgreementChange = (id: string, value: boolean) => {
-    setChecked(prev => ({ ...prev, [id]: value }))
+    setAgreementChecked(prev => ({ ...prev, [id]: value }))
   }
 
   const mutation = useMutation({
     mutationFn: signUp,
     onSuccess: data => {
-      if (data.statusCode === 200) {
-        navigate('/login')
-      } else {
-        alert('회원가입 실패: ' + data.message)
+      switch (data.statusCode) {
+        case 200:
+          navigate('/login')
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg: '회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+          })
       }
     },
-    onError: error => {
-      alert('회원가입 실패 ' + error.message)
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '회원가입에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
     },
   })
 
+  const handleEmailDuplicateCheck = async () => {
+    if (!emailValue) {
+      setError('email', { message: '이메일을 입력해 주세요.' })
+      return
+    }
+
+    if (errors.email) return
+
+    try {
+      const response = await checkEmailDuplicate(emailValue)
+      if (response.data) {
+        setIsEmailDuplicated(true)
+        setError('email', { message: '이미 사용 중인 이메일입니다.' })
+      } else {
+        setIsEmailDuplicated(false)
+        clearErrors('email')
+      }
+      setIsEmailChecked(true)
+    } catch {
+      showToast({
+        type: 'error',
+        msg: '이메일 중복 확인에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    }
+  }
+
   const handleSignUp = (data: SignUpSchemaType) => {
+    if (!isEmailChecked) {
+      setIsEmailChecked(false)
+      return
+    }
+
     const payload = {
       email: data.email,
       password: data.password,
@@ -86,35 +131,48 @@ const SignUpForm = () => {
   return (
     <form onSubmit={handleSubmit(handleSignUp)} className="flex flex-col gap-5">
       <div className="flex flex-col gap-5 sm:gap-10">
-        <Controller
-          name="email"
-          control={control}
-          defaultValue=""
-          render={({ field }) => (
-            <Input
-              label="이메일 *"
-              id="email"
-              value={field.value}
-              onChange={e => {
-                field.onChange(e)
-              }}
-              error={!!errors.email}
-              errorMsg={errors.email?.message}
-              shape={deviceType === 'mobile' ? 'square' : 'floating'}
-              suffix={
-                <Button
-                  text="중복확인"
-                  shape="underline"
-                  className={`text-fs14 group-hover:text-gray-700 group-focus:text-gray-700 sm:text-gray-700 ${
-                    field.value ? 'text-gray-700' : 'text-gray-200'
-                  }`}
-                  onClick={() => alert('중복확인')}
-                />
-              }
-              suffixAlwaysVisible={true}
-            />
+        <div>
+          <Controller
+            name="email"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Input
+                label="이메일 *"
+                id="email"
+                value={field.value}
+                onChange={e => {
+                  field.onChange(e)
+                  setIsEmailChecked(null)
+                  setIsEmailDuplicated(null)
+                }}
+                error={!!errors.email || isEmailChecked === false}
+                errorMsg={errors.email?.message}
+                shape={deviceType === 'mobile' ? 'square' : 'floating'}
+                suffix={
+                  <Button
+                    text="중복확인"
+                    shape="underline"
+                    className={`text-fs14 group-hover:text-gray-700 group-focus:text-gray-700 sm:text-gray-700 ${
+                      field.value ? 'text-gray-700' : 'text-gray-200'
+                    }`}
+                    onClick={handleEmailDuplicateCheck}
+                  />
+                }
+                suffixAlwaysVisible={true}
+              />
+            )}
+          />
+          {isEmailChecked === false && (
+            <div className="text-fs12 text-error p-1 text-left">이메일 중복 확인을 해주세요.</div>
           )}
-        />
+          {isEmailChecked && isEmailDuplicated === false && (
+            <div className="sm:text-pri-500 text-fs12 p-1 text-left text-gray-100">
+              사용 가능한 이메일입니다.
+            </div>
+          )}
+        </div>
+
         <Controller
           name="password"
           control={control}
@@ -190,7 +248,7 @@ const SignUpForm = () => {
         </div>
       </div>
 
-      <Agreement checked={checked} onChange={handleAgreementChange} />
+      <Agreement checked={agreemnetChecked} onChange={handleAgreementChange} />
 
       <Button
         text="이메일 인증하고 가입하기"
