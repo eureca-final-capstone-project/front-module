@@ -5,9 +5,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { PasswordResetSchemaType } from '../../../types/auth'
 import { passwordChangeSchema } from '../../../utils/validation'
 import Button from '../../../components/Button/Button'
+import { useSearchParams } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
+import { resetPassword } from '../../../apis/auth'
+import { useToast } from '../../../hooks/useToast'
 
 const PasswordResetForm = () => {
   const deviceType = useDeviceType()
+  const [searchParams] = useSearchParams()
+
+  const { showToast } = useToast()
 
   const {
     control,
@@ -25,8 +32,32 @@ const PasswordResetForm = () => {
   const isActive =
     passwordValue && passwordConfirmValue && !errors.newPassword && !errors.confirmPassword
 
+  const mutation = useMutation({
+    mutationFn: resetPassword,
+    onSuccess: data => {
+      console.log(data)
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '비밀번호 재설정에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    },
+  })
+
   const handlePasswordReset = (data: PasswordResetSchemaType) => {
-    console.log(data)
+    const token = searchParams.get('token')
+
+    if (token) {
+      const payload = {
+        newPassword: data.newPassword,
+        token,
+      }
+      mutation.mutate(payload)
+      return
+    }
+
+    showToast({ type: 'error', msg: '비밀번호 재설정에 실패했습니다. 잠시 후 다시 시도해 주세요.' })
   }
 
   return (
