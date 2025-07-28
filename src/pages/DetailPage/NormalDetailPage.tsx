@@ -13,15 +13,16 @@ import {
   getTransactionFeedDetail,
   TransactionFeedDetailResponse,
 } from '../../apis/transactionFeedDetail'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { formatRelativeTime } from '../../utils/time'
-import PostCardCol from '../../components/PostCard/PostCardCol'
 import { transformRecommendedPost } from '../../utils/postCardParse'
 import { useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
+import PostCard from '../../components/PostCard/PostCard'
+import { mapSalesTypeFromServer } from '../../utils/salesType'
 import { useWishMutation } from '../../hooks/useWishMutation'
 
 const NormalDetailPage = () => {
@@ -46,6 +47,12 @@ const NormalDetailPage = () => {
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
 
+  const actualType = mapSalesTypeFromServer(data.salesType.name)
+
+  if (actualType !== 'normal') {
+    return <Navigate to="/404" replace />
+  }
+
   const handleWishClick = () => {
     if (data.liked) {
       deleteWishMutation.mutate([Number(transactionFeedId)])
@@ -64,7 +71,7 @@ const NormalDetailPage = () => {
             alt={'이미지'}
             className={`h-full w-full object-cover`}
           />
-          {data.status.code !== 'ACTIVE' && (
+          {data.status.code !== 'ON_SALE' && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/70">
               <span className="text-fs16 text-gray-10 font-semibold transition-transform duration-200 group-hover:scale-105">
                 {data.status.code === 'COMPLETED' ? '거래 완료' : '기간 만료'}
@@ -226,7 +233,11 @@ const NormalDetailPage = () => {
           ) : recommendedData && recommendedData.length > 0 ? (
             <div className="grid grid-cols-2 gap-7 md:grid-cols-4">
               {recommendedData.map(post => (
-                <PostCardCol key={post.transactionFeedId} {...transformRecommendedPost(post)} />
+                <PostCard
+                  key={post.transactionFeedId}
+                  {...transformRecommendedPost(post)}
+                  type="col"
+                />
               ))}
             </div>
           ) : (
@@ -241,7 +252,11 @@ const NormalDetailPage = () => {
             ) : recommendedData && recommendedData.length > 0 ? (
               <div className="grid grid-cols-2 gap-4">
                 {recommendedData.map(post => (
-                  <PostCardCol key={post.transactionFeedId} {...transformRecommendedPost(post)} />
+                  <PostCard
+                    key={post.transactionFeedId}
+                    {...transformRecommendedPost(post)}
+                    type="col"
+                  />
                 ))}
               </div>
             ) : (
