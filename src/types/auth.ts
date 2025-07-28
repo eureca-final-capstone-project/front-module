@@ -1,6 +1,7 @@
 import z from 'zod'
 import {
   additionalInfoSchema,
+  forgotPasswordSchema,
   loginSchema,
   nicknameSchema,
   passwordChangeSchema,
@@ -13,6 +14,7 @@ export type SignUpSchemaType = z.infer<typeof signUpSchema>
 export type AdditionalInfoSchemaTye = z.infer<typeof additionalInfoSchema>
 export type PasswordChangeSchemaType = z.infer<typeof passwordChangeSchema>
 export type NicknameSchemaType = z.infer<typeof nicknameSchema>
+export type ForgetPasswordSchemaType = z.infer<typeof forgotPasswordSchema>
 
 // 회원가입 request 타입
 export type SignUpRequestType = Omit<
