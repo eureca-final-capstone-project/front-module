@@ -15,6 +15,7 @@ export type AdditionalInfoSchemaTye = z.infer<typeof additionalInfoSchema>
 export type PasswordChangeSchemaType = z.infer<typeof passwordChangeSchema>
 export type NicknameSchemaType = z.infer<typeof nicknameSchema>
 export type ForgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>
+export type PasswordResetSchemaType = Omit<z.infer<typeof passwordChangeSchema>, 'currentPassword'>
 
 // 회원가입 request 타입
 export type SignUpRequestType = Omit<
@@ -31,3 +32,6 @@ export type AdditionalInfoRequestType = {
   telecomCompanyId: number
   phoneNumber: string
 }
+
+// 비밀번호 재설정 request 타입
+export type PasswordRestRequestType = Omit<PasswordResetSchemaType, 'confirmPassword'>
