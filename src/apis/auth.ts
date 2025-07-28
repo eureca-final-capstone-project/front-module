@@ -47,7 +47,6 @@ export const forgotPassword = async (data: ForgotPasswordSchemaType) => {
 
 // 비밀번호 재설정
 export const resetPassword = async (data: PasswordRestRequestType) => {
-  console.log(data)
   const response = await client.post('/user/password-reset/confirm', data)
   return response.data
 }
