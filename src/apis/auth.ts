@@ -32,3 +32,8 @@ export const requestTokenForOAuth = async (data: { authCode: string }) => {
   const response = await client.post('/oauth/token', data)
   return response.data
 }
+
+export const checkEmailDuplicate = async (email: string) => {
+  const response = await client.get(`/user/check-email?email=${email}`)
+  return response.data
+}
