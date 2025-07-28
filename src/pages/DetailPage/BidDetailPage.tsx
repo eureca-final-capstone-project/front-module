@@ -177,16 +177,7 @@ const BidDetailPage = () => {
 
                 {/* 데스크탑 신고하기 */}
                 <div className="hidden items-end justify-end gap-1 lg:flex">
-                  {isMyPost ? (
-                    <>
-                      <Button
-                        text="수정하기"
-                        className="text-gray-700"
-                        shape="underline"
-                        onClick={() => {}}
-                      />
-                    </>
-                  ) : (
+                  {!isMyPost && (
                     <>
                       <ReportStrokeIcon className="text-error" />
                       <Button
@@ -201,7 +192,7 @@ const BidDetailPage = () => {
                           }
                           // 신고 처리 로직
                         }}
-                      />{' '}
+                      />
                     </>
                   )}
                 </div>
@@ -221,16 +212,7 @@ const BidDetailPage = () => {
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
                   <div className="flex items-end justify-end gap-1 lg:hidden">
-                    {isMyPost ? (
-                      <>
-                        <Button
-                          text="수정하기"
-                          shape="underline"
-                          className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => {}}
-                        />
-                      </>
-                    ) : (
+                    {isMyPost && (
                       <>
                         <ReportStrokeIcon className="text-error" />
                         <Button
