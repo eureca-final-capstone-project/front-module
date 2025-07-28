@@ -26,6 +26,7 @@ import { mapSalesTypeFromServer } from '../../utils/salesType'
 import { useWishMutation } from '../../hooks/useWishMutation'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
+import { getTokenParsed } from '../../apis/tokenParsed'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
@@ -70,10 +71,22 @@ const BidDetailPage = () => {
     bidMutation.mutate({ id: Number(transactionFeedId), amount: bidAmount })
   }
 
+  const { data: userInfo } = useQuery({
+    queryKey: ['tokenParsed'],
+    queryFn: getTokenParsed,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: !!sessionStorage.getItem('accessToken'),
+  })
+
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) {
     return <Navigate to="/404" replace />
   }
+
+  const isMyPost = userInfo?.userId === data.sellerId
+  const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
+  const isBuyDisabled = isMyPost || !hasTransactionPermission
 
   const actualType = mapSalesTypeFromServer(data.salesType.name)
 
@@ -154,9 +167,30 @@ const BidDetailPage = () => {
                 </div>
 
                 {/* 데스크탑 신고하기 */}
-                <div className="hidden items-end justify-end lg:flex">
-                  <ReportStrokeIcon className="text-error" />
-                  <Button text="신고하기" shape="underline" className="text-gray-700" />
+                <div
+                  className={`hidden items-end justify-end lg:flex ${isMyPost ? 'gap-2' : 'gap-1'}`}
+                >
+                  {isMyPost ? (
+                    <>
+                      <Button
+                        text="수정하기"
+                        className="text-gray-700"
+                        shape="underline"
+                        onClick={() => {}}
+                      />
+                      <Button
+                        text="삭제하기"
+                        className="text-gray-700"
+                        shape="underline"
+                        onClick={() => {}}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <ReportStrokeIcon className="text-error" />
+                      <Button text="신고하기" className="text-gray-700" shape="underline" />
+                    </>
+                  )}
                 </div>
               </div>
               <div className="mb-4 flex items-center justify-between gap-3 text-gray-800 md:mb-5">
@@ -173,13 +207,34 @@ const BidDetailPage = () => {
                 </div>
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
-                  <div className="flex items-end justify-end gap-1 lg:hidden">
-                    <ReportStrokeIcon className="text-error" />
-                    <Button
-                      text="신고하기"
-                      shape="underline"
-                      className="text-fs14 sm:text-fs16 text-gray-700"
-                    />
+                  <div
+                    className={`flex items-end justify-end lg:hidden ${isMyPost ? 'gap-2' : 'gap-1'}`}
+                  >
+                    {isMyPost ? (
+                      <>
+                        <Button
+                          text="수정하기"
+                          shape="underline"
+                          className="text-fs14 sm:text-fs16 text-gray-700"
+                          onClick={() => {}}
+                        />
+                        <Button
+                          text="삭제하기"
+                          shape="underline"
+                          className="text-fs14 sm:text-fs16 text-gray-700"
+                          onClick={() => {}}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <ReportStrokeIcon className="text-error" />
+                        <Button
+                          text="신고하기"
+                          shape="underline"
+                          className="text-fs14 sm:text-fs16 text-gray-700"
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -271,12 +326,14 @@ const BidDetailPage = () => {
                 <Button
                   text="입찰하기"
                   onClick={openModal}
-                  className="bg-pri-500 text-gray-10 text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden"
+                  disabled={isBuyDisabled}
+                  className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
                 />
                 <Button
                   text="입찰하기"
                   onClick={openModal}
-                  className="bg-pri-500 text-gray-10 text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block"
+                  disabled={isBuyDisabled}
+                  className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
                 />
               </div>
             </div>
