@@ -4,7 +4,7 @@ import LoginForm from './components/LoginForm'
 import SocialLogin from './components/SocialLogin'
 import { useState } from 'react'
 import Modal from '../../components/Modal/Modal'
-import ForgetPasswordForm from './components/ForgetPasswordForm'
+import ForgotPasswordForm from './components/ForgotPasswordForm'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -28,7 +28,7 @@ const LoginPage = () => {
             isOpen={isForgotPasswordModalOpen}
             onClose={() => setIsForgotPasswordModalOpen(false)}
           >
-            <ForgetPasswordForm onClose={() => setIsForgotPasswordModalOpen(false)} />
+            <ForgotPasswordForm onClose={() => setIsForgotPasswordModalOpen(false)} />
           </Modal>
         </div>
       </div>
