@@ -1,4 +1,10 @@
-import { AdditionalInfoRequestType, LoginSchemaType, SignUpRequestType } from '../types/auth'
+import {
+  AdditionalInfoRequestType,
+  ForgotPasswordSchemaType,
+  LoginSchemaType,
+  PasswordRestRequestType,
+  SignUpRequestType,
+} from '../types/auth'
 import client from './client'
 
 export const signUp = async (data: SignUpRequestType) => {
@@ -30,5 +36,26 @@ export const naverLogin = () => {
 
 export const requestTokenForOAuth = async (data: { authCode: string }) => {
   const response = await client.post('/oauth/token', data)
+  return response.data
+}
+
+export const checkEmailDuplicate = async (email: string) => {
+  const response = await client.get(`/user/check-email?email=${email}`)
+  return response.data
+}
+
+// 비밀번호 재설정 안내 이메일 요청
+export const forgotPassword = async (data: ForgotPasswordSchemaType) => {
+  const response = await client.post('/user/password-reset/request', data)
+  return response.data
+}
+
+// 비밀번호 재설정
+export const resetPassword = async (data: PasswordRestRequestType) => {
+  const response = await client.post('/user/password-reset/confirm', data)
+  return response.data
+}
+export const logout = async () => {
+  const response = await client.post('/auth/logout')
   return response.data
 }

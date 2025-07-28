@@ -6,12 +6,29 @@ import RecommendSection from './components/RecommendSection'
 import BidSection from './components/BidSection'
 import EventBanner from './components/EventBanner'
 import Graph from '../../components/Graph/Graph'
-import { lineData } from '../../mocks/graphData'
 import LatestSection from './components/LatestSection'
 import SectionDescription from './components/SectionDescription'
 import FadeInUpMotion from '../../components/Animation/FadeInUpMotion'
+import { useQuery } from '@tanstack/react-query'
+import { transformToGraphData } from '../../utils/graph'
+import { getHourlyStatistics } from '../../apis/graph'
 
 const MainPage = () => {
+  const { data: statistics, isLoading } = useQuery({
+    queryKey: ['hourly-statistics'],
+    queryFn: getHourlyStatistics,
+  })
+
+  const graphData = statistics
+    ? transformToGraphData(statistics).map(entry => {
+        const newEntry: Record<string, number> = {}
+        Object.entries(entry).forEach(([key, value]) => {
+          if (value !== null) newEntry[key] = value
+        })
+        return newEntry
+      })
+    : []
+
   return (
     <div className="bg-background flex min-h-screen flex-col items-center">
       <Header />
@@ -27,7 +44,18 @@ const MainPage = () => {
                 <SectionDescription text="통신사 별 <span class='text-pri-500 font-bold'>데이터 거래 시세 변동</span>을 한눈에 확인하세요." />
                 <Card className="flex min-h-60 justify-start overflow-hidden rounded-none p-5 sm:h-110 sm:rounded-b-md">
                   <SectionHeader title="시세 그래프" iconType="priceGraph" />
-                  <Graph type="line" data={lineData} yKeys={['u+', 'kt', 'skt']} height={300} />
+                  {isLoading ? (
+                    <p className="flex min-h-75 items-center justify-center">
+                      시세 정보를 불러오는 중입니다...
+                    </p>
+                  ) : (
+                    <Graph
+                      type="line"
+                      data={graphData}
+                      yKeys={['LG U+', 'KT', 'SKT']}
+                      height={300}
+                    />
+                  )}
                 </Card>
               </div>
             </FadeInUpMotion>

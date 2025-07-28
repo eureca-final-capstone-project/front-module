@@ -31,7 +31,7 @@ export const additionalInfoSchema = z.object({
 
 export const passwordChangeSchema = z
   .object({
-    currentPassword: z.string().nonempty('기존 비밀번호를 입력해주세요.'),
+    currentPassword: z.string().nonempty('기존 비밀번호를 입력해주세요.').optional(),
     newPassword: z
       .string()
       .regex(
@@ -44,6 +44,7 @@ export const passwordChangeSchema = z
     message: '새 비밀번호가 일치하지 않습니다.',
     path: ['confirmPassword'],
   })
+
 export const nicknameSchema = z.object({
   nickname: z
     .string()
@@ -130,3 +131,56 @@ export const validateSalesDataAmount = (unit: string, amount: number, sellableDa
 
   return { isValid: true }
 }
+
+export const validateChangeDataAmount = (unit: string, amount: number, totalDataMb: number) => {
+  if (isNaN(amount)) {
+    return { isValid: false, message: '가격은 숫자로 입력해 주세요.' }
+  }
+
+  const unitRules = {
+    MB: {
+      min: 100,
+      step: 100,
+      convert: (val: number) => val,
+      unitLabel: 'MB',
+    },
+    GB: {
+      min: 1,
+      step: 1,
+      convert: (val: number) => val * 1000,
+      unitLabel: 'GB',
+    },
+  } as const
+
+  const rule = unitRules[unit as keyof typeof unitRules]
+  if (!rule) return { isValid: false, message: '유효하지 않은 단위입니다.' }
+
+  const amountInMb = rule.convert(amount)
+
+  if (amountInMb > totalDataMb) {
+    return {
+      isValid: false,
+      message: '보유 데이터 양 범위 내에서 입력해 주세요.',
+    }
+  }
+
+  if (amount < rule.min) {
+    return {
+      isValid: false,
+      message: `${rule.unitLabel}는 ${rule.min}${rule.unitLabel} 이상 입력해야 합니다.`,
+    }
+  }
+
+  if (amount % rule.step !== 0) {
+    return {
+      isValid: false,
+      message: `${rule.unitLabel}는 ${rule.step}${rule.unitLabel} 단위로 입력해야 합니다.`,
+    }
+  }
+
+  return { isValid: true }
+}
+
+export const forgotPasswordSchema = z.object({
+  email: z.email('올바른 이메일 형식을 입력해 주세요.'),
+})

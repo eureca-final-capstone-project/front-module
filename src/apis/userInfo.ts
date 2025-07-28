@@ -75,8 +75,6 @@ export const putUserPassword = async (
   params: EditPasswordParams
 ): Promise<EditPasswordResponse> => {
   const response = await client.put('/user/password', params)
-  console.log('----------------서버 응답:', response.data)
-
   return response.data
 }
 export const getUserDataStatus = async (): Promise<UserDataStatus> => {
@@ -183,5 +181,12 @@ export interface PayHistoryDetailResponse {
 
 export const getPayHistoryDetail = async (payHistoryId: number) => {
   const res = await client.get<PayHistoryDetailResponse>(`/pay-history/${payHistoryId}`)
+  return res.data.data
+}
+
+export const putEnableSaleData = async (amount: number) => {
+  const res = await client.put('/user-data/enable-sale/change', {
+    amount,
+  })
   return res.data.data
 }

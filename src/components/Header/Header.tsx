@@ -14,7 +14,9 @@ const Header = () => {
   const [showMobileSearch, setShowMobileSearch] = useState(false)
 
   const handleSearch = (keyword: string) => {
-    navigate(`/list?keyword=${encodeURIComponent(keyword)}`)
+    if (!keyword.trim()) return
+    setShowMobileSearch(false)
+    navigate(`/posts?keyword=${encodeURIComponent(keyword.trim())}`)
   }
 
   return (

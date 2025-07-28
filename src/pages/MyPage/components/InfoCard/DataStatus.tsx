@@ -42,6 +42,7 @@ const DataStatus = () => {
           text="데이터 전환하기"
           className="text-fs14 lg:text-fs18 border-pri-500 text-pri-500 mt-4 border-[1.7px] font-medium"
           onClick={handleClick}
+          disabled={(data?.totalDataMb ?? 0) === 0}
         />
       </>
     </InfoCard>

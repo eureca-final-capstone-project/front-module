@@ -4,7 +4,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { loginSchema } from '../../../utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import { useAuthStore } from '../../../store/authStore'
@@ -13,7 +13,7 @@ import { LoginSchemaType } from '../../../types/auth'
 const LoginForm = () => {
   const navigate = useNavigate()
   const deviceType = useDeviceType()
-
+  const queryClient = useQueryClient()
   const setIsLogin = useAuthStore(state => state.setIsLogin)
 
   const {
@@ -34,11 +34,12 @@ const LoginForm = () => {
 
   const mutation = useMutation({
     mutationFn: login,
-    onSuccess: data => {
+    onSuccess: async data => {
       if (data.statusCode === 200) {
         const accessToken = data.data.accessToken
         sessionStorage.setItem('accessToken', accessToken)
         setIsLogin(true)
+        await queryClient.invalidateQueries({ queryKey: ['userProfile'] })
         navigate('/')
       } else {
         alert('로그인 실패: ' + data.message)
