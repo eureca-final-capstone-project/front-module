@@ -183,3 +183,10 @@ export const getPayHistoryDetail = async (payHistoryId: number) => {
   const res = await client.get<PayHistoryDetailResponse>(`/pay-history/${payHistoryId}`)
   return res.data.data
 }
+
+export const putEnableSaleData = async (amount: number) => {
+  const res = await client.put('/user-data/enable-sale/change', {
+    amount,
+  })
+  return res.data.data
+}
