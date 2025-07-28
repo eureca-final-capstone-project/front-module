@@ -4,7 +4,6 @@ import Badge from '../Badge/Badge'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import { formatAmount, formatDataSize } from '../../utils/format'
 import { getTelecomBadgeColor, getTelecomBadgeText } from '../../utils/telecom'
-import { useEffect, useRef } from 'react'
 interface Props {
   nickname: string
   email: string
@@ -23,26 +22,8 @@ const UserInfoModal = ({ nickname, email, telecomCompany, onClose }: Props) => {
     queryFn: getUserDataStatus,
   })
 
-  const modalRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onClose])
-
   return (
-    <div
-      ref={modalRef}
-      className="rounded-custom-m bg-gray-10 shadow-header-modal absolute right-0 z-50 flex w-[236px] flex-col gap-4.5 p-5"
-    >
+    <div className="rounded-custom-m bg-gray-10 shadow-header-modal absolute right-0 z-50 flex w-[236px] flex-col gap-4.5 p-5">
       <div className="flex w-full items-center justify-between">
         <div className="text-fs16">
           <span className="font-semibold">{nickname}</span>님

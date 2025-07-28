@@ -32,7 +32,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const email = userProfile?.email ?? ''
   const telecomCompany = userProfile?.telecomCompany?.name ?? ''
 
-  const isLoggedIn = !!userProfile
+  const isLoggedIn = !!userProfile && !!userProfile.nickname
   const notifications = [{ sample1: 'sample1' }]
   const hasUnreadNotifications = notifications.length > 0
 
