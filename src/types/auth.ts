@@ -5,6 +5,7 @@ import {
   loginSchema,
   nicknameSchema,
   passwordChangeSchema,
+  resetPasswordSchema,
   signUpSchema,
 } from '../utils/validation'
 
@@ -15,7 +16,7 @@ export type AdditionalInfoSchemaTye = z.infer<typeof additionalInfoSchema>
 export type PasswordChangeSchemaType = z.infer<typeof passwordChangeSchema>
 export type NicknameSchemaType = z.infer<typeof nicknameSchema>
 export type ForgotPasswordSchemaType = z.infer<typeof forgotPasswordSchema>
-export type PasswordResetSchemaType = Omit<z.infer<typeof passwordChangeSchema>, 'currentPassword'>
+export type PasswordResetSchemaType = z.infer<typeof resetPasswordSchema>
 
 // 회원가입 request 타입
 export type SignUpRequestType = Omit<
