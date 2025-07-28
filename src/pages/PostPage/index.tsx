@@ -8,12 +8,15 @@ import { SORT_BY, SortLabel } from '../../constants/sortBy'
 import { getTransactionFeeds, TransactionFeedResponse } from '../../apis/transactionFeed'
 import { transformPostCard } from '../../utils/postCardParse'
 import { PostCardProps } from '../../components/PostCard/PostCard'
+import { useSearchParams } from 'react-router-dom'
 
 const PostPage = () => {
   const sortLabels = SORT_BY.map(option => option.label) as SortLabel[]
   const [selectedSort, setSelectedSort] = useState<SortLabel>('최신순')
   const deviceType = useDeviceType()
   const observerRef = useRef<HTMLDivElement | null>(null)
+  const [searchParams] = useSearchParams()
+  const keyword = searchParams.get('keyword') || ''
 
   const sortBy = useMemo(() => {
     const map: Record<SortLabel, 'LATEST' | 'PRICE_HIGH' | 'PRICE_LOW'> = {
@@ -26,14 +29,18 @@ const PostPage = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError } =
     useInfiniteQuery<TransactionFeedResponse, Error>({
-      queryKey: ['transactionFeeds', sortBy],
+      queryKey: ['transactionFeeds', sortBy, keyword],
       queryFn: async ({ pageParam = 0 }) => {
-        const res = await getTransactionFeeds({ sortBy }, { page: pageParam as number, size: 12 })
+        const res = await getTransactionFeeds(keyword ? { keyword, sortBy } : { sortBy }, {
+          page: pageParam as number,
+          size: 12,
+        })
         return res
       },
       initialPageParam: 0,
       getNextPageParam: lastPage => (lastPage.last ? undefined : lastPage.number + 1),
       staleTime: 1000 * 60,
+      enabled: !!sortBy,
     })
 
   const flattenedPosts: PostCardProps[] = useMemo(() => {
