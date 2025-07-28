@@ -27,7 +27,8 @@ export const formatFullDate = (
 ): string => {
   const date = new Date(dateString)
 
-  const year = date.getFullYear()
+  const fullYear = date.getFullYear()
+  const year = String(fullYear).slice(-2)
   const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
 
@@ -45,4 +46,16 @@ export const formatFullDate = (
   } else {
     return `${month}월 ${day}일 ${timeText}`
   }
+}
+export const formatCompactDateTime = (dateString: string): string => {
+  const date = new Date(dateString)
+
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+
+  const hour = String(date.getHours()).padStart(2, '0')
+  const minute = String(date.getMinutes()).padStart(2, '0')
+
+  return `${year}.${month}.${day} | ${hour}:${minute}`
 }

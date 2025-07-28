@@ -70,5 +70,5 @@ export const getTransactionFeeds = async (
 
 export const postTransactionFeed = async (data: PostTransactionPayloadType) => {
   const response = await client.post('/transaction-feed', data)
-  return response.data.data
+  return response.data
 }

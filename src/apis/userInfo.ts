@@ -106,3 +106,82 @@ export const getTransactionHistory = async ({
   })
   return res.data.data
 }
+export interface PayHistoryItem {
+  payHistoryId: number
+  changeType: '충전' | '환전' | '구매' | '판매'
+  changePay: number
+  createdAt: string
+}
+
+export interface PayHistoryPageData {
+  totalElements: number
+  totalPages: number
+  pageable: unknown
+  size: number
+  content: PayHistoryItem[]
+  number: number
+  sort: unknown
+  numberOfElements: number
+  first: boolean
+  last: boolean
+  empty: boolean
+}
+export interface PayHistoryResponse {
+  statusCode: number
+  message: string
+  data: PayHistoryPageData
+}
+export const getPayHistory = async (page = 0, size = 20): Promise<PayHistoryItem[]> => {
+  const res = await client.get<PayHistoryResponse>('/pay-history', {
+    params: {
+      'pageable.page': page,
+      'pageable.size': size,
+    },
+  })
+  return res.data.data.content
+}
+export interface PayHistoryDetailResponse {
+  statusCode: number
+  message: string
+  data: {
+    payHistoryId: number
+    changeType: '충전' | '환전' | '구매' | '판매'
+    finalUserPay: number
+    createdAt: string
+    chargeDetail: {
+      orderId: string
+      paymentAmount: number
+      discountAmount: number
+      finalPaymentAmount: number
+      chargedPay: number
+      chargedAt: string
+      payTypeName: string
+      finalUserPay: number
+    } | null
+    exchangeDetail: {
+      exchangeHistoryId: number
+      exchangeAmount: number
+      fee: number
+      finalExchangeAmount: number
+      exchangedPay: number
+      exchangedAt: string
+      bankName: string
+      exchangeAccount: string
+      finalUserPay: number
+    } | null
+    transactionDetail: {
+      transactionHistoryId: number
+      transactionType: '구매' | '판매'
+      dataTitle: string
+      transactionPay: number
+      transactedAt: string
+      telecom: string
+      finalUserPay: number
+    } | null
+  }
+}
+
+export const getPayHistoryDetail = async (payHistoryId: number) => {
+  const res = await client.get<PayHistoryDetailResponse>(`/pay-history/${payHistoryId}`)
+  return res.data.data
+}

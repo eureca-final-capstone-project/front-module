@@ -4,6 +4,8 @@ import Input from '../../../components/Input/Input'
 import { formatNumberWithComma } from '../../../utils/format'
 import Button from '../../../components/Button/Button'
 import { useUserStore } from '../../../store/userStore'
+import { validateSalesDataAmount } from '../../../utils/validation'
+import { useEffect } from 'react'
 
 const DataInput = () => {
   const sellableDataMb = useUserStore(state => state.data?.sellableDataMb ?? 0)
@@ -11,10 +13,22 @@ const DataInput = () => {
   const {
     control,
     setValue,
+    watch,
     setError,
     clearErrors,
     formState: { errors },
   } = useFormContext()
+
+  const unit = watch('unit')
+  const salesDataAmount = watch('salesDataAmount')
+
+  useEffect(() => {
+    if (salesDataAmount === '' || salesDataAmount === undefined) return
+
+    const { isValid, message } = validateSalesDataAmount(unit, salesDataAmount, sellableDataMb)
+    if (!isValid) setError('salesDataAmount', { message })
+    else clearErrors('salesDataAmount')
+  }, [unit, salesDataAmount, setError, clearErrors, sellableDataMb])
 
   return (
     <div className="flex gap-5">
@@ -47,22 +61,9 @@ const DataInput = () => {
               value={formattedValue}
               onChange={e => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
-                const numberValue = rawValue === '' ? '' : Number(rawValue)
+                const numberValue = rawValue === '' ? NaN : Number(rawValue)
 
-                // 입력 데이터가 판매 가능 데이터를 초과하면 에러 처리
-                if (
-                  typeof numberValue === 'number' &&
-                  !isNaN(numberValue) &&
-                  numberValue > sellableDataMb
-                ) {
-                  setError('salesDataAmount', {
-                    message: `판매 가능한 데이터 양 범위 내에서 입력해 주세요.`,
-                  })
-                } else {
-                  clearErrors('salesDataAmount') // 조건을 만족하면 에러 초기화
-                }
-
-                field.onChange(numberValue)
+                field.onChange(isNaN(numberValue) ? '' : numberValue)
               }}
               error={!!errors.salesDataAmount}
               errorMsg={errors.salesDataAmount?.message?.toString() || ''}

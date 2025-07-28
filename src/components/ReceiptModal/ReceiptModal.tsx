@@ -6,22 +6,17 @@ import { config } from './config'
 import CloseIcon from '../../assets/icons/x.svg?react'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
 import CircleCheckIcon from '@/assets/icons/circle-check.svg?react'
-export interface ReceiptProps {
+import { PayHistoryDetailResponse } from '../../apis/userInfo'
+import RefundReceipt from './RefundReceipt'
+
+type ChargeDetail = NonNullable<PayHistoryDetailResponse['data']['chargeDetail']>
+type ExchangeDetail = NonNullable<PayHistoryDetailResponse['data']['exchangeDetail']>
+type TransactionDetail = NonNullable<PayHistoryDetailResponse['data']['transactionDetail']>
+
+export interface ReceiptProps<T = unknown> {
   type: 'charge' | 'refund' | 'buy' | 'sell'
   pay: number
-  info: {
-    id: string
-    time: string
-    account?: string
-    method?: string
-    totalPay: number
-    carrier?: string
-    post?: {
-      type: string
-      data: string
-      price: number
-    }
-  }
+  info: T
 }
 interface ReceiptModalProps extends ReceiptProps {
   onClose: () => void
@@ -90,10 +85,12 @@ const ReceiptModal = ({ type, pay, info, onClose }: ReceiptModalProps) => {
                 </div>
                 <hr className="border-gray-100" />
                 <div>
-                  {type === 'charge' || type === 'refund' ? (
-                    <ChargeReceipt type={type} pay={pay} info={info} />
+                  {type === 'charge' ? (
+                    <ChargeReceipt type={type} pay={pay} info={info as ChargeDetail} />
+                  ) : type === 'refund' ? (
+                    <RefundReceipt type={type} pay={pay} info={info as ExchangeDetail} />
                   ) : (
-                    <TradeReceipt type={type} pay={pay} info={info} />
+                    <TradeReceipt type={type} pay={pay} info={info as TransactionDetail} />
                   )}
                 </div>
               </div>
