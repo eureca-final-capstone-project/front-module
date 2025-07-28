@@ -31,7 +31,7 @@ export const additionalInfoSchema = z.object({
 
 export const passwordChangeSchema = z
   .object({
-    currentPassword: z.string().nonempty('기존 비밀번호를 입력해주세요.'),
+    currentPassword: z.string().nonempty('기존 비밀번호를 입력해주세요.').optional(),
     newPassword: z
       .string()
       .regex(
@@ -44,6 +44,7 @@ export const passwordChangeSchema = z
     message: '새 비밀번호가 일치하지 않습니다.',
     path: ['confirmPassword'],
   })
+
 export const nicknameSchema = z.object({
   nickname: z
     .string()
