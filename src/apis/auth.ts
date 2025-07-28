@@ -32,3 +32,7 @@ export const requestTokenForOAuth = async (data: { authCode: string }) => {
   const response = await client.post('/oauth/token', data)
   return response.data
 }
+export const logout = async () => {
+  const response = await client.post('/auth/logout')
+  return response.data
+}

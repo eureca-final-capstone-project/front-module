@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query'
+import { useNavigate } from 'react-router-dom'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUserDataStatus, getUserPayStatus } from '../../apis/userInfo'
-import Badge from '../Badge/Badge'
-import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import { formatAmount, formatDataSize } from '../../utils/format'
 import { getTelecomBadgeColor, getTelecomBadgeText } from '../../utils/telecom'
+import Badge from '../Badge/Badge'
+import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
+import { logout } from '../../apis/auth'
+import { toast } from 'react-toastify'
 interface Props {
   nickname: string
   email: string
@@ -11,7 +14,7 @@ interface Props {
   onClose: () => void
 }
 
-const UserInfoModal = ({ nickname, email, telecomCompany, onClose }: Props) => {
+const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
   const { data: payStatus } = useQuery({
     queryKey: ['userPayStatus'],
     queryFn: getUserPayStatus,
@@ -22,6 +25,27 @@ const UserInfoModal = ({ nickname, email, telecomCompany, onClose }: Props) => {
     queryFn: getUserDataStatus,
   })
 
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const { mutate: logoutMutate } = useMutation({
+    mutationFn: logout,
+    onSuccess: () => {
+      queryClient.clear()
+      sessionStorage.removeItem('accessToken')
+      toast.success('로그아웃 되었습니다.')
+      navigate('/login')
+    },
+    onError: error => {
+      console.error('로그아웃 실패:', error)
+      toast.error('로그아웃에 실패했습니다.')
+    },
+  })
+
+  const handleLogout = () => {
+    logoutMutate()
+  }
+
   return (
     <div className="rounded-custom-m bg-gray-10 shadow-header-modal absolute right-0 z-50 flex w-[236px] flex-col gap-4.5 p-5">
       <div className="flex w-full items-center justify-between">
@@ -30,7 +54,7 @@ const UserInfoModal = ({ nickname, email, telecomCompany, onClose }: Props) => {
         </div>
         <button
           type="button"
-          onClick={onClose}
+          onClick={handleLogout}
           className="text-fs12 hover:border-pri-400 hover:text-pri-400 flex items-center justify-center rounded-xs border border-gray-500 px-1.5 py-1 text-xs text-gray-700 transition-colors duration-200"
         >
           로그아웃
