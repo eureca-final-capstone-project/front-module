@@ -4,20 +4,25 @@ import Input from '../../../components/Input/Input'
 import Button from '../../../components/Button/Button'
 import { forgotPasswordSchema } from '../../../utils/validation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ForgetPasswordSchemaType } from '../../../types/auth'
+import { ForgotPasswordSchemaType } from '../../../types/auth'
+import { useMutation } from '@tanstack/react-query'
+import { forgotPassword } from '../../../apis/auth'
+import { useToast } from '../../../hooks/useToast'
 
-interface ForgetPasswordFormProps {
+interface ForgotPasswordFormProps {
   onClose: () => void
 }
 
-const ForgetPasswordForm = ({ onClose }: ForgetPasswordFormProps) => {
+const ForgotPasswordForm = ({ onClose }: ForgotPasswordFormProps) => {
+  const { showToast } = useToast()
+
   const {
     control,
     handleSubmit,
     watch,
     clearErrors,
     formState: { errors },
-  } = useForm<ForgetPasswordSchemaType>({
+  } = useForm<ForgotPasswordSchemaType>({
     resolver: zodResolver(forgotPasswordSchema),
     mode: 'onSubmit', // 폼 제출 시, 검증
     reValidateMode: 'onSubmit', // 폼 한 번 제출 후, 다시 제출 시 검증
@@ -25,8 +30,35 @@ const ForgetPasswordForm = ({ onClose }: ForgetPasswordFormProps) => {
 
   const emailValue = watch('email')
 
-  const onSubmitForgotPassword = (data: ForgetPasswordSchemaType) => {
-    console.log(data)
+  const mutation = useMutation({
+    mutationFn: forgotPassword,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          console.log(data)
+          showToast({
+            type: 'success',
+            msg: '비밀번호 재설정 안내 메일을 발송했습니다.\n 메일이 오지 않으면 스팸함을 확인해주세요.',
+          })
+          onClose()
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg: '비밀번호 재설정 안내 메일 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+          })
+      }
+    },
+    onError: () => {
+      showToast({
+        type: 'error',
+        msg: '비밀번호 재설정 안내 메일 발송에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+      })
+    },
+  })
+
+  const onSubmitForgotPassword = (data: ForgotPasswordSchemaType) => {
+    mutation.mutate(data)
   }
 
   return (
@@ -64,7 +96,7 @@ const ForgetPasswordForm = ({ onClose }: ForgetPasswordFormProps) => {
           )}
         />
         <Button
-          text="비밀번호 재설정 링크 전송하기"
+          text="비밀번호 재설정 안내 메일 발송하기"
           type="submit"
           disabled={!emailValue}
           className={
@@ -76,4 +108,4 @@ const ForgetPasswordForm = ({ onClose }: ForgetPasswordFormProps) => {
   )
 }
 
-export default ForgetPasswordForm
+export default ForgotPasswordForm
