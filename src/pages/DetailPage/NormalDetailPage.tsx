@@ -13,7 +13,7 @@ import {
   getTransactionFeedDetail,
   TransactionFeedDetailResponse,
 } from '../../apis/transactionFeedDetail'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { formatRelativeTime } from '../../utils/time'
 import { transformRecommendedPost } from '../../utils/postCardParse'
 import { useState } from 'react'
@@ -24,6 +24,7 @@ import { useToast } from '../../hooks/useToast'
 import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 import PostCard from '../../components/PostCard/PostCard'
+import { mapSalesTypeFromServer } from '../../utils/salesType'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -99,6 +100,12 @@ const NormalDetailPage = () => {
 
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
+
+  const actualType = mapSalesTypeFromServer(data.salesType.name)
+
+  if (actualType !== 'normal') {
+    return <Navigate to="/404" replace />
+  }
 
   const handleWishClick = () => {
     if (data.liked) {
