@@ -22,6 +22,7 @@ import NormalDetailPage from '../pages/DetailPage/NormalDetailPage'
 import DataPurchasePage from '../pages/DataPurchasePage'
 import BidDetailPage from '../pages/DetailPage/BidDetailPage'
 import NotFoundPage from '../pages/NotFoundPage'
+import PasswordResetPage from '../pages/PasswordResetPage'
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +48,7 @@ export const router = createBrowserRouter([
         path: '/oauth/callback',
         element: <OAuthCallbackPage />,
       },
+      { path: '/reset-password', element: <PasswordResetPage /> },
     ],
   },
   {
