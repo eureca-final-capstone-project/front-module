@@ -95,7 +95,7 @@ const ChangeDataPage = () => {
         {deviceType === 'mobile' ? <Breadcrumb current="데이터 전환" /> : ''}
 
         <div className="flex h-full flex-col gap-4 px-4 sm:px-0">
-          <Card type="label" labelTitle="현재 데이터 정보">
+          <Card type="label" labelTitle="현재 데이터 정보" withMotion motionCustom={0}>
             <div className="space-y-3">
               <div className="flex justify-between">
                 <div>보유 데이터</div>
@@ -108,13 +108,15 @@ const ChangeDataPage = () => {
             </div>
           </Card>
 
-          <Card type="label" labelTitle="데이터 전환">
+          <Card type="label" labelTitle="데이터 전환" withMotion motionCustom={1}>
             <DataInput />
           </Card>
           <Card
             type="warning"
             iconTitle="데이터 전환 시, 보유 데이터로 재전환이 불가합니다"
             iconDescription="신중하게 결정해주세요!"
+            withMotion
+            motionCustom={2}
           />
         </div>
         <FloatActionButton
