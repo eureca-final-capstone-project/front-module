@@ -176,19 +176,11 @@ const BidDetailPage = () => {
                 </div>
 
                 {/* 데스크탑 신고하기 */}
-                <div
-                  className={`hidden items-end justify-end lg:flex ${isMyPost ? 'gap-2' : 'gap-1'}`}
-                >
+                <div className="hidden items-end justify-end gap-1 lg:flex">
                   {isMyPost ? (
                     <>
                       <Button
                         text="수정하기"
-                        className="text-gray-700"
-                        shape="underline"
-                        onClick={() => {}}
-                      />
-                      <Button
-                        text="삭제하기"
                         className="text-gray-700"
                         shape="underline"
                         onClick={() => {}}
@@ -228,19 +220,11 @@ const BidDetailPage = () => {
                 </div>
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
-                  <div
-                    className={`flex items-end justify-end lg:hidden ${isMyPost ? 'gap-2' : 'gap-1'}`}
-                  >
+                  <div className="flex items-end justify-end gap-1 lg:hidden">
                     {isMyPost ? (
                       <>
                         <Button
                           text="수정하기"
-                          shape="underline"
-                          className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => {}}
-                        />
-                        <Button
-                          text="삭제하기"
                           shape="underline"
                           className="text-fs14 sm:text-fs16 text-gray-700"
                           onClick={() => {}}
