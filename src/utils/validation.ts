@@ -31,7 +31,7 @@ export const additionalInfoSchema = z.object({
 
 export const passwordChangeSchema = z
   .object({
-    currentPassword: z.string().nonempty('기존 비밀번호를 입력해주세요.').optional(),
+    currentPassword: z.string().nonempty('기존 비밀번호를 입력해주세요.'),
     newPassword: z
       .string()
       .regex(
@@ -184,3 +184,18 @@ export const validateChangeDataAmount = (unit: string, amount: number, totalData
 export const forgotPasswordSchema = z.object({
   email: z.email('올바른 이메일 형식을 입력해 주세요.'),
 })
+
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,16}$/,
+        '비밀번호는 영문, 숫자, 특수문자를 포함한 8~16자여야 합니다.'
+      ),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.newPassword === data.confirmPassword, {
+    message: '새 비밀번호가 일치하지 않습니다.',
+    path: ['confirmPassword'],
+  })

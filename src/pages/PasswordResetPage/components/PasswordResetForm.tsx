@@ -3,7 +3,7 @@ import Input from '../../../components/Input/Input'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { PasswordResetSchemaType } from '../../../types/auth'
-import { passwordChangeSchema } from '../../../utils/validation'
+import { resetPasswordSchema } from '../../../utils/validation'
 import Button from '../../../components/Button/Button'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
@@ -23,7 +23,7 @@ const PasswordResetForm = () => {
     watch,
     formState: { errors },
   } = useForm<PasswordResetSchemaType>({
-    resolver: zodResolver(passwordChangeSchema),
+    resolver: zodResolver(resetPasswordSchema),
     mode: 'all',
   })
 
