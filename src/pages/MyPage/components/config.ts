@@ -17,6 +17,12 @@ export const modalTexts = {
     leftButtonText: '닫기',
     rightButtonText: '거래하기',
   },
+  'pay-refund': {
+    title: '페이를 환전하시겠습니까?',
+    description: '환전 후 입력 계좌로 환전된 금액이 입급됩니다.',
+    leftButtonText: '닫기',
+    rightButtonText: '환전하기',
+  },
 } as const
 
 export const buttonOptions = {
