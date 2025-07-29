@@ -37,7 +37,7 @@ const ScrollToTopButton = ({ threshold = 300, className }: ScrollToTopButtonProp
     <AnimatePresence>
       {isVisible && (
         <motion.button
-          className={`bg-gray-10 focus:ring-pri-500 focus:ring-opacity-80 shadow-header-modal fixed right-8 bottom-8 z-40 flex cursor-pointer items-center justify-center rounded-full p-2.5 text-white ring-2 ring-gray-100 transition-colors duration-200 hover:bg-gray-50 focus:ring-2 focus:outline-none sm:right-16 ${className}`}
+          className={`bg-gray-10 focus:ring-pri-500 focus:ring-opacity-80 shadow-header-modal fixed right-6 bottom-8 z-40 flex cursor-pointer items-center justify-center rounded-full p-2.5 text-white ring-2 ring-gray-100 transition-colors duration-200 hover:bg-gray-50 focus:ring-2 focus:outline-none sm:right-16 ${className}`}
           onClick={scrollToTop}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
