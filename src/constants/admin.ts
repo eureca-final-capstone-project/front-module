@@ -13,7 +13,7 @@ export const adminSidebarMenu = [
 
 export const userColumns: { header: string; key: keyof User }[] = [
   { header: '이메일', key: 'email' },
-  { header: '닉네임', key: 'nickname' },
+  { header: '닉네임', key: 'nickName' },
   { header: '통신사', key: 'telecomCompany' },
   { header: '휴대폰 번호', key: 'phoneNumber' },
   { header: '가입일', key: 'createdAt' },

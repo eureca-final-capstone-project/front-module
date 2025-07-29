@@ -1,7 +1,7 @@
 export interface User {
   userId: number
   email: string
-  nickname: string
+  nickName: string
   telecomCompany: string
   phoneNumber: string
   createdAt: string
