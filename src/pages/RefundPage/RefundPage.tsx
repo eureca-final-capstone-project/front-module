@@ -1,12 +1,59 @@
 import Card from '../../components/Card/Card'
 import DatchaCoin from '@/assets/icons/datcha-coin.svg?react'
 import { formatAmount } from '../../utils/format'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { getUserPayStatus } from '../../apis/userInfo'
 import { useNavigate } from 'react-router-dom'
+import RefundPayInput from './components/RefundPayInput'
+import RefundAccountInput from './components/RefundAccountInput'
+import { FormProvider, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { refundSchema } from '../../utils/validation'
+import { RefundSchemaType } from '../../types/pay'
+import { postRefundRequest } from '../../apis/payment'
+import { toast } from 'react-toastify'
+import RefundBankSelector from './components/RefundBankSelector'
 // import FloatActionButton from '../components/FloatActionButton'
 
 const RefundPage = () => {
+  const refundMutation = useMutation({
+    mutationFn: postRefundRequest,
+    onSuccess: () => {
+      toast.success('환전이 완료되었습니다.')
+      navigate('/mypage/pay-history')
+    },
+    onError: error => {
+      // 타입은 상황에 따라 조정 (ex. AxiosError)
+      console.error('환전 요청 실패:', error)
+      toast.error('환전에 실패했습니다. 잠시 후 시도해주세요.')
+    },
+  })
+
+  const methods = useForm({
+    resolver: zodResolver(refundSchema),
+    mode: 'onChange',
+    defaultValues: {
+      refundAmount: '',
+      exchangeAccount: '',
+      bankId: 0,
+    },
+  })
+  const onSubmit = (data: RefundSchemaType) => {
+    const inputAmount = Number(data.refundAmount.replace(/,/g, '')) || 0
+    const balance = userPayStatus?.balance ?? 0
+
+    if (inputAmount > balance) {
+      toast.error('보유한 페이보다 큰 금액입니다.')
+      return
+    }
+
+    refundMutation.mutate({
+      bankId: data.bankId,
+      exchangeAccount: data.exchangeAccount,
+      amount: inputAmount,
+    })
+  }
+
   const { data: userPayStatus } = useQuery({
     queryKey: ['userPayStatus'],
     queryFn: getUserPayStatus,
@@ -26,8 +73,17 @@ const RefundPage = () => {
             </div>
           </div>
         </Card>
-        <Card labelTitle="환전 페이" type="label" withMotion motionCustom={1}></Card>
-        <Card labelTitle="환전 계좌" type="label" withMotion motionCustom={2}></Card>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <Card labelTitle="환전 페이" type="label" withMotion motionCustom={1}>
+              <RefundPayInput balance={userPayStatus?.balance ?? 0} />
+            </Card>
+            <Card labelTitle="환전 계좌" type="label" withMotion motionCustom={2}>
+              <RefundBankSelector />
+              <RefundAccountInput />
+            </Card>
+          </form>
+        </FormProvider>
         <Card
           withMotion
           motionCustom={3}
