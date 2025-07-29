@@ -5,6 +5,7 @@ import ListTile from '../../components/ListTile/ListTile'
 import { formatCompactDate } from '../../utils/time'
 import { getMyReportHistory } from '../../apis/report'
 import type { ReportHistoryItem } from '../../apis/report'
+import ReportIcon from '@/assets/icons/report-bold.svg?react'
 
 const getStatusLabelAndClass = (status: string): { label: string; className: string } => {
   const pending = ['검수 대기중']
@@ -19,13 +20,47 @@ const getStatusLabelAndClass = (status: string): { label: string; className: str
 }
 
 const ReportHistoryPage = () => {
-  const { data: reports = [], isLoading } = useQuery<ReportHistoryItem[]>({
+  const {
+    data: reports = [],
+    isLoading,
+    isError,
+  } = useQuery<ReportHistoryItem[]>({
     queryKey: ['myReportHistory'],
     queryFn: getMyReportHistory,
   })
 
-  if (isLoading) {
-    return <p className="mt-10 text-center">불러오는 중...</p>
+  if (isLoading || isError || reports.length === 0) {
+    let title = ''
+    let subtitle: React.ReactNode = null
+    let textColor = 'text-gray-500'
+
+    if (isLoading) {
+      title = '신고 내역을 불러오는 중이에요'
+    } else if (isError) {
+      title = '신고 내역을 불러오지 못했습니다'
+      subtitle = (
+        <p className="text-fs12 sm:text-fs14 mt-2 text-gray-400">잠시 후 다시 시도해주세요</p>
+      )
+      textColor = 'text-error'
+    } else {
+      title = '신고 내역이 없습니다'
+      subtitle = (
+        <p className="text-fs12 sm:text-fs14 mt-2 text-gray-400">
+          부적절한 게시글 발견 시 정확한 사유와 함께 신고해주세요 <br />
+          허위 신고는 제재 대상이 될 수 있습니다
+        </p>
+      )
+    }
+
+    return (
+      <div
+        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+      >
+        <ReportIcon className="h-6 w-8 sm:h-8 sm:w-10" />
+        <p className="text-fs16 sm:text-fs18 pt-3 font-medium">{title}</p>
+        {subtitle}
+      </div>
+    )
   }
 
   return (
