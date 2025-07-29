@@ -6,6 +6,8 @@ import { formatCompactDate } from '../../utils/time'
 import { getMyReportHistory } from '../../apis/report'
 import type { ReportHistoryItem } from '../../apis/report'
 import ReportIcon from '@/assets/icons/report-bold.svg?react'
+import { useState } from 'react'
+import ReportModal from './components/Modal/ReportModal'
 
 const getStatusLabelAndClass = (status: string): { label: string; className: string } => {
   const pending = ['검수 대기중']
@@ -28,6 +30,14 @@ const ReportHistoryPage = () => {
     queryKey: ['myReportHistory'],
     queryFn: getMyReportHistory,
   })
+
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleOpenModal = () => {
+    console.log('모달 오픈')
+    setIsModalOpen(true)
+  }
+  const handleCloseModal = () => setIsModalOpen(false)
 
   if (isLoading || isError || reports.length === 0) {
     let title = ''
@@ -78,7 +88,7 @@ const ReportHistoryPage = () => {
           const { label, className } = getStatusLabelAndClass(item.status)
           return (
             <FadeInUpMotion key={item.transactionFeedId} custom={i} delayUnit={0.07} duration={0.3}>
-              <ListTile>
+              <ListTile onClick={handleOpenModal}>
                 <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
                   <p className="truncate text-left">{item.title}</p>
                   <p className="hidden truncate text-center sm:block">{item.reportType}</p>
@@ -92,6 +102,7 @@ const ReportHistoryPage = () => {
           )
         })}
       </div>
+      <ReportModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </div>
   )
 }
