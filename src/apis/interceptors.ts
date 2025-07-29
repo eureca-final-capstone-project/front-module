@@ -1,4 +1,4 @@
-import { AxiosInstance } from 'axios'
+import { AxiosInstance, AxiosRequestConfig } from 'axios'
 
 /**
  * 클라이언트 인스턴스에 요청 인터셉터를 등록하여 accessToken 자동 주입
@@ -35,8 +35,18 @@ export const attachResponseInterceptor = (client: AxiosInstance) => {
     async response => {
       const data = response.data.data
 
-      //
       if (data.statusCode === 10001 && data.statusCodeName === 'TOKEN_EXPIRED') {
+        const originalRequest = response.config as AxiosRequestConfig & {
+          _retry?: boolean
+        }
+
+        if (originalRequest._retry) {
+          window.location.href = '/login'
+          return Promise.reject(new Error('토큰 발급에 실패했습니다.'))
+        }
+
+        originalRequest._retry = true
+
         try {
           const refreshRes = await client.get('/auth/re-generate-token')
 
@@ -45,7 +55,10 @@ export const attachResponseInterceptor = (client: AxiosInstance) => {
             sessionStorage.setItem('accessToken', newAccessToken)
 
             // 원래 요청에 새로운 토큰 헤더 설정
-            response.config.headers['Authorization'] = `Bearer ${newAccessToken}`
+            originalRequest.headers = {
+              ...originalRequest.headers,
+              Authorization: `Bearer ${newAccessToken}`,
+            }
 
             // 원래 요청 재시도
             return client(response.config)
