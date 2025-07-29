@@ -5,6 +5,12 @@ import ToggleText from '../../../components/Toggle/ToggleText'
 import { getVolumeData } from '../../../apis/admin/dashboard'
 import { useState } from 'react'
 
+interface VolumeItem {
+  date: string
+  hour: number | null
+  saleVolume: number
+}
+
 const VolumeGraph = () => {
   const [salesType, setSalesType] = useState('일반 판매')
 
@@ -21,6 +27,10 @@ const VolumeGraph = () => {
   if (isError || !statistics?.data) return <div>데이터를 불러오지 못했습니다.</div>
 
   const { volumes } = statistics.data
+  const formattedVolumes = volumes.map((item: VolumeItem) => ({
+    ...item,
+    date: item.date.slice(5).replace('-', '.'),
+  }))
 
   return (
     <section className="flex flex-col gap-5">
@@ -35,7 +45,14 @@ const VolumeGraph = () => {
       </div>
 
       <Card className="px-0">
-        <Graph type="bar" data={volumes} name="거래량" yKeys={['saleVolume']} height={328} />
+        <Graph
+          type="bar"
+          data={formattedVolumes}
+          name="거래량"
+          xKey={salesType === '일반 판매' ? 'hour' : 'date'}
+          yKeys={['saleVolume']}
+          height={328}
+        />
       </Card>
     </section>
   )
