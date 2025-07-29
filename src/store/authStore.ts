@@ -6,6 +6,6 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>(set => ({
-  isLogin: !!sessionStorage.getItem('accessToken'),
+  isLogin: !!sessionStorage.getItem('userAccessToken'),
   setIsLogin: value => set({ isLogin: value }),
 }))
