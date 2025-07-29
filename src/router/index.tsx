@@ -26,6 +26,7 @@ import PasswordResetPage from '../pages/PasswordResetPage'
 import CompletePage from '../pages/CompletePage'
 import MyPostPage from '../pages/MyPostPage'
 import AdminLoginPage from '../pages/AdminPage/AdminLoginPage'
+import RefundPage from '../pages/RefundPage'
 
 export const router = createBrowserRouter([
   {
@@ -114,6 +115,11 @@ export const router = createBrowserRouter([
         path: '/payment-fail',
         element: <PaymentFailPage />,
         handle: { title: '결제 실패' },
+      },
+      {
+        path: '/refund',
+        element: <RefundPage />,
+        handle: { title: '페이 환전하기' },
       },
       {
         path: '/data-purchase/:transactionFeedId',
