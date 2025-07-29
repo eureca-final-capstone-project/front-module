@@ -86,6 +86,7 @@ const PostWritePage = () => {
     let amount = data.salesDataAmount
     if (data.unit === 'GB') amount *= 1000
 
+    // 주석 없애면 에러남 지우지말아줘요
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { unit, ...rest } = data
 

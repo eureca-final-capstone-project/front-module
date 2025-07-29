@@ -2,6 +2,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 import { RefundSchemaType } from '../../../types/pay'
 import Input from '../../../components/Input/Input'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
+import Button from '../../../components/Button/Button'
 
 interface RefundPayInputProps {
   balance: number
@@ -11,6 +12,7 @@ const RefundPayInput = ({ balance }: RefundPayInputProps) => {
   const {
     control,
     watch,
+    setValue,
     formState: { errors },
     clearErrors,
   } = useFormContext<RefundSchemaType>()
@@ -22,7 +24,9 @@ const RefundPayInput = ({ balance }: RefundPayInputProps) => {
   const isExceedingBalance = Number(rawValue) > balance
   const errorMessage =
     errors.refundAmount?.message ||
-    (rawValue && isExceedingBalance ? '보유한 페이보다 큰 금액입니다.' : '')
+    (rawValue && isExceedingBalance ? '보유하신 페이보다 큰 금액입니다.' : '')
+
+  const quickAmounts = [1000, 3000, 5000, 10000]
 
   return (
     <>
@@ -57,6 +61,33 @@ const RefundPayInput = ({ balance }: RefundPayInputProps) => {
           />
         )}
       />
+
+      <div className="mt-3 flex flex-wrap gap-2">
+        {quickAmounts.map(amount => (
+          <Button
+            key={amount}
+            onClick={() => {
+              const current = Number(watch('refundAmount')?.replace(/,/g, '') || 0)
+              const newAmount = current + amount
+              setValue('refundAmount', newAmount.toString())
+              clearErrors('refundAmount')
+            }}
+            text={<span className="text-sm">{amount.toLocaleString()}원</span>}
+            mediumPadding
+            className="text-fs16 rounded-2 bg-gray-10 hover:bg-gray-100"
+          />
+        ))}
+
+        <Button
+          onClick={() => {
+            setValue('refundAmount', balance.toString())
+            clearErrors('refundAmount')
+          }}
+          text={<span className="text-sm">전액 환전</span>}
+          mediumPadding
+          className="text-fs16 rounded-2 bg-pri-100 hover:bg-pri-200"
+        />
+      </div>
     </>
   )
 }

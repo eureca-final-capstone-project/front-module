@@ -45,7 +45,7 @@ const RefundBankSelector = () => {
             className={`text-fs16 rounded-2 ${
               selectedBankId === bank.bankId
                 ? 'bg-pri-500 text-gray-10'
-                : 'bg-gray-10 text-gray-700'
+                : 'bg-gray-10 text-gray-700 hover:bg-gray-100'
             }`}
           />
         )
