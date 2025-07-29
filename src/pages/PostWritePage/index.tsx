@@ -89,8 +89,6 @@ const PostWritePage = () => {
       telecomCompanyId: telecom?.id,
       salesDataAmount: amount,
     }
-    console.log(amount)
-
     mutation.mutate(postData)
   }
 
