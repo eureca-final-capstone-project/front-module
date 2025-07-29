@@ -3,6 +3,7 @@ import { Controller, useFormContext } from 'react-hook-form'
 const ContentInput = () => {
   const {
     control,
+    setError,
     clearErrors,
     formState: { errors },
   } = useFormContext()
@@ -20,9 +21,10 @@ const ContentInput = () => {
             value={field.value}
             onChange={e => {
               field.onChange(e)
-              if (errors.content) clearErrors('content')
+              if (!field.value.trim()) setError('content', { message: '내용을 입력해 주세요.' })
+              else clearErrors('content')
             }}
-            className={`rounded-sm border ${errors.content ? 'border-error' : field.value ? 'border-pri-500' : 'border-gray-400'} hover:border-pri-500 focus:border-pri-500 h-30 w-full resize-none p-4 text-gray-900 placeholder:text-gray-400 focus:outline-none`}
+            className={`rounded-sm border ${errors.content ? 'border-error border' : field.value.trim() ? 'border-pri-500' : 'hover:border-pri-500 focus:border-pri-500 border-gray-400'} h-30 w-full resize-none p-4 text-gray-900 placeholder:text-gray-400 focus:outline-none`}
           />
           <span className="text-error text-fs12 p-1">
             {errors.content?.message?.toString() || ''}
