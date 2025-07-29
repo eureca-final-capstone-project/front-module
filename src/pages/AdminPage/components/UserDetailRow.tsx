@@ -3,10 +3,11 @@ import { STATUS_STYLE } from '../../../constants/admin'
 import { UserReport } from '../../../types/admin'
 
 interface UserDetailRowProps {
+  email: string
   reports: UserReport[]
 }
 
-const UserDetailRow = ({ reports }: UserDetailRowProps) => {
+const UserDetailRow = ({ email, reports }: UserDetailRowProps) => {
   return (
     <table className="w-full">
       <colgroup>
@@ -23,18 +24,26 @@ const UserDetailRow = ({ reports }: UserDetailRowProps) => {
           reports.length > 0 &&
           reports.map(report => {
             return (
-              <tr key={report.reportId} className="bg-gray-30 border-t border-gray-100">
-                <td></td>
-                <td className="px-3 py-4">{report.reportId}</td>
-                <td className="px-3 py-4">{report.reportType}</td>
-                <td className="max-w-50 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap">
-                  {report.content}
-                </td>
-                <td className="px-3 py-4">{new Date(report.createdAt).toLocaleDateString()}</td>
-                <td className="px-3 py-4">
-                  <Badge label={report.status} {...STATUS_STYLE[report.status]} />
-                </td>
-              </tr>
+              <>
+                <tr className="bg-gray-30 border-t border-gray-100">
+                  <td></td>
+                  <td className="px-3 py-2.5" colSpan={6}>
+                    {email}
+                  </td>
+                </tr>
+                <tr key={report.reportId} className="bg-gray-30 border-t border-gray-100">
+                  <td></td>
+                  <td className="px-3 py-4">{report.reportId}</td>
+                  <td className="px-3 py-4">{report.reportType}</td>
+                  <td className="max-w-50 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap">
+                    {report.content}
+                  </td>
+                  <td className="px-3 py-4">{new Date(report.createdAt).toLocaleDateString()}</td>
+                  <td className="px-3 py-4">
+                    <Badge label={report.status} {...STATUS_STYLE[report.status]} />
+                  </td>
+                </tr>
+              </>
             )
           })}
       </tbody>

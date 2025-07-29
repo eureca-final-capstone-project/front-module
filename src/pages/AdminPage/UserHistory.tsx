@@ -124,7 +124,9 @@ const UserHistory = () => {
             renderCell={renderUserCell}
             isClickable={row => row.reportCount > 0}
             onRowClick={handleRowClick}
-            renderDetailTable={row => <UserDetailRow reports={reportsByUser[row.userId] ?? []} />}
+            renderDetailTable={row => (
+              <UserDetailRow email={row.email} reports={reportsByUser[row.userId] ?? []} />
+            )}
           />
         </div>
       </section>
