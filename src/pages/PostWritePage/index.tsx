@@ -59,18 +59,23 @@ const PostWritePage = () => {
   const mutation = useMutation({
     mutationFn: postTransactionFeed,
     onSuccess: (data, variables) => {
-      if (data.statusCode === 200) {
-        showToast({ type: 'success', msg: '판매글이 성공적으로 등록되었습니다.' })
-        reset()
-        navigate(`/posts/${typeMap[variables.salesTypeId]}/${data.data.id}`)
-      } else {
-        showToast({ type: 'error', msg: '판매글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.' })
+      switch (data.statusCode) {
+        case 200:
+          showToast({ type: 'success', msg: '판매글이 성공적으로 등록되었습니다.' })
+          reset()
+          navigate(`/posts/${typeMap[variables.salesTypeId]}/${data.data.id}`)
+          break
+        default:
+          showToast({
+            type: 'error',
+            msg: '판매글 등록에 실패했습니다.',
+          })
       }
     },
-    onError: error => {
+    onError: () => {
       showToast({
         type: 'error',
-        msg: error.message || '판매글 등록에 실패했습니다. 잠시 후 다시 시도해 주세요.',
+        msg: '판매글 등록에 실패했습니다.',
       })
     },
   })
