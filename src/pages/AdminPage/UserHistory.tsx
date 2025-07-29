@@ -56,7 +56,6 @@ const UserHistory = () => {
       return
     }
     // 데이터 없으면 API 호출 후 저장
-    console.log(2)
     setReportsByUser(prev => ({ ...prev, [row.userId]: userReportData }))
   }
 
