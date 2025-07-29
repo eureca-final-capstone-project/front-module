@@ -14,16 +14,16 @@ export const lineData = [
 ]
 
 export const barData = [
-  { hour: '00', 거래량: 1500 },
-  { hour: '01', 거래량: 9300 },
-  { hour: '02', 거래량: 1800 },
-  { hour: '03', 거래량: 8800 },
-  { hour: '04', 거래량: 2000 },
-  { hour: '05', 거래량: 1600 },
-  { hour: '06', 거래량: 8900 },
-  { hour: '07', 거래량: 6700 },
-  { hour: '08', 거래량: 7000 },
-  { hour: '09', 거래량: 8800 },
-  { hour: '10', 거래량: 5400 },
-  { hour: '11', 거래량: 1900 },
+  { hour: '00', saleVolume: 1500 },
+  { hour: '01', saleVolume: 9300 },
+  { hour: '02', saleVolume: 1800 },
+  { hour: '03', saleVolume: 8800 },
+  { hour: '04', saleVolume: 2000 },
+  { hour: '05', saleVolume: 1600 },
+  { hour: '06', saleVolume: 8900 },
+  { hour: '07', saleVolume: 6700 },
+  { hour: '08', saleVolume: 7000 },
+  { hour: '09', saleVolume: 8800 },
+  { hour: '10', saleVolume: 5400 },
+  { hour: '11', saleVolume: 1900 },
 ]
