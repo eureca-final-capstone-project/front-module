@@ -40,6 +40,10 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
 
   const handleAction = (key: string, callback: () => void) => () => {
     setActiveNav(key)
+    if (key === 'search') {
+      callback()
+      return
+    }
     if (isLoggedIn) {
       callback()
     } else {
