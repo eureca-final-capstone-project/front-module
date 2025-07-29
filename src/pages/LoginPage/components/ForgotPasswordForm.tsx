@@ -35,7 +35,6 @@ const ForgotPasswordForm = ({ onClose }: ForgotPasswordFormProps) => {
     onSuccess: data => {
       switch (data.statusCode) {
         case 200:
-          console.log(data)
           showToast({
             type: 'success',
             msg: '비밀번호 재설정 안내 메일을 발송했습니다.\n 메일이 오지 않으면 스팸함을 확인해주세요.',

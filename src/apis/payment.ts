@@ -52,7 +52,15 @@ export interface CalculateDiscountResponse {
     }
   }
 }
-
+export interface RefundRequest {
+  bankId: number
+  exchangeAccount: string
+  amount: number
+}
+export interface Bank {
+  bankId: number
+  bankName: string
+}
 export const postPreparePayment = async (payload: PreparePaymentRequest) => {
   const response = await client.post('/payment/prepare', payload)
   return response.data as PreparePaymentResponse
@@ -68,4 +76,10 @@ export const postCalculateDiscount = async (
 ): Promise<CalculateDiscountResponse> => {
   const res = await client.post('/payment/event-coupon/calculate', params)
   return res.data
+}
+export const postRefundRequest = (body: RefundRequest) => {
+  return client.post('/user-pay/exchange', body)
+}
+export const getRefundBanks = (): Promise<Bank[]> => {
+  return client.get<{ data: Bank[] }>('/user-pay/banks').then(res => res.data.data)
 }
