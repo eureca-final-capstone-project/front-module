@@ -32,28 +32,14 @@ const RangeInput = ({
   placeholderMax = '0',
   error = false,
   errorMessage = '',
-  selectedMin,
-  selectedMax,
-  onResetSelected,
 }: RangeInputProps) => {
-  const hasSelectedPreset = selectedMin !== undefined && selectedMax !== undefined
   const isApplyDisabled = error || minValue === '' || maxValue === ''
 
-  const checkShouldReset = (newMin: string, newMax: string) => {
-    if (!hasSelectedPreset) return
-
-    if (newMin !== selectedMin || newMax !== selectedMax) {
-      onResetSelected?.()
-    }
-  }
-
   const handleMinChange = (value: string) => {
-    checkShouldReset(value, maxValue)
     onChangeMin(value)
   }
 
   const handleMaxChange = (value: string) => {
-    checkShouldReset(minValue, value)
     onChangeMax(value)
   }
 
