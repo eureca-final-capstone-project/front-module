@@ -30,7 +30,7 @@ type StatusStyle =
 
 export const STATUS_STYLE: Record<string, StatusStyle> = {
   활성: { variant: 'default' },
-  비활성: { variant: 'secondary', background: 'gray50' },
+  차단: { variant: 'secondary', background: 'gray50' },
   검수대기: { variant: 'secondary', background: 'gray200' },
   AI승인: { variant: 'outline', status: 'success' },
   AI거절: { variant: 'outline', status: 'error' },
