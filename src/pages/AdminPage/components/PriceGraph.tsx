@@ -1,13 +1,36 @@
+import { useQuery } from '@tanstack/react-query'
 import Card from '../../../components/Card/Card'
 import Graph from '../../../components/Graph/Graph'
-import { lineData } from '../../../mocks/graphData'
+import { getHourlyStatistics } from '../../../apis/graph'
+import { transformToGraphData } from '../../../utils/graph'
 
 const PriceGraph = () => {
+  const { data: statistics, isLoading } = useQuery({
+    queryKey: ['hourly-statistics'],
+    queryFn: getHourlyStatistics,
+  })
+
+  const graphData = statistics
+    ? transformToGraphData(statistics).map(entry => {
+        const newEntry: Record<string, number> = {}
+        Object.entries(entry).forEach(([key, value]) => {
+          if (value !== null) newEntry[key] = value
+        })
+        return newEntry
+      })
+    : []
+
   return (
     <section className="flex flex-col gap-5">
       <h2 className="text-fs24">시세 그래프</h2>
       <Card className="px-0">
-        <Graph type="line" data={lineData} yKeys={['LG U+', 'KT', 'SKT']} height={328} />
+        {isLoading ? (
+          <p className="flex min-h-75 items-center justify-center">
+            시세 정보를 불러오는 중입니다...
+          </p>
+        ) : (
+          <Graph type="line" data={graphData} yKeys={['LG U+', 'KT', 'SKT']} height={328} />
+        )}
       </Card>
     </section>
   )

@@ -9,6 +9,7 @@ interface ButtonProps {
   disabled?: boolean
   className?: string
   shape?: 'square' | 'underline'
+  mediumPadding?: boolean
   smallPadding?: boolean
   extraSmallPadding?: boolean
   noShadow?: boolean
@@ -25,6 +26,7 @@ const Button = ({
   disabled = false,
   className = '',
   shape = 'square',
+  mediumPadding = false,
   smallPadding = false,
   extraSmallPadding = false,
   noShadow = false,
@@ -36,7 +38,9 @@ const Button = ({
         ? 'px-2 py-1'
         : smallPadding
           ? 'px-2.5 py-2 sm:px-6 sm:py-2.5'
-          : 'p-3.5'
+          : mediumPadding
+            ? 'p-2.5'
+            : 'p-3.5'
   const baseClass =
     shape === 'underline'
       ? disabled

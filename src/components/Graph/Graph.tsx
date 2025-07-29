@@ -23,6 +23,7 @@ interface GraphProps {
   xKey?: string
   yKeys?: string[]
   colors?: Record<string, string>
+  name?: string
 }
 
 const colors: Record<string, string> = {
@@ -32,7 +33,15 @@ const colors: Record<string, string> = {
   SKT: '#D71826',
 }
 
-const Graph = ({ type, data, width = '100%', height = 300, xKey = 'hour', yKeys }: GraphProps) => {
+const Graph = ({
+  type,
+  data,
+  width = '100%',
+  height = 300,
+  xKey = 'hour',
+  yKeys,
+  name,
+}: GraphProps) => {
   if (!data || data.length === 0) return <p>데이터 없음</p>
 
   const renderKeys = yKeys ?? Object.keys(data[0]).filter(key => key !== xKey)
@@ -70,7 +79,7 @@ const Graph = ({ type, data, width = '100%', height = 300, xKey = 'hour', yKeys 
           <Tooltip formatter={value => `${value}`} labelFormatter={label => `${label}시`} />
           <Legend />
           {renderKeys.map(key => (
-            <Bar key={key} dataKey={key} fill={colors[key] ?? colors['default']} />
+            <Bar key={key} dataKey={key} name={name} fill={colors[key] ?? colors['default']} />
           ))}
         </BarChart>
       )}

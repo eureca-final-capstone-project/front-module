@@ -1,24 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
-
 interface ToggleTextProps {
   leftText: string
   rightText: string
-  initialSelectedText?: string
+  selectedText: string
   onToggle?: (selectedText: string) => void
 }
 
-const ToggleText = ({ leftText, rightText, initialSelectedText, onToggle }: ToggleTextProps) => {
-  const isFirstRender = useRef(true)
-  const [selectedText, setSelectedText] = useState(initialSelectedText ?? leftText)
-
-  useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false
-      return
-    }
-    onToggle?.(selectedText)
-  }, [selectedText, onToggle])
-
+const ToggleText = ({ leftText, rightText, selectedText, onToggle }: ToggleTextProps) => {
   const isSelected = (text: string) => selectedText === text
 
   return (
@@ -35,7 +22,7 @@ const ToggleText = ({ leftText, rightText, initialSelectedText, onToggle }: Togg
           className={`z-10 flex flex-1 items-center justify-center ${
             isSelected(leftText) ? 'text-black' : 'text-gray-500'
           }`}
-          onClick={() => setSelectedText(leftText)}
+          onClick={() => onToggle?.(leftText)}
         >
           {leftText}
         </button>
@@ -44,7 +31,7 @@ const ToggleText = ({ leftText, rightText, initialSelectedText, onToggle }: Togg
           className={`z-10 flex flex-1 items-center justify-center ${
             isSelected(rightText) ? 'text-black' : 'text-gray-500'
           }`}
-          onClick={() => setSelectedText(rightText)}
+          onClick={() => onToggle?.(rightText)}
         >
           {rightText}
         </button>

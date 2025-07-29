@@ -49,7 +49,7 @@ const NormalDetailPage = () => {
     queryFn: getTokenParsed,
     staleTime: 1000 * 60 * 5,
     retry: false,
-    enabled: !!sessionStorage.getItem('accessToken'),
+    enabled: !!sessionStorage.getItem('userAccessToken'),
   })
 
   const { addWishMutation, deleteWishMutation } = useWishMutation(Number(transactionFeedId))

@@ -25,6 +25,8 @@ import NotFoundPage from '../pages/NotFoundPage'
 import PasswordResetPage from '../pages/PasswordResetPage'
 import CompletePage from '../pages/CompletePage'
 import MyPostPage from '../pages/MyPostPage'
+import AdminLoginPage from '../pages/AdminPage/AdminLoginPage'
+import RefundPage from '../pages/RefundPage'
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +53,10 @@ export const router = createBrowserRouter([
         element: <OAuthCallbackPage />,
       },
       { path: '/reset-password', element: <PasswordResetPage /> },
+      {
+        path: '/admin/login',
+        element: <AdminLoginPage />,
+      },
     ],
   },
   {
@@ -111,6 +117,11 @@ export const router = createBrowserRouter([
         handle: { title: '결제 실패' },
       },
       {
+        path: '/refund',
+        element: <RefundPage />,
+        handle: { title: '페이 환전하기' },
+      },
+      {
         path: '/data-purchase/:transactionFeedId',
         element: <DataPurchasePage />,
         handle: { title: '데이터 구매' },
@@ -130,6 +141,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: '/404',
     element: <NotFoundPage />,
