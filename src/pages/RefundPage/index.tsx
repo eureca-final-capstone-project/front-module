@@ -14,6 +14,8 @@ import { postRefundRequest } from '../../apis/payment'
 import { toast } from 'react-toastify'
 import RefundBankSelector from './components/RefundBankSelector'
 import FloatActionButton from '../../components/FloatActionButton'
+import { useState } from 'react'
+import BasicModal from '../MyPage/components/Modal/BasicModal'
 
 const RefundPage = () => {
   const refundMutation = useMutation({
@@ -23,7 +25,6 @@ const RefundPage = () => {
       navigate('/mypage/pay-history')
     },
     onError: error => {
-      // 타입은 상황에 따라 조정 (ex. AxiosError)
       console.error('환전 요청 실패:', error)
       toast.error('환전에 실패했습니다. 잠시 후 시도해주세요.')
     },
@@ -48,6 +49,28 @@ const RefundPage = () => {
   const refundAmount = watch('refundAmount')
   const bankId = watch('bankId')
   const exchangeAccount = watch('exchangeAccount')
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleOpenModal = () => {
+    const inputAmount = Number(refundAmount.replace(/,/g, '')) || 0
+    const balance = userPayStatus?.balance ?? 0
+
+    if (inputAmount > balance) {
+      toast.error('입력하신 금액이 보유 다챠페이를 초과하였습니다.')
+      return
+    }
+
+    setIsModalOpen(true)
+  }
+
+  const handleClickLeft = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleClickRight = () => {
+    setIsModalOpen(false)
+    handleSubmit(onSubmit)()
+  }
 
   const isFilled =
     refundAmount.replace(/,/g, '').length > 0 && exchangeAccount.length >= 10 && Number(bankId) > 0
@@ -74,6 +97,8 @@ const RefundPage = () => {
     queryFn: getUserPayStatus,
   })
   const navigate = useNavigate()
+  const refundValue = Number(refundAmount.replace(/,/g, '')) || 0
+  const remainingBalance = (userPayStatus?.balance ?? 0) - refundValue
 
   return (
     <div className={`sm:px-0} flex flex-col px-4 sm:justify-between`}>
@@ -113,10 +138,32 @@ const RefundPage = () => {
       <FloatActionButton
         show={showButton}
         text="환전 요청하기"
-        onClick={handleSubmit(onSubmit)}
+        onClick={handleOpenModal}
         disabled={!isValid || isSubmitting}
         className={!isValid ? 'button-disabled' : 'button-active'}
       />
+      <BasicModal
+        isOpen={isModalOpen}
+        onClose={handleClickLeft}
+        modalType="pay-refund"
+        onClickLeft={handleClickLeft}
+        onClickRight={handleClickRight}
+        isWarning={false}
+      >
+        <div className="text-fs16 mb-3 w-full">
+          <h4 className="text-fs18 font-medium">환전 후 변동 정보</h4>
+          <hr className="mt-0.5 mb-2 w-full border-t-gray-200"></hr>
+          <div>
+            <div className="flex items-center justify-between">
+              <span>잔여 다챠페이</span>
+              <div className="flex items-center gap-1 text-gray-900">
+                <DatchaCoin className="h-4 w-4" />
+                <span>{formatAmount(remainingBalance)}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </BasicModal>
     </div>
   )
 }
