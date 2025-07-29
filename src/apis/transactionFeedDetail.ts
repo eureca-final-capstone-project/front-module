@@ -3,6 +3,7 @@ import { BID_ERROR_MESSAGES } from '../constants/bidErrorMessage'
 
 export interface TransactionFeedDetailResponse {
   transactionFeedId: number
+  sellerId: number
   title: string
   content: string
   salesDataAmount: number

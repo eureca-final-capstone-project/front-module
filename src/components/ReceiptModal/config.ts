@@ -43,7 +43,7 @@ export const config = {
     payMent: '거래 다챠페이',
     isMinus: true,
     extra: [
-      { label: '거래 게시글', key: 'dataTitle' },
+      { label: '거래 데이터', key: 'dataAmount' },
       { label: '거래 번호', key: 'transactionHistoryId' },
       { label: '거래 시간', key: 'transactedAt' },
       { label: '통신사', key: 'telecom' },
@@ -58,7 +58,7 @@ export const config = {
     payMent: '거래 다챠페이',
     isMinus: false,
     extra: [
-      { label: '거래 게시글', key: 'dataTitle' },
+      { label: '거래 데이터', key: 'dataAmount' },
       { label: '거래 번호', key: 'transactionHistoryId' },
       { label: '거래 시간', key: 'transactedAt' },
       { label: '통신사', key: 'telecom' },
