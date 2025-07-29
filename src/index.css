@@ -154,6 +154,10 @@
   }
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: var(--font-pretendard);
   color: var(--color-gray-900);
