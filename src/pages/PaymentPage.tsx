@@ -160,6 +160,7 @@ const PaymentPage = () => {
             prefix={<DatchaCoin className="h-6 w-6" />}
             className="text-fs16 appearance-none"
             required={true}
+            inputMode="numeric"
           />
         </Card>
         <Card type="label" labelTitle="쿠폰 적용" withMotion motionCustom={2}>

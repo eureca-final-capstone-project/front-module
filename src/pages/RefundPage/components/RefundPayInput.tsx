@@ -53,6 +53,7 @@ const RefundPayInput = ({ balance }: RefundPayInputProps) => {
             }
             suffix="원"
             suffixAlwaysVisible={true}
+            inputMode="numeric"
           />
         )}
       />

@@ -26,7 +26,7 @@ import PasswordResetPage from '../pages/PasswordResetPage'
 import CompletePage from '../pages/CompletePage'
 import MyPostPage from '../pages/MyPostPage'
 import AdminLoginPage from '../pages/AdminPage/AdminLoginPage'
-import RefundPage from '../pages/RefundPage/RefundPage'
+import RefundPage from '../pages/RefundPage'
 
 export const router = createBrowserRouter([
   {
