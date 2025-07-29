@@ -56,7 +56,7 @@ const RangeInput = ({
           label={placeholderMin}
           suffix={rangeType === 'dataAmount' ? 'MB' : '원'}
           suffixAlwaysVisible
-          className="input-no-spinner rounded-xs px-1 py-1 lg:px-2 lg:py-2"
+          className="input-no-spinner rounded-xs px-2.5 py-3 sm:px-1 sm:py-1 lg:px-2 lg:py-2"
         />
         <span className="text-gray-800">-</span>
         <Input
@@ -69,7 +69,7 @@ const RangeInput = ({
           label={placeholderMax}
           suffix={rangeType === 'dataAmount' ? 'MB' : '원'}
           suffixAlwaysVisible
-          className="input-no-spinner rounded-xs px-1 py-1 lg:px-2 lg:py-2"
+          className="input-no-spinner rounded-xs px-2.5 py-3 sm:px-1 sm:py-1 lg:px-2 lg:py-2"
         />
       </div>
       {error && errorMessage && <span className="text-fs14 text-error">{errorMessage}</span>}
