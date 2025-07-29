@@ -4,7 +4,7 @@ import { config } from './config'
 import ReceiptInfo from './ReceiptInfo'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import type { PayHistoryDetailResponse } from '../../apis/userInfo'
-import { formatAmount } from '../../utils/format'
+import { formatAccountNumber, formatAmount } from '../../utils/format'
 import { formatCompactDateTime } from '../../utils/time'
 
 type ExchangeDetail = NonNullable<PayHistoryDetailResponse['data']['exchangeDetail']>
@@ -67,7 +67,7 @@ const RefundReceipt = ({ type, pay, info }: ReceiptProps<ExchangeDetail>) => {
                   <>
                     {info.bankName}
                     <br />
-                    {info.exchangeAccount}
+                    {formatAccountNumber(info.exchangeAccount)}
                   </>
                 ) : item.key === 'exchangeHistoryId' ? (
                   String(rawValue)
