@@ -20,39 +20,46 @@ export const attachRequestInterceptor = (client: AxiosInstance) => {
 }
 
 /**
- * 클라이언트 인스턴스에 401 토큰 만료 감지 및 자동 토큰 갱신 인터셉터 등록
+ * 클라이언트 인스턴스에 statusCode 10001 토큰 만료 감지 및 자동 토큰 갱신 인터셉터 등록
  *
- * - 서버가 401 상태와 errorCode 'TOKEN_EXPIRED'를 반환할 때만 accessToken 갱신 시도
+ * - statusCode 10001 상태와 errorCode 'TOKEN_EXPIRED'를 반환할 때만 accessToken 갱신 시도
  * - refreshToken으로 갱신 성공 시 원래 요청을 재시도하여 반환
  * - refreshToken도 만료되거나 갱신 실패 시 로그인 페이지로 이동하여 재로그인 유도
  * - 무한 루프 방지를 위해 `_retry` 플래그를 사용
  *
  * @param client axios 인스턴스
  */
+
 export const attachResponseInterceptor = (client: AxiosInstance) => {
   client.interceptors.response.use(
-    response => response,
-    async error => {
-      const originalRequest = error.config
+    async response => {
+      const data = response.data.data
 
-      const isTokenExpired =
-        error.response?.status === 401 && error.response?.data?.errorCode === 'TOKEN_EXPIRED' // 서버 기준에 맞게 수정 필요
-
-      if (isTokenExpired && !originalRequest._retry && originalRequest.url !== '/auth/refresh') {
-        console.log('------------------------토큰 만료')
-        originalRequest._retry = true
+      //
+      if (data.statusCode === 10001 && data.statusCodeName === 'TOKEN_EXPIRED') {
         try {
-          const res = await client.post('/auth/refresh')
-          const newAccessToken = res.data.accessToken
-          sessionStorage.setItem('accessToken', newAccessToken)
-          return client(originalRequest)
+          const refreshRes = await client.get('/auth/re-generate-token')
+
+          if (refreshRes.data.statusCode === 200) {
+            const newAccessToken = refreshRes.data.data.accessToken
+            sessionStorage.setItem('accessToken', newAccessToken)
+
+            // 원래 요청에 새로운 토큰 헤더 설정
+            response.config.headers['Authorization'] = `Bearer ${newAccessToken}`
+
+            // 원래 요청 재시도
+            return client(response.config)
+          }
         } catch (refreshError) {
-          // logout()
+          console.log(refreshError)
           window.location.href = '/login'
           return Promise.reject(refreshError)
         }
       }
 
+      return response
+    },
+    error => {
       return Promise.reject(error)
     }
   )
