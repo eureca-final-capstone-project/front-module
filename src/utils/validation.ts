@@ -199,3 +199,12 @@ export const resetPasswordSchema = z
     message: '새 비밀번호가 일치하지 않습니다.',
     path: ['confirmPassword'],
   })
+
+export const refundSchema = z.object({
+  refundAmount: z
+    .string()
+    .min(1, '환전 금액을 입력해주세요.')
+    .regex(/^\d+$/, '숫자만 입력해주세요.'),
+  bankId: z.coerce.number().min(1, '은행을 선택해주세요.'),
+  exchangeAccount: z.string().min(1, '계좌번호를 입력해주세요.'),
+})
