@@ -262,3 +262,16 @@ input[type='number'] {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+#nprogress .bar {
+  background: var(--color-pri-500) !important;
+  height: 4px !important;
+}
+
+#nprogress .spinner {
+  display: none !important;
+}
+
+#nprogress .spinner-icon {
+  display: none !important;
+}
