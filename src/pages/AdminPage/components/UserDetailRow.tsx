@@ -10,13 +10,14 @@ const UserDetailRow = ({ reports }: UserDetailRowProps) => {
   return (
     <table className="w-full">
       <colgroup>
-        <col style={{ width: '3%' }} /> {/* 빈칸 */}
-        <col style={{ width: '3%' }} /> {/* reportId */}
-        <col style={{ width: '15.5%' }} /> {/* reportType */}
-        <col style={{ width: '34%' }} /> {/* content */}
-        <col style={{ width: '21.5%' }} /> {/* createdAt */}
-        <col style={{ width: '18.5%' }} /> {/* status */}
+        <col style={{ width: '3%' }} />
+        <col style={{ width: '3%' }} />
+        <col style={{ width: '15.5%' }} />
+        <col style={{ width: '34%' }} />
+        <col style={{ width: '21.5%' }} />
+        <col style={{ width: '18.5%' }} />
       </colgroup>
+
       <tbody>
         {reports &&
           reports.length > 0 &&

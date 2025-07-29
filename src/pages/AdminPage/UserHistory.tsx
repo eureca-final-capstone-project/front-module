@@ -2,7 +2,6 @@ import { useState } from 'react'
 import Badge from '../../components/Badge/Badge'
 import Table from '../../components/Table/Table'
 import { STATUS_STYLE, userColumns } from '../../constants/admin'
-import { userReportData } from '../../mocks/adminData'
 import { User, UserReport } from '../../types/admin'
 import Toggle from '../../components/Toggle/Toggle'
 import UserDetailRow from './components/UserDetailRow'
@@ -11,7 +10,7 @@ import { useSearchParams } from 'react-router-dom'
 import Pagination from '../../components/Pagination/Pagination'
 import { getTelecomBadgeColor } from '../../utils/telecom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { banUser, getUsers } from '../../apis/admin/dashboard'
+import { banUser, getUserReport, getUsers } from '../../apis/admin/dashboard'
 import { formatPhoneNumber } from '../../utils/format'
 import { useToast } from '../../hooks/useToast'
 
@@ -25,7 +24,6 @@ const UserHistory = () => {
 
   const [currentPage, setCurrentPage] = useState(pageParam)
   const [reportsByUser, setReportsByUser] = useState<Record<number, UserReport[]>>({})
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null)
 
   const itemsPerPage = 10
 
@@ -87,14 +85,19 @@ const UserHistory = () => {
     }
   }
 
-  const handleRowClick = (row: User) => {
-    setSelectedUserId(row.userId)
+  const handleRowClick = async (row: User) => {
     // 이미 데이터가 있으면 재사용
     if (reportsByUser[row.userId]) {
       return
     }
     // 데이터 없으면 API 호출 후 저장
-    setReportsByUser(prev => ({ ...prev, [row.userId]: userReportData }))
+    try {
+      const { data: userReportData } = await getUserReport(row.userId)
+      setReportsByUser(prev => ({ ...prev, [row.userId]: userReportData }))
+    } catch (error) {
+      showToast({ type: 'error', msg: '데이터를 불러오지 못했습니다.' })
+      console.error(error)
+    }
   }
 
   const handlePageChange = (newPage: number) => {
@@ -102,7 +105,6 @@ const UserHistory = () => {
     setSearchParams({ page: String(newPage) })
 
     // 페이지 변경시 리포트 초기화
-    setSelectedUserId(null)
     setReportsByUser({})
   }
 
@@ -122,11 +124,7 @@ const UserHistory = () => {
             renderCell={renderUserCell}
             isClickable={row => row.reportCount > 0}
             onRowClick={handleRowClick}
-            renderDetailTable={
-              selectedUserId !== null ? (
-                <UserDetailRow reports={reportsByUser[selectedUserId] ?? []} />
-              ) : null
-            }
+            renderDetailTable={row => <UserDetailRow reports={reportsByUser[row.userId] ?? []} />}
           />
         </div>
       </section>

@@ -24,3 +24,8 @@ export const banUser = async ({ userId, isBanned }: { userId: number; isBanned: 
   })
   return response.data
 }
+
+export const getUserReport = async (userId: number) => {
+  const response = await admin.get(`/users/${userId}/report-list`)
+  return response.data
+}
