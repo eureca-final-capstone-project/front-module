@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import Card from '../../../components/Card/Card'
 import Graph from '../../../components/Graph/Graph'
 import ToggleText from '../../../components/Toggle/ToggleText'
@@ -21,6 +21,7 @@ const VolumeGraph = () => {
   } = useQuery({
     queryKey: ['volume', salesType],
     queryFn: () => getVolumeData(salesType),
+    placeholderData: keepPreviousData,
   })
 
   if (isLoading) return <div>데이터를 불러오는 중입니다...</div>
