@@ -13,7 +13,7 @@ import { RefundSchemaType } from '../../types/pay'
 import { postRefundRequest } from '../../apis/payment'
 import { toast } from 'react-toastify'
 import RefundBankSelector from './components/RefundBankSelector'
-// import FloatActionButton from '../components/FloatActionButton'
+import FloatActionButton from '../../components/FloatActionButton'
 
 const RefundPage = () => {
   const refundMutation = useMutation({
@@ -38,12 +38,27 @@ const RefundPage = () => {
       bankId: 0,
     },
   })
+
+  const {
+    watch,
+    handleSubmit,
+    formState: { isValid, isSubmitting },
+  } = methods
+
+  const refundAmount = watch('refundAmount')
+  const bankId = watch('bankId')
+  const exchangeAccount = watch('exchangeAccount')
+
+  const isFilled =
+    refundAmount.replace(/,/g, '').length > 0 && exchangeAccount.length >= 10 && Number(bankId) > 0
+  const showButton = isFilled && isValid
+
   const onSubmit = (data: RefundSchemaType) => {
     const inputAmount = Number(data.refundAmount.replace(/,/g, '')) || 0
     const balance = userPayStatus?.balance ?? 0
 
     if (inputAmount > balance) {
-      toast.error('보유한 페이보다 큰 금액입니다.')
+      toast.error('입력하신 금액이 보유 다챠페이를 초과하였습니다.')
       return
     }
 
@@ -59,6 +74,7 @@ const RefundPage = () => {
     queryFn: getUserPayStatus,
   })
   const navigate = useNavigate()
+
   return (
     <div className={`sm:px-0} flex flex-col px-4 sm:justify-between`}>
       <div className="flex flex-col gap-4">
@@ -94,13 +110,13 @@ const RefundPage = () => {
           iconDescription="충전 및 환전, 거래로 변동된 페이 내역을 한 눈에 확인해보세요!"
         ></Card>
       </div>
-      {/* <FloatActionButton
-        show={amount > 0}
-        text={`${finalAmount.toLocaleString()}원 결제하기`}
-        onClick={handlePayment}
-        disabled={isDisabled}
-        className={isDisabled ? 'button-disabled' : 'button-active'}
-      /> */}
+      <FloatActionButton
+        show={showButton}
+        text="환전 요청하기"
+        onClick={handleSubmit(onSubmit)}
+        disabled={!isValid || isSubmitting}
+        className={!isValid ? 'button-disabled' : 'button-active'}
+      />
     </div>
   )
 }
