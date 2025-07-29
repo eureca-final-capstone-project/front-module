@@ -1,6 +1,8 @@
 import Card from '../../../components/Card/Card'
 import UserIcon from '@/assets/icons/user.svg?react'
 import ReportIcon from '@/assets/icons/report.svg?react'
+import { getDashboardData } from '../../../apis/admin/dashboard'
+import { useQuery } from '@tanstack/react-query'
 
 interface ManagementCardProps {
   title: string
@@ -36,6 +38,20 @@ const ManagementCard = ({ title, stats, icon, iconBgColor }: ManagementCardProps
 }
 
 const SystemManagement = () => {
+  const {
+    data: dashboardData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: getDashboardData,
+  })
+
+  if (isLoading) return <div>데이터를 불러오는 중입니다...</div>
+  if (isError || !dashboardData?.data) return <div>데이터를 불러오지 못했습니다.</div>
+
+  const { todayUserCount, totalUserCount, todayReportCount, totalReportCount } = dashboardData.data
+
   return (
     <section className="flex flex-col gap-5">
       <h2 className="text-fs24">시스템 관리</h2>
@@ -43,8 +59,8 @@ const SystemManagement = () => {
         <ManagementCard
           title="회원 관리"
           stats={[
-            { label: '오늘 가입한 사용자', value: 17 },
-            { label: '전체 사용자', value: 200 },
+            { label: '오늘 가입한 사용자', value: todayUserCount },
+            { label: '전체 사용자', value: totalUserCount },
           ]}
           icon={<UserIcon className="text-pri-400 h-12 w-12" />}
           iconBgColor="#DCFAF8"
@@ -52,8 +68,8 @@ const SystemManagement = () => {
         <ManagementCard
           title="신고 관리"
           stats={[
-            { label: '오늘 신고 건수', value: 17 },
-            { label: '전체 신고 건수', value: 200 },
+            { label: '오늘 신고 건수', value: todayReportCount },
+            { label: '전체 신고 건수', value: totalReportCount },
           ]}
           icon={<ReportIcon className="text-error h-12 w-12" />}
           iconBgColor="#FFE0E1"
