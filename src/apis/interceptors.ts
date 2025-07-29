@@ -69,7 +69,7 @@ export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey
               if (res.data.statusCode === 200) {
                 const newAccessToken = res.data.data.accessToken
                 sessionStorage.setItem(tokenKey, newAccessToken)
-                console.log('재발급 성공')
+
                 return newAccessToken
               } else {
                 throw new Error('토큰 갱신에 실패했습니다.')
@@ -84,8 +84,6 @@ export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey
         try {
           // 토큰 갱신 Promise 대기
           const newAccessToken = await refreshPromise
-
-          console.log('이전 발급 요청 대기...중')
 
           // 원래 요청에 새로운 토큰 헤더 설정
           originalRequest.headers = {

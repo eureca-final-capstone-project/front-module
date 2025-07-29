@@ -54,7 +54,6 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
           break
         }
         default:
-          console.log(data)
           alert('로그인 실패: ' + data.message)
       }
     },
