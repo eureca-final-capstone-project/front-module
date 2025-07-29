@@ -50,3 +50,26 @@ export const formatPhoneNumber = (value: string) => {
   }
   return `${number.slice(0, 3)}-${number.slice(3, 7)}-${number.slice(7, 11)}`
 }
+
+/* 계좌 번호 하이픈 자동 삽입 함수 */
+export const formatAccountNumber = (value: string) => {
+  const onlyDigits = value.replace(/\D/g, '')
+
+  // 최대 13자리
+  const sliced = onlyDigits.slice(0, 13)
+
+  const parts = []
+  if (sliced.length <= 3) {
+    parts.push(sliced)
+  } else if (sliced.length <= 7) {
+    parts.push(sliced.slice(0, 3), sliced.slice(3))
+  } else if (sliced.length <= 11) {
+    parts.push(sliced.slice(0, 3), sliced.slice(3, 7), sliced.slice(7))
+  } else {
+    parts.push(sliced.slice(0, 3), sliced.slice(3, 7), sliced.slice(7, 11), sliced.slice(11))
+  }
+
+  return parts.join('-')
+}
+/* 계좌 번호 하이픈 자동 제거 함수 */
+export const stripAccountNumber = (value: string) => value.replace(/\D/g, '').slice(0, 13)
