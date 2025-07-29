@@ -21,7 +21,8 @@ const TitleInput = () => {
           value={field.value}
           onChange={e => {
             field.onChange(e)
-            if (field.value.length > 20)
+            if (!field.value.trim()) setError('title', { message: '제목을 입력해 주세요.' })
+            else if (field.value.length > 20)
               setError('title', { message: '제목은 20자 이내여야 합니다.' })
             else clearErrors('title')
           }}
