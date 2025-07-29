@@ -17,3 +17,10 @@ export const getUsers = async (pageable: Pageable) => {
   })
   return response.data
 }
+
+export const banUser = async ({ userId, isBanned }: { userId: number; isBanned: boolean }) => {
+  const response = await admin.patch(`/users/${userId}/ban`, {
+    isBanned,
+  })
+  return response.data
+}
