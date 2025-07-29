@@ -22,7 +22,7 @@ const RefundAccountInput = () => {
         const isShort = onlyDigits.length > 0 && onlyDigits.length < 10
         const errorMessage =
           errors.exchangeAccount?.message ||
-          (isShort ? '계좌번호는 최소 10자리 이상 14자리 미만으로 입력해주세요.' : '')
+          (isShort ? '계좌번호는 최소 10자리 이상 13자리 미만으로 입력해주세요.' : '')
 
         return (
           <Input
