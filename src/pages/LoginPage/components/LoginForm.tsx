@@ -45,7 +45,7 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
         case 200: {
           const accessToken = data.data.accessToken
 
-          sessionStorage.setItem('accessToken', accessToken)
+          sessionStorage.setItem(isAdmin ? 'adminAccessToken' : 'userAccessToken', accessToken)
           setIsLogin(true)
           await queryClient.invalidateQueries({
             queryKey: [isAdmin ? 'adminProfile' : 'userProfile'],
@@ -54,7 +54,6 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
           break
         }
         default:
-          console.log(data)
           alert('로그인 실패: ' + data.message)
       }
     },

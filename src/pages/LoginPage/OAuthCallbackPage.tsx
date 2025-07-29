@@ -16,7 +16,7 @@ const OAuthCallbackPage = () => {
     onSuccess: data => {
       if (data.statusCode === 200) {
         const accessToken = data.data.accessToken
-        sessionStorage.setItem('accessToken', accessToken)
+        sessionStorage.setItem('userAccessToken', accessToken)
         setIsLogin(true)
 
         if (data.data.newUser) {

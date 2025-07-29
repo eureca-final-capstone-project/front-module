@@ -32,7 +32,7 @@ const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
     mutationFn: logout,
     onSuccess: () => {
       queryClient.clear()
-      sessionStorage.removeItem('accessToken')
+      sessionStorage.removeItem('userAccessToken')
       toast.success('로그아웃 되었습니다.')
       navigate('/login')
     },

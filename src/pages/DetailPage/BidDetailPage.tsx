@@ -78,7 +78,7 @@ const BidDetailPage = () => {
     queryFn: getTokenParsed,
     staleTime: 1000 * 60 * 5,
     retry: false,
-    enabled: !!sessionStorage.getItem('accessToken'),
+    enabled: !!sessionStorage.getItem('userAccessToken'),
   })
 
   if (isLoading) return <p>로딩 중</p>
