@@ -18,6 +18,7 @@ interface InputProps {
   suffix?: ReactNode
   suffixAlwaysVisible?: boolean
   className?: string
+  inputMode?: React.HTMLAttributes<HTMLInputElement>['inputMode']
 }
 
 const Input = ({
@@ -35,6 +36,7 @@ const Input = ({
   suffix,
   suffixAlwaysVisible = false,
   className,
+  inputMode = 'text',
 }: InputProps) => {
   const [showPassword, setShowPassword] = useState(false)
   const isPassword = type === 'password'
@@ -125,6 +127,7 @@ const Input = ({
           disabled={disabled}
           placeholder={shape === 'floating' ? '' : label}
           className={`${inputBaseClasses} ${borderClasses} ${className}`}
+          inputMode={inputMode}
         />
 
         {shape === 'floating' && (
