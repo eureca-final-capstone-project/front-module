@@ -25,6 +25,7 @@ import NotFoundPage from '../pages/NotFoundPage'
 import PasswordResetPage from '../pages/PasswordResetPage'
 import CompletePage from '../pages/CompletePage'
 import MyPostPage from '../pages/MyPostPage'
+import AdminLoginPage from '../pages/AdminPage/AdminLoginPage'
 
 export const router = createBrowserRouter([
   {
@@ -51,6 +52,10 @@ export const router = createBrowserRouter([
         element: <OAuthCallbackPage />,
       },
       { path: '/reset-password', element: <PasswordResetPage /> },
+      {
+        path: '/admin/login',
+        element: <AdminLoginPage />,
+      },
     ],
   },
   {
@@ -130,6 +135,7 @@ export const router = createBrowserRouter([
       },
     ],
   },
+
   {
     path: '/404',
     element: <NotFoundPage />,

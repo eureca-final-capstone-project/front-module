@@ -9,8 +9,14 @@ import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import { useAuthStore } from '../../../store/authStore'
 import { LoginSchemaType } from '../../../types/auth'
+import { adminLogin } from '../../../apis/admin/auth'
 
-const LoginForm = () => {
+interface LoginFormProps {
+  isAdmin?: boolean
+  onSuccessNavigateTo?: string
+}
+
+const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProps) => {
   const navigate = useNavigate()
   const deviceType = useDeviceType()
   const queryClient = useQueryClient()
@@ -33,16 +39,23 @@ const LoginForm = () => {
   const isActive = emailValue && passwordValue
 
   const mutation = useMutation({
-    mutationFn: login,
+    mutationFn: isAdmin ? adminLogin : login,
     onSuccess: async data => {
-      if (data.statusCode === 200) {
-        const accessToken = data.data.accessToken
-        sessionStorage.setItem('accessToken', accessToken)
-        setIsLogin(true)
-        await queryClient.invalidateQueries({ queryKey: ['userProfile'] })
-        navigate('/')
-      } else {
-        alert('로그인 실패: ' + data.message)
+      switch (data.statusCode) {
+        case 200: {
+          const accessToken = data.data.accessToken
+
+          sessionStorage.setItem('accessToken', accessToken)
+          setIsLogin(true)
+          await queryClient.invalidateQueries({
+            queryKey: [isAdmin ? 'adminProfile' : 'userProfile'],
+          })
+          navigate(onSuccessNavigateTo)
+          break
+        }
+        default:
+          console.log(data)
+          alert('로그인 실패: ' + data.message)
       }
     },
     onError: error => {
