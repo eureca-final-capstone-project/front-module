@@ -45,7 +45,7 @@ const AuthLayout = () => {
           </div>
         ) : (
           /* 로그인 및 회원가입 모달 박스 */
-          <div className="bg-gray-10 z-10 hidden max-h-[80vh] w-full max-w-111 overflow-y-auto rounded-md p-10 text-center sm:block lg:z-10 lg:-ml-40 lg:flex-shrink-0">
+          <div className="bg-gray-10 z-10 hidden max-h-[80vh] min-h-[50vh] w-full max-w-111 overflow-y-auto rounded-md p-10 text-center sm:block lg:z-10 lg:-ml-40 lg:flex-shrink-0">
             <Outlet />
           </div>
         )}
