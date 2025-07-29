@@ -8,10 +8,10 @@ import { AxiosInstance, AxiosRequestConfig } from 'axios'
  * - 로그인 이후 토큰 갱신 시에도 자동 반영되어 최신 토큰으로 API 요청 가능
  * @param client axios 인스턴스
  */
-export const attachRequestInterceptor = (client: AxiosInstance) => {
-  client.interceptors.request.use(
+export const attachRequestInterceptor = (axiosInstance: AxiosInstance, tokenKey: string) => {
+  axiosInstance.interceptors.request.use(
     config => {
-      const accessToken = sessionStorage.getItem('accessToken')
+      const accessToken = sessionStorage.getItem(tokenKey)
       if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
       return config
     },
@@ -31,14 +31,14 @@ export const attachRequestInterceptor = (client: AxiosInstance) => {
  * - 이후 요청은 해당 Promise를 공유해 결과 대기
  * - race condition 방지
  *
- * @param client axios 인스턴스
+ * @param axiosInstance axios 인스턴스
  */
 
 let isRefreshing = false
 let refreshPromise: Promise<string> | null = null
 
-export const attachResponseInterceptor = (client: AxiosInstance) => {
-  client.interceptors.response.use(
+export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey: string) => {
+  axiosInstance.interceptors.response.use(
     async response => {
       // 서버 응답 데이터에서 실제 데이터 부분 추출
       const data = response.data?.data
@@ -62,13 +62,14 @@ export const attachResponseInterceptor = (client: AxiosInstance) => {
           isRefreshing = true
 
           // 토큰 재발급 요청 Promise 생성 및 저장
-          refreshPromise = client
+          refreshPromise = axiosInstance
             .get('/auth/re-generate-token')
             .then(res => {
               // 갱신 성공 시 새 토큰 저장 및 반환
               if (res.data.statusCode === 200) {
                 const newAccessToken = res.data.data.accessToken
-                sessionStorage.setItem('accessToken', newAccessToken)
+                sessionStorage.setItem(tokenKey, newAccessToken)
+                console.log('재발급 성공')
                 return newAccessToken
               } else {
                 throw new Error('토큰 갱신에 실패했습니다.')
@@ -84,6 +85,8 @@ export const attachResponseInterceptor = (client: AxiosInstance) => {
           // 토큰 갱신 Promise 대기
           const newAccessToken = await refreshPromise
 
+          console.log('이전 발급 요청 대기...중')
+
           // 원래 요청에 새로운 토큰 헤더 설정
           originalRequest.headers = {
             ...originalRequest.headers,
@@ -91,7 +94,7 @@ export const attachResponseInterceptor = (client: AxiosInstance) => {
           }
 
           // 원래 요청 재시도
-          return client(originalRequest)
+          return axiosInstance(originalRequest)
         } catch (error) {
           // 토큰 갱신 실패 시 로그인 페이지로 이동 유도
           window.location.href = '/login'
