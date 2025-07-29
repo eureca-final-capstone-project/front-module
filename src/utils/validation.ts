@@ -74,8 +74,8 @@ export const getRangeErrorMessage = (min: string, max: string, unitLabel: string
 }
 
 export const postTransactionSchema = z.object({
-  title: z.string().min(1, { message: '제목을 입력해 주세요.' }),
-  content: z.string().nonempty('내용을 입력해 주세요.'),
+  title: z.string().trim().min(1, { message: '제목을 입력해 주세요.' }),
+  content: z.string().trim().nonempty('내용을 입력해 주세요.'),
   salesTypeId: z.union([z.literal(1), z.literal(2)]),
   salesPrice: z.number({ message: '가격은 숫자로 입력해 주세요.' }),
   unit: z.enum(['MB', 'GB']),
