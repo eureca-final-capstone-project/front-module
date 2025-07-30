@@ -4,13 +4,18 @@ import CloseIcon from '@/assets/icons/x.svg?react'
 import { motion, AnimatePresence } from 'framer-motion'
 import FadeInUpMotion from '../../../../components/Animation/FadeInUpMotion'
 import { useEffect } from 'react'
+import { ReportHistoryItem } from '../../../../apis/report'
+import { getStatusLabelAndClass } from '../config'
+import { formatFullDate } from '../../../../utils/time'
+import Button from '../../../../components/Button/Button'
 
 interface ReportModalProps {
   isOpen: boolean
   onClose: () => void
+  report?: ReportHistoryItem
 }
 
-const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
+const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
   useEffect(() => {
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
     document.body.style.overflow = 'hidden'
@@ -49,7 +54,7 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
             <div className="shadow-receipt-top bg-error-light absolute -top-7 z-10 flex h-14 w-14 items-center justify-center rounded-full">
               <CircleReportIcon className="h-6.5 w-6.5" />
             </div>
-            <div className="flex w-82 flex-col overflow-hidden rounded-md md:w-88">
+            <div className="flex w-82 flex-col overflow-hidden rounded-md sm:w-[31rem]">
               <div className="bg-gray-10 flex flex-col gap-5 px-4 py-9">
                 <div className="flex flex-col gap-[0.5rem]">
                   <div className="-mb-2 flex justify-end">
@@ -66,10 +71,37 @@ const ReportModal = ({ isOpen, onClose }: ReportModalProps) => {
                   </p>
                 </div>
                 <hr className="border-gray-100" />
-                <ReceiptInfo label="신고 판매글" value="내용내용" />
-                <ReceiptInfo label="신고 판매글" value="내용내용" />
-                <ReceiptInfo label="신고 판매글" value="내용내용" />
-                <ReceiptInfo label="신고 판매글" value="내용내용" />
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-x-4">
+                  <ReceiptInfo
+                    label="신고 판매글"
+                    value={report?.title ?? '-'}
+                    className="order-1 sm:order-none"
+                  />
+                  <ReceiptInfo
+                    label="신고 유형"
+                    value={report?.reportType ?? '-'}
+                    className="order-2 sm:order-none"
+                  />
+                  <ReceiptInfo
+                    label="신고 일시"
+                    value={formatFullDate(report?.createdAt ?? '', 'tablet')}
+                    className="order-3 sm:order-none"
+                  />
+                  <ReceiptInfo
+                    label="처리 여부"
+                    value={getStatusLabelAndClass(report?.status ?? '').label}
+                    className="order-5 sm:order-none"
+                  />
+                  <ReceiptInfo
+                    label="신고 사유"
+                    value={report?.reason ?? '-'}
+                    className="order-4 sm:order-none sm:col-span-2"
+                  />
+                </div>
+                <Button
+                  className="border-pri-500 text-pri-500 border-1"
+                  text="게시글 자세히 보기"
+                />
               </div>
             </div>
           </div>
