@@ -73,11 +73,11 @@ const IconModal = ({
                       onClick={onClose}
                     />
                   </div>
-                  <h2 className="text-fs18 md:text-fs20 text-center font-medium text-gray-900">
+                  <h2 className="text-fs18 sm:text-fs20 text-center font-medium text-gray-900">
                     {title}
                   </h2>
                   {description && (
-                    <p className="text-fs12 md:text-fs14 text-center text-gray-500">
+                    <p className="text-fs12 sm:text-fs14 text-center text-gray-500">
                       {description}
                     </p>
                   )}

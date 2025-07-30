@@ -26,11 +26,13 @@ import { mapSalesTypeFromServer } from '../../utils/salesType'
 import { useWishMutation } from '../../hooks/useWishMutation'
 import { getTokenParsed } from '../../apis/tokenParsed'
 import { toast } from 'react-toastify'
+import FeedReportModal from './components/FeedReportModal'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
   const [isSheetOpen, setIsSheetOpen] = useState(false)
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const deviceType = useDeviceType()
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
@@ -175,7 +177,7 @@ const NormalDetailPage = () => {
                             navigate('/login')
                             return
                           }
-                          // 신고 처리 로직
+                          setIsReportModalOpen(true)
                         }}
                       />
                     </>
@@ -227,7 +229,7 @@ const NormalDetailPage = () => {
                               navigate('/login')
                               return
                             }
-                            // 신고 처리 로직
+                            setIsReportModalOpen(true)
                           }}
                         />
                       </>
@@ -359,6 +361,11 @@ const NormalDetailPage = () => {
           </div>
         </BottomSheet>
       )}
+      <FeedReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        transactionFeedId={Number(transactionFeedId)}
+      />
     </main>
   )
 }
