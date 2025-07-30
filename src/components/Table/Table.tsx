@@ -53,7 +53,7 @@ const Table = <T,>({
       <tbody className="bg-gray-10 text-gray-700">
         {data.length === 0 ? (
           <tr>
-            <td colSpan={columns.length + 1} className="px-3 py-4 text-center">
+            <td colSpan={columns.length + 3} className="px-3 py-4 text-center">
               데이터가 없습니다.
             </td>
           </tr>
