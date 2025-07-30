@@ -35,3 +35,17 @@ export const PRICE_OPTIONS: {
   { label: '10,000원 이하', minPrice: 0, maxPrice: 10000 },
   { label: '20,000원 이하', minPrice: 0, maxPrice: 20000 },
 ]
+
+// 내 판매글
+export const MY_FILTER_OPTIONS: { label: string; value: string }[] = [
+  { label: '전체', value: 'ALL' },
+  { label: '일반 판매', value: 'NORMAL' },
+  { label: '입찰 판매', value: 'BID' },
+]
+
+export const MY_STATUS_OPTIONS: { label: string; value: string }[] = [
+  { label: '전체', value: 'ALL' },
+  { label: '진행 거래', value: 'ON_SALE' },
+  { label: '완료 거래', value: 'COMPLETED' },
+  { label: '기간 만료 거래', value: 'EXPIRED' },
+]
