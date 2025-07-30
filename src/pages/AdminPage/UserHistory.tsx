@@ -122,7 +122,7 @@ const UserHistory = () => {
             columns={userColumns}
             data={usersData}
             renderCell={renderUserCell}
-            isClickable={row => row.reportCount > 0}
+            isClickable={row => row.reportCount > 0 || row.email.length >= 18}
             onRowClick={handleRowClick}
             renderDetailTable={row => (
               <UserDetailRow email={row.email} reports={reportsByUser[row.userId] ?? []} />
