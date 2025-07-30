@@ -74,7 +74,7 @@ const ReportHistoryPage = () => {
           <p className="text-right">처리 여부</p>
         </div>
       </ListTile>
-      <div className="flex flex-col gap-2 px-5 sm:px-0">
+      <div className="flex flex-col gap-2 px-5 pb-4 sm:px-0">
         {reports.map((item, i) => {
           const { label, className } = getStatusLabelAndClass(item.status)
           return (

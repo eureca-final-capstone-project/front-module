@@ -10,6 +10,7 @@ import TriangleIcon from '@/assets/icons/triangle.svg?react'
 import UserInfoModal from './UserInfoModal'
 import { AnimatePresence } from 'framer-motion'
 import DropdownMotion from '../Animation/DropDownMotion'
+import { useScrollStore } from '../../store/scrollStore'
 
 interface HeaderNavProps {
   deviceType: string
@@ -86,6 +87,11 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       label: '관심 거래',
       to: isLoggedIn ? '/mypage/favorites' : '/login',
       matchPath: '/mypage/favorites',
+      onClick: () => {
+        if (isLoggedIn) {
+          useScrollStore.getState().triggerScrollToBottom()
+        }
+      },
     },
     {
       label: '내 판매글',
@@ -177,10 +183,11 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       {/* 하단 nav */}
       <nav className="text-fs20">
         <ul className="flex gap-4">
-          {navLinks.map(({ label, to, matchPath }) => (
+          {navLinks.map(({ label, to, matchPath, onClick }) => (
             <li key={label}>
               <Link
                 to={to}
+                onClick={onClick}
                 className={`hover:text-pri-500 ${isActiveLink(matchPath) ? 'text-pri-500' : ''}`}
               >
                 {label}

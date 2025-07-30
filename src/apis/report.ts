@@ -15,6 +15,7 @@ attachResponseInterceptor(adminClient, 'userAccessToken')
 export interface ReportHistoryItem {
   transactionFeedId: number
   title: string
+  salesType: string
   salesDataAmount: number
   reportType: string
   createdAt: string
