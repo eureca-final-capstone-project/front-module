@@ -44,7 +44,7 @@ const MyPage = () => {
     return selected?.content ? <div>{selected.content}</div> : null
   }
   return (
-    <>
+    <div className="">
       {/* 상단 */}
       <section className="mb-10 flex h-[280px] justify-between gap-3 lg:gap-5">
         <Profile />
@@ -62,7 +62,7 @@ const MyPage = () => {
       />
       {/* 콘텐츠 */}
       <div className="px-5 py-8">{selected.content}</div>
-    </>
+    </div>
   )
 }
 
