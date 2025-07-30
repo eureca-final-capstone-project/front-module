@@ -101,7 +101,7 @@ const RefundPage = () => {
   const remainingBalance = (userPayStatus?.balance ?? 0) - refundValue
 
   return (
-    <div className={`sm:px-0} flex flex-col px-4 sm:justify-between`}>
+    <div className={`flex flex-col px-4 sm:justify-between sm:px-0`}>
       <div className="flex flex-col gap-4">
         <Card withMotion motionCustom={0}>
           <div className="flex items-center justify-between font-medium">
