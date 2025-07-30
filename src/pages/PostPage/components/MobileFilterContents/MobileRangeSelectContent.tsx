@@ -113,7 +113,7 @@ const MobileRangeSelectContent = ({
               className="flex items-center gap-3"
               onClick={() => handlePresetSelect(index)}
             >
-              <CheckBox checked={checked} onChange={() => {}} type="default" />
+              <CheckBox checked={checked} onChange={() => {}} type="radio" />
               <span className="text-fs16">{option.label}</span>
             </div>
           )
