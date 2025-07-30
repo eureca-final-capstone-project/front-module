@@ -8,6 +8,9 @@ import { ReportHistoryItem } from '../../../../apis/report'
 import { getStatusLabelAndClass } from '../config'
 import { formatFullDate } from '../../../../utils/time'
 import Button from '../../../../components/Button/Button'
+import { useNavigate } from 'react-router-dom'
+import { getTransactionFeedDetail } from '../../../../apis/transactionFeedDetail'
+import { useToast } from '../../../../hooks/useToast'
 
 interface ReportModalProps {
   isOpen: boolean
@@ -16,6 +19,26 @@ interface ReportModalProps {
 }
 
 const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
+  const navigate = useNavigate()
+  const { showToast } = useToast()
+
+  const handleNavigateToPost = async () => {
+    if (!report) return
+    const basePath =
+      report.salesType === '일반 판매' ? 'normal' : report.salesType === '입찰 판매' ? 'bid' : null
+
+    if (!basePath) return
+
+    try {
+      await getTransactionFeedDetail(report.transactionFeedId)
+
+      onClose()
+      navigate(`/posts/${basePath}/${report.transactionFeedId}`)
+    } catch {
+      showToast({ type: 'error', msg: '삭제되었거나 존재하지 않는 게시글입니다.' })
+    }
+  }
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -103,6 +126,7 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
                 <Button
                   className="border-pri-500 text-pri-500 border-1"
                   text="게시글 자세히 보기"
+                  onClick={handleNavigateToPost}
                 />
               </div>
             </div>

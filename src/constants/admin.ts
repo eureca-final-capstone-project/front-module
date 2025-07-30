@@ -2,7 +2,7 @@ import DashboardIcon from '@/assets/icons/dashboard.svg?react'
 import UsersIcon from '@/assets/icons/user.svg?react'
 import ReportIcon from '@/assets/icons/report.svg?react'
 import RestrictionIcon from '@/assets/icons/restriction.svg?react'
-import { Report, ReportStatus, User } from '../types/admin'
+import { Report, ReportStatus, Restriction, RestrictionStatus, User } from '../types/admin'
 
 export const adminSidebarMenu = [
   { label: '대시보드', path: '/admin/dashboard', icon: DashboardIcon },
@@ -36,8 +36,10 @@ export const STATUS_STYLE: Record<string, StatusStyle> = {
   'AI 거절': { variant: 'outline', status: 'error' },
   '관리자 승인': { className: 'bg-success' },
   '관리자 거절': { className: 'bg-error' },
-  '제재 완료': { variant: 'default' },
+  '제재 승인': { variant: 'default' },
+  '제재 거절': { className: 'bg-error' },
   '제재 대기 중': { variant: 'secondary', background: 'gray200' },
+  '제재 만료': { variant: 'secondary', background: 'gray50' },
 }
 
 export const reportTab = [
@@ -74,6 +76,34 @@ export const REPORT_STATUS_LABEL: Record<ReportStatus, string> = {
   AI_REJECTED: 'AI 거절',
   ADMIN_ACCEPTED: '관리자 승인',
   ADMIN_REJECTED: '관리자 거절',
-  COMPLETED: '제재 완료',
-  REJECTED: '제재 대기 중',
+  COMPLETED: '제재 승인',
+  REJECTED: '제재 거절',
+}
+
+export const restrictionTab = [
+  { id: '', label: '전체' },
+  { id: 'pending', label: '제재 대기 중' },
+  { id: 'accept', label: '제재 승인' },
+  { id: 'rejected', label: '제재 거절' },
+  { id: 'expired', label: '제재 만료' },
+]
+
+export const restrictionTabCode: Record<string, RestrictionStatus> = {
+  pending: 'PENDING',
+  accept: 'COMPLETED',
+  rejected: 'REJECTED',
+  expired: 'RESTRICT_EXPIRATION',
+}
+
+export const restrictionColumns: { header: string; key: keyof Restriction }[] = [
+  { header: '이메일', key: 'userEmail' },
+  { header: '상태', key: 'status' },
+  { header: '제재 승인/거절', key: 'restrictionStatus' },
+]
+
+export const RESTRICTION_STATUS_LABEL: Record<RestrictionStatus, string> = {
+  PENDING: '제재 대기 중',
+  COMPLETED: '제재 승인',
+  REJECTED: '제재 거절',
+  RESTRICT_EXPIRATION: '제재 만료',
 }

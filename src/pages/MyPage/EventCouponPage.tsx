@@ -5,11 +5,15 @@ import { getUserEventCoupons } from '../../apis/eventCoupon'
 import Button from '../../components/Button/Button'
 import { useNavigate } from 'react-router-dom'
 import EventCouponIcon from '@/assets/icons/event-coupon.svg?react'
+import { useState } from 'react'
+import Pagination from '../../components/Pagination/Pagination'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 
 const EventCouponPage = () => {
   const deviceType = useDeviceType()
   const gridColsClass = deviceType === 'mobile' ? 'grid-cols-1' : 'grid-cols-2'
   const navigate = useNavigate()
+  const [page, setPage] = useState(1)
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['userEventCoupons'],
@@ -17,6 +21,7 @@ const EventCouponPage = () => {
   })
 
   const eventCoupons = data?.data.coupons ?? []
+  const pagedCoupons = eventCoupons.slice((page - 1) * 4, page * 4)
 
   if (isLoading || isError || eventCoupons.length === 0) {
     let title = ''
@@ -55,14 +60,23 @@ const EventCouponPage = () => {
 
   return (
     <div className="p-4 sm:p-0">
+      {deviceType === 'mobile' ? <Breadcrumb current="이벤트 쿠폰함" /> : ''}
+
       <div className={`grid gap-4 ${gridColsClass}`}>
-        {eventCoupons.map(eventCoupon => (
+        {pagedCoupons.map(eventCoupon => (
           <EventCoupon
             key={eventCoupon.userEventCouponId}
             coupon={eventCoupon}
             deviceType={deviceType}
           />
         ))}
+      </div>
+      <div className="mt-3 flex justify-center pb-6">
+        <Pagination
+          currentPage={page}
+          totalPages={Math.ceil(eventCoupons.length / 4)}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   )
