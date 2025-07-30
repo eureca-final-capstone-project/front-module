@@ -25,7 +25,7 @@ const ButtonHeader = ({
   hideActionButtons,
 }: ButtonHeaderProps) => {
   return (
-    <div className="flex items-center justify-between p-4 sm:p-0">
+    <div className="flex items-center justify-between px-4 sm:p-0">
       <div className="flex gap-2 sm:gap-3">
         {buttonOptions.map(({ label, value }) => {
           const isSelected = selectedType === value

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import DataChargeIcon from '@/assets/icons/data-charge.svg?react'
 import { useState } from 'react'
 import Pagination from '../../components/Pagination/Pagination'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 
 const sortByStatusAndCreatedAt = (a: DataCoupon, b: DataCoupon) => {
   const getPriority = (statusCode: string) => {
@@ -83,8 +84,12 @@ const DataChargePage = () => {
   }
 
   return (
-    <div>
-      <div className={`grid ${gridCols} mb-5 gap-5 px-4 pb-4 sm:p-0`}>
+    <>
+      {deviceType === 'mobile' ? <Breadcrumb current="데이터 충전권" /> : ''}
+      <p className="text-fs14 sm:text-fs16 px-4 pb-5 text-gray-700 sm:px-0 sm:pb-4">
+        보유하신 충전권을 확인하시고 데이터로 전환하세요!
+      </p>
+      <div className={`grid ${gridCols} mb-5 gap-4 px-4 pt-4 sm:gap-5 sm:p-0`}>
         {coupons.map(coupon => (
           <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
         ))}
@@ -96,7 +101,7 @@ const DataChargePage = () => {
           onPageChange={setPage}
         />
       </div>
-    </div>
+    </>
   )
 }
 
