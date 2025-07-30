@@ -17,6 +17,8 @@ interface ReportModalProps {
 
 const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
   useEffect(() => {
+    if (!isOpen) return
+
     const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
     document.body.style.overflow = 'hidden'
     document.body.style.paddingRight = `${scrollBarWidth}px`
@@ -31,7 +33,7 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
       document.body.style.paddingRight = ''
       window.removeEventListener('keydown', handleEsc)
     }
-  }, [onClose])
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
