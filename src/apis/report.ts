@@ -34,6 +34,17 @@ export interface ReportPayload {
   reason: string
 }
 
-export const postReport = async (body: ReportPayload): Promise<void> => {
-  await adminClient.post('/admin/reports', body)
+export interface ReportResponse {
+  statusCode: number
+  message: string
+  data?: {
+    statusCode: number
+    statusCodeName: string
+    detailMessage: string
+  }
+}
+
+export const postReport = async (body: ReportPayload): Promise<ReportResponse> => {
+  const res = await adminClient.post<ReportResponse>('/reports', body)
+  return res.data
 }

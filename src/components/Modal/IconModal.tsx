@@ -8,7 +8,7 @@ interface IconModalProps {
   onClose: () => void
   icon: ReactNode
   title: string
-  description?: string
+  description?: ReactNode
   children: ReactNode
   className?: string
 }
@@ -77,9 +77,9 @@ const IconModal = ({
                     {title}
                   </h2>
                   {description && (
-                    <p className="text-fs12 sm:text-fs14 text-center text-gray-500">
+                    <div className="text-fs12 sm:text-fs14 text-center text-gray-500">
                       {description}
-                    </p>
+                    </div>
                   )}
                 </div>
                 <hr className="border-gray-100" />

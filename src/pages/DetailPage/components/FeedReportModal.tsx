@@ -33,28 +33,58 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
   const [reportTypeId, setReportTypeId] = useState<number | null>(null)
   const [reason, setReason] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [selectedId, setSelectedId] = useState<number | null>(null)
+  // const [selectedId, setSelectedId] = useState<number | null>(null)
 
   useEffect(() => {
     if (!isOpen) {
       setReportTypeId(null)
       setReason('')
+      setIsSubmitting(false)
     }
   }, [isOpen])
 
-  const { mutate } = useMutation<void, AxiosError<ReportErrorResponse>, ReportPayload>({
-    mutationFn: postReport,
-    onSuccess: () => {
-      showToast({ msg: '신고가 접수되었습니다.', type: 'success' })
-      onClose()
-    },
-    onError: error => {
-      const code = error.response?.data?.statusCode
-      if (code === 70007) {
-        showToast({ msg: '이미 신고한 게시글입니다.', type: 'error' })
-      } else {
-        showToast({ msg: '신고 처리 중 오류가 발생했습니다.', type: 'error' })
+  const { mutate } = useMutation({
+    mutationFn: (body: ReportPayload) => postReport(body),
+    onSuccess: res => {
+      // console.log('---------신고 응답:', res)
+      switch (res.statusCode) {
+        case 200:
+          showToast({ msg: '신고가 접수되었습니다.', type: 'success' })
+          onClose()
+          break
+        case 70007:
+          showToast({ msg: '이미 신고한 사용자의 게시글입니다.', type: 'error' })
+          onClose()
+          break
+        case 70006:
+          showToast({ msg: '신고하려는 게시글이 존재하지 않습니다.', type: 'error' })
+          onClose()
+          break
+        case 70004:
+          showToast({ msg: '신고 유형이 올바르지 않습니다. 다시 시도해주세요.', type: 'error' })
+          onClose()
+          break
+        case 70008:
+          showToast({
+            msg: '신고 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
+            type: 'error',
+          })
+          onClose()
+          break
+        default:
+          showToast({
+            msg: '신고 처리 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
+            type: 'error',
+          })
+          onClose()
+          break
       }
+      setIsSubmitting(false)
+    },
+    onError: (error: AxiosError<ReportErrorResponse>) => {
+      console.error('신고 실패 응답:', error.response?.data)
+      showToast({ msg: '신고 처리 중 오류가 발생했습니다.', type: 'error' })
+      setIsSubmitting(false)
     },
   })
 
@@ -74,7 +104,14 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
       onClose={onClose}
       icon={<CircleReportIcon className="h-6.5 w-6.5" />}
       title="신고하기"
-      description="신고 유형을 선택하고, 신고 사유를 작성해주세요."
+      description={
+        <div className="space-y-1">
+          <p>신고 유형을 선택하고, 신고 사유를 작성해주세요.</p>
+          <p className="text-fs13 text-gray-500">
+            ⚠ 이미 신고한 사용자의 다른 게시글은 신고하실 수 없습니다.
+          </p>
+        </div>
+      }
     >
       <div className="flex flex-col gap-2">
         <div>
@@ -82,14 +119,14 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
             <RadioButton
               key={option.id}
               label={option.label}
-              checked={selectedId === option.id}
-              onChange={() => setSelectedId(option.id)}
+              checked={reportTypeId === option.id}
+              onChange={() => setReportTypeId(option.id)}
             />
           ))}
         </div>
         <h4 className="text-fs14 sm:text-fs16">신고 사유 (필수)</h4>
         <textarea
-          className="text-fs12 rounded-custom-s w-full border border-gray-200 p-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
+          className="text-fs12 sm:text-fs14 rounded-custom-s w-full border border-gray-200 p-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
           rows={4}
           placeholder="신고 사유를 입력해주세요"
           value={reason}
