@@ -10,15 +10,15 @@ import { useState } from 'react'
 import ReportModal from './components/Modal/ReportModal'
 import { getStatusLabelAndClass } from './components/config'
 import { formatDataSize } from '../../utils/format'
+import Pagination from '../../components/Pagination/Pagination'
 
 const ReportHistoryPage = () => {
-  const {
-    data: reports = [],
-    isLoading,
-    isError,
-  } = useQuery<ReportHistoryItem[]>({
-    queryKey: ['myReportHistory'],
-    queryFn: getMyReportHistory,
+  const [page, setPage] = useState(1)
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['myReportHistory', page],
+    queryFn: () => getMyReportHistory(page - 1, 6),
+    placeholderData: previousData => previousData,
   })
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -30,7 +30,7 @@ const ReportHistoryPage = () => {
   }
   const handleCloseModal = () => setIsModalOpen(false)
 
-  if (isLoading || isError || reports.length === 0) {
+  if (isLoading || isError || !data || data.posts.length === 0) {
     let title = ''
     let subtitle: React.ReactNode = null
     let textColor = 'text-gray-500'
@@ -75,7 +75,7 @@ const ReportHistoryPage = () => {
         </div>
       </ListTile>
       <div className="flex flex-col gap-2 px-5 pb-4 sm:px-0">
-        {reports.map((item, i) => {
+        {data.posts.map((item, i) => {
           const { label, className } = getStatusLabelAndClass(item.status)
           return (
             <FadeInUpMotion key={item.transactionFeedId} custom={i} delayUnit={0.07} duration={0.3}>
@@ -100,6 +100,9 @@ const ReportHistoryPage = () => {
             </FadeInUpMotion>
           )
         })}
+      </div>
+      <div className="mt-3 flex justify-center pb-6">
+        <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
       </div>
       <ReportModal isOpen={isModalOpen} onClose={handleCloseModal} report={selectedReport!} />
     </div>
