@@ -49,6 +49,7 @@
   --color-pri-gradation-small: linear-gradient(0deg, #1c2c3a 0%, #183d45 69%, #154d50 100%);
   --color-coupon-gradation-mb: linear-gradient(0deg, #86cfcf 0%, #baf1f1 100%);
   --color-coupon-gradation-gb: linear-gradient(0deg, #4ea4a6 0%, #7bc8ca 100%);
+  --color-coupon-gradation-disabled: linear-gradient(0deg, #d4d4d8 0%, #f4f4f5 100%);
   --color-toss-gradation: linear-gradient(45deg, #447eff 0%, #825eff 100%);
 
   /* Effect 스타일 */
@@ -154,9 +155,9 @@
   }
 }
 
-html {
+/* html {
   scrollbar-gutter: stable;
-}
+} */
 
 body {
   font-family: var(--font-pretendard);

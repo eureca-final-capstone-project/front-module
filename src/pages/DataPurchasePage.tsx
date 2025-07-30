@@ -3,7 +3,7 @@ import DatchaCoin from '@/assets/icons/datcha-coin.svg?react'
 import DatchaCoinColor from '@/assets/icons/datcha-coin-color.svg?react'
 import { formatAmount, formatDataSize } from '../utils/format'
 import { getUserPayStatus } from '../apis/userInfo'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import PostCard from '../components/PostCard/PostCard'
 import { getTransactionFeedDetail, postPurchaseFeed } from '../apis/transactionFeedDetail'
 import { transformTransactionFeedToPostCard } from '../utils/postCardParse'
@@ -17,6 +17,8 @@ import { toast } from 'react-toastify'
 const DataPurchasePage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
+
+  const queryClient = useQueryClient()
 
   const { data } = useQuery({
     queryKey: ['transactionFeed', transactionFeedId],
@@ -32,6 +34,7 @@ const DataPurchasePage = () => {
   const purchaseMutation = useMutation({
     mutationFn: () => postPurchaseFeed(Number(transactionFeedId)),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['dataCoupons'] })
       toast('데이터 충전권이 발급되었습니다.', { type: 'success' })
       closeModal()
       navigate('/mypage/data-charge')

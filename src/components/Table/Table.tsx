@@ -6,6 +6,7 @@ interface TableProps<T> {
   data: T[]
   renderCell?: (key: keyof T, row: T) => ReactNode
   isClickable?: (row: T) => boolean
+  isArrow?: boolean
   onRowClick?: (row: T) => void
   renderDetailTable?: (row: T) => ReactNode
 }
@@ -15,6 +16,7 @@ const Table = <T,>({
   data,
   renderCell,
   isClickable,
+  isArrow = true,
   onRowClick,
   renderDetailTable,
 }: TableProps<T>) => {
@@ -68,7 +70,7 @@ const Table = <T,>({
                     onClick={() => clickable && handleRowClick(row, rowIndex)}
                   >
                     <td
-                      className={`py-4 pl-4 text-right ${clickable ? 'opacity-100' : 'opacity-0'}`}
+                      className={`py-4 pl-4 text-right ${clickable && isArrow ? 'opacity-100' : 'opacity-0'}`}
                     >
                       <ArrowBottomIcon
                         className={`w-3 text-gray-700 transition-transform duration-300 ease-in-out ${
@@ -79,7 +81,7 @@ const Table = <T,>({
                     {columns.map(col => (
                       <td
                         key={String(col.key)}
-                        className="max-w-47 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap"
+                        className={`${col.key === 'email' ? 'max-w-47' : 'max-w-130'} overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap`}
                         colSpan={col.key === 'email' ? 3 : 1}
                       >
                         {renderCell ? renderCell(col.key, row) : String(row[col.key])}
@@ -97,7 +99,7 @@ const Table = <T,>({
                               : 'max-h-0 opacity-0'
                           }`}
                         >
-                          {renderDetailTable?.(row)}
+                          {expandedRows.includes(rowIndex) && renderDetailTable?.(row)}
                         </div>
                       </td>
                     </tr>
