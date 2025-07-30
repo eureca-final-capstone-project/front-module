@@ -15,6 +15,7 @@ import { buttonOptions } from './components/config'
 import HeartIcon from '@/assets/icons/heart-bold.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
 import { useSearchParams } from 'react-router-dom'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 
 const FavoritesPage = () => {
   const deviceType = useDeviceType()
@@ -125,54 +126,61 @@ const FavoritesPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* 상단 */}
-      <FavoritesHeader
-        buttonOptions={buttonOptions.fav}
-        selectedType={selectedType}
-        onSelectType={handleSelectType}
-        onOpenDeleteModal={handleOpenModal}
-        onSelectAll={handleSelectAll}
-        allChecked={allChecked}
-      />
-      {/* 콘텐츠 */}
-      {isPending || isError || data?.posts.length === 0 ? (
-        renderStatusFallback()
-      ) : (
-        <div className={`grid gap-4 ${gridColsClass}`}>
-          {data.posts.map((post, index) => (
-            <React.Fragment key={post.transactionFeedId}>
-              <div className="flex items-start gap-2">
-                <CheckBox
-                  checked={isSelected(post.transactionFeedId)}
-                  onChange={() => toggleId(post.transactionFeedId)}
-                  type={deviceType === 'mobile' ? 'smallCheckBox' : 'default'}
-                />
-                <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
-                  <PostCard {...post} type="row" page="favorite" />
-                </div>
-              </div>
-              {index < data.posts.length - 1 && (
-                <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
-      {modalType && (
-        <BasicModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          modalType={modalType}
-          onClickLeft={closeModal}
-          onClickRight={handleConfirmDelete}
+    <>
+      {deviceType === 'mobile' ? <Breadcrumb current="관심 거래" /> : ''}
+      <div className="flex flex-col gap-4 sm:gap-5">
+        {/* 상단 */}
+        <FavoritesHeader
+          buttonOptions={buttonOptions.fav}
+          selectedType={selectedType}
+          onSelectType={handleSelectType}
+          onOpenDeleteModal={handleOpenModal}
+          onSelectAll={handleSelectAll}
+          allChecked={allChecked}
         />
-      )}
-      <div className="mt-3 flex justify-center pb-6">
-        <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
+        {/* 콘텐츠 */}
+        {isPending || isError || data?.posts.length === 0 ? (
+          renderStatusFallback()
+        ) : (
+          <div className={`grid gap-4 ${gridColsClass}`}>
+            {data.posts.map((post, index) => (
+              <React.Fragment key={post.transactionFeedId}>
+                <div className="flex items-start gap-2">
+                  <CheckBox
+                    checked={isSelected(post.transactionFeedId)}
+                    onChange={() => toggleId(post.transactionFeedId)}
+                    type={deviceType === 'mobile' ? 'smallCheckBox' : 'default'}
+                  />
+                  <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
+                    <PostCard {...post} type="row" page="favorite" />
+                  </div>
+                </div>
+                {index < data.posts.length - 1 && (
+                  <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+        {modalType && (
+          <BasicModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            modalType={modalType}
+            onClickLeft={closeModal}
+            onClickRight={handleConfirmDelete}
+          />
+        )}
+        <div className="mt-3 flex justify-center pb-6">
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 1}
+            onPageChange={setPage}
+          />
+        </div>
+        <div ref={bottomRef} />
       </div>
-      <div ref={bottomRef} />
-    </div>
+    </>
   )
 }
 

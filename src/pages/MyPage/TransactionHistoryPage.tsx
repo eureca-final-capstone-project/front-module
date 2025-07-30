@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import ListIcon from '@/assets/icons/list.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 const TransactionHistoryPage = () => {
   const deviceType = useDeviceType()
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
@@ -86,49 +87,56 @@ const TransactionHistoryPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      {/* 상단 */}
-      <TransactionHeader
-        buttonOptions={buttonOptions.trade}
-        selectedType={selectedType}
-        onSelectType={handleSelectType}
-        onOpenDeleteModal={handleOpenModal}
-        onSelectAll={() => {}}
-        allChecked={false}
-        hideActionButtons={true}
-      />
-      {/* 콘텐츠 */}
-      {isPending || isError || data?.posts.length === 0 ? (
-        renderStatusFallback()
-      ) : (
-        <div className={`grid gap-4 ${gridColsClass}`}>
-          {data.posts.map((post, index) => (
-            <React.Fragment key={post.transactionFeedId}>
-              <div className="flex items-start gap-2">
-                <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
-                  <PostCard {...post} type="row" page="tradehistory" />
-                </div>
-              </div>
-              {index < data.posts.length - 1 && (
-                <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
-      <div className="mt-3 flex justify-center pb-6">
-        <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
-      </div>
-      {modalType && (
-        <BasicModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          modalType={modalType}
-          onClickLeft={closeModal}
-          onClickRight={() => {}}
+    <>
+      {deviceType === 'mobile' ? <Breadcrumb current="거래 내역" /> : ''}
+      <div className="flex flex-col gap-4 sm:gap-5">
+        {/* 상단 */}
+        <TransactionHeader
+          buttonOptions={buttonOptions.trade}
+          selectedType={selectedType}
+          onSelectType={handleSelectType}
+          onOpenDeleteModal={handleOpenModal}
+          onSelectAll={() => {}}
+          allChecked={false}
+          hideActionButtons={true}
         />
-      )}
-    </div>
+        {/* 콘텐츠 */}
+        {isPending || isError || data?.posts.length === 0 ? (
+          renderStatusFallback()
+        ) : (
+          <div className={`grid gap-4 ${gridColsClass}`}>
+            {data.posts.map((post, index) => (
+              <React.Fragment key={post.transactionFeedId}>
+                <div className="flex items-start gap-2">
+                  <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
+                    <PostCard {...post} type="row" page="tradehistory" />
+                  </div>
+                </div>
+                {index < data.posts.length - 1 && (
+                  <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+        <div className="mt-3 flex justify-center pb-6">
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 1}
+            onPageChange={setPage}
+          />
+        </div>
+        {modalType && (
+          <BasicModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            modalType={modalType}
+            onClickLeft={closeModal}
+            onClickRight={() => {}}
+          />
+        )}
+      </div>
+    </>
   )
 }
 

@@ -38,3 +38,25 @@ export interface Report {
   transactionFeedId: number
   transactionFeedTitle: string
 }
+
+export type RestrictionStatus = 'PENDING' | 'COMPLETED' | 'REJECTED' | 'RESTRICT_EXPIRATION'
+
+export interface Restriction {
+  restrictionTargetId: number
+  userId: number
+  userEmail: string
+  reportType: string
+  restrictionContent: string
+  restrictionDuration: number
+  status: RestrictionStatus
+  expiresAt: string
+  restrictionStatus: boolean
+}
+
+export interface RestrictionReport {
+  reportId: number
+  reportType: string
+  content: string
+  reportedAt: string
+  status: ReportStatus
+}

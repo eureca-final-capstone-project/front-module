@@ -10,7 +10,7 @@ const ListTile = ({ children, type, className = '', onClick }: ListTileProps) =>
   const baseClass = `${fontSizeClass} items-center flex w-full justify-between rounded-md`
   const typeClass =
     type === 'title'
-      ? 'bg-background px-8 sm:px-5 py-0 '
+      ? 'bg-background px-7 py-0 '
       : 'cursor-pointer shadow-tile bg-gray-10 px-5 py-6'
 
   return (

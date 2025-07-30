@@ -10,15 +10,18 @@ import { useState } from 'react'
 import ReportModal from './components/Modal/ReportModal'
 import { getStatusLabelAndClass } from './components/config'
 import { formatDataSize } from '../../utils/format'
+import Pagination from '../../components/Pagination/Pagination'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 const ReportHistoryPage = () => {
-  const {
-    data: reports = [],
-    isLoading,
-    isError,
-  } = useQuery<ReportHistoryItem[]>({
-    queryKey: ['myReportHistory'],
-    queryFn: getMyReportHistory,
+  const [page, setPage] = useState(1)
+  const deviceType = useDeviceType()
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['myReportHistory', page],
+    queryFn: () => getMyReportHistory(page - 1, 6),
+    placeholderData: previousData => previousData,
   })
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -30,7 +33,7 @@ const ReportHistoryPage = () => {
   }
   const handleCloseModal = () => setIsModalOpen(false)
 
-  if (isLoading || isError || reports.length === 0) {
+  if (isLoading || isError || !data || data.posts.length === 0) {
     let title = ''
     let subtitle: React.ReactNode = null
     let textColor = 'text-gray-500'
@@ -65,44 +68,62 @@ const ReportHistoryPage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-5">
-      <ListTile type="title">
-        <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
-          <p className="text-left">거래글 명</p>
-          <p className="hidden text-center sm:block">신고 유형</p>
-          <p className="hidden text-center sm:block">신고일</p>
-          <p className="text-right">처리 여부</p>
+    <>
+      {deviceType === 'mobile' ? <Breadcrumb current="신고 내역" /> : ''}
+
+      <div className="flex flex-col gap-5">
+        <ListTile type="title">
+          <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
+            <p className="text-left">거래글 명</p>
+            <p className="hidden text-center sm:block">신고 유형</p>
+            <p className="hidden text-center sm:block">신고일</p>
+            <p className="text-right">처리 여부</p>
+          </div>
+        </ListTile>
+        <div className="flex flex-col gap-2 px-4 sm:px-0">
+          {data.posts.map((item, i) => {
+            const { label, className } = getStatusLabelAndClass(item.status)
+            return (
+              <FadeInUpMotion
+                key={item.transactionFeedId}
+                custom={i}
+                delayUnit={0.07}
+                duration={0.3}
+              >
+                <ListTile onClick={() => handleOpenModal(item)}>
+                  <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
+                    <div className="flex gap-1">
+                      <Badge
+                        size="small"
+                        variant="default"
+                        label={formatDataSize(item.salesDataAmount)}
+                        className="bg-pri-500"
+                      />
+                      <p className="truncate text-left">{item.title}</p>
+                    </div>
+                    <p className="hidden truncate text-center sm:block">{item.reportType}</p>
+                    <p className="hidden text-center sm:block">
+                      {formatCompactDate(item.createdAt)}
+                    </p>
+                    <div className="flex justify-end">
+                      <Badge size="small" variant="default" label={label} className={className} />
+                    </div>
+                  </div>
+                </ListTile>
+              </FadeInUpMotion>
+            )
+          })}
         </div>
-      </ListTile>
-      <div className="flex flex-col gap-2 px-5 pb-4 sm:px-0">
-        {reports.map((item, i) => {
-          const { label, className } = getStatusLabelAndClass(item.status)
-          return (
-            <FadeInUpMotion key={item.transactionFeedId} custom={i} delayUnit={0.07} duration={0.3}>
-              <ListTile onClick={() => handleOpenModal(item)}>
-                <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
-                  <div className="flex gap-1">
-                    <Badge
-                      size="small"
-                      variant="default"
-                      label={formatDataSize(item.salesDataAmount)}
-                      className="bg-pri-500"
-                    />
-                    <p className="truncate text-left">{item.title}</p>
-                  </div>
-                  <p className="hidden truncate text-center sm:block">{item.reportType}</p>
-                  <p className="hidden text-center sm:block">{formatCompactDate(item.createdAt)}</p>
-                  <div className="flex justify-end">
-                    <Badge size="small" variant="default" label={label} className={className} />
-                  </div>
-                </div>
-              </ListTile>
-            </FadeInUpMotion>
-          )
-        })}
+        <div className="mt-3 flex justify-center pb-6">
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 1}
+            onPageChange={setPage}
+          />
+        </div>
+        <ReportModal isOpen={isModalOpen} onClose={handleCloseModal} report={selectedReport!} />
       </div>
-      <ReportModal isOpen={isModalOpen} onClose={handleCloseModal} report={selectedReport!} />
-    </div>
+    </>
   )
 }
 
