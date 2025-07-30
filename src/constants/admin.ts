@@ -13,7 +13,7 @@ export const adminSidebarMenu = [
 
 export const userColumns: { header: string; key: keyof User }[] = [
   { header: '이메일', key: 'email' },
-  { header: '닉네임', key: 'nickname' },
+  { header: '닉네임', key: 'nickName' },
   { header: '통신사', key: 'telecomCompany' },
   { header: '휴대폰 번호', key: 'phoneNumber' },
   { header: '가입일', key: 'createdAt' },
@@ -30,12 +30,12 @@ type StatusStyle =
 
 export const STATUS_STYLE: Record<string, StatusStyle> = {
   활성: { variant: 'default' },
-  비활성: { variant: 'secondary', background: 'gray50' },
+  차단: { variant: 'secondary', background: 'gray50' },
   검수대기: { variant: 'secondary', background: 'gray200' },
-  AI승인: { variant: 'outline', status: 'success' },
-  AI거절: { variant: 'outline', status: 'error' },
-  관리자승인: { className: 'bg-success' },
-  관리자거절: { className: 'bg-error' },
+  'AI 승인': { variant: 'outline', status: 'success' },
+  'AI 거절': { variant: 'outline', status: 'error' },
+  '관리자 승인': { className: 'bg-success' },
+  '관리자 거절': { className: 'bg-error' },
   '제재 완료': { variant: 'default' },
   '제재 대기 중': { variant: 'secondary', background: 'gray200' },
 }

@@ -7,7 +7,7 @@ interface TableProps<T> {
   renderCell?: (key: keyof T, row: T) => ReactNode
   isClickable?: (row: T) => boolean
   onRowClick?: (row: T) => void
-  renderDetailTable?: ReactNode
+  renderDetailTable?: (row: T) => ReactNode
 }
 
 const Table = <T,>({
@@ -97,7 +97,7 @@ const Table = <T,>({
                               : 'max-h-0 opacity-0'
                           }`}
                         >
-                          {renderDetailTable}
+                          {renderDetailTable?.(row)}
                         </div>
                       </td>
                     </tr>

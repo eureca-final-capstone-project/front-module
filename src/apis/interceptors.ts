@@ -37,7 +37,11 @@ export const attachRequestInterceptor = (axiosInstance: AxiosInstance, tokenKey:
 let isRefreshing = false
 let refreshPromise: Promise<string> | null = null
 
-export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey: string) => {
+export const attachResponseInterceptor = (
+  axiosInstance: AxiosInstance,
+  tokenKey: string,
+  isAdmin = false
+) => {
   axiosInstance.interceptors.response.use(
     async response => {
       // 서버 응답 데이터에서 실제 데이터 부분 추출
@@ -50,7 +54,8 @@ export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey
 
         // 이미 재시도 했으면 무한 루프 방지 위해 로그인 페이지로 이동
         if (originalRequest._retry) {
-          window.location.href = '/login'
+          console.log('이미 갱신 시도 했음!')
+          window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(new Error('토큰 갱신에 실패했습니다.'))
         }
 
@@ -67,6 +72,7 @@ export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey
             .then(res => {
               // 갱신 성공 시 새 토큰 저장 및 반환
               if (res.data.statusCode === 200) {
+                console.log('토큰 발급 성공!')
                 const newAccessToken = res.data.data.accessToken
                 sessionStorage.setItem(tokenKey, newAccessToken)
 
@@ -84,6 +90,7 @@ export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey
         try {
           // 토큰 갱신 Promise 대기
           const newAccessToken = await refreshPromise
+          console.log('이전 요청 토큰 갱신 발급까지 대기 중...')
 
           // 원래 요청에 새로운 토큰 헤더 설정
           originalRequest.headers = {
@@ -95,7 +102,7 @@ export const attachResponseInterceptor = (axiosInstance: AxiosInstance, tokenKey
           return axiosInstance(originalRequest)
         } catch (error) {
           // 토큰 갱신 실패 시 로그인 페이지로 이동 유도
-          window.location.href = '/login'
+          window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(error)
         }
       }
