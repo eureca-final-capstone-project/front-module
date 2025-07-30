@@ -99,7 +99,7 @@ const Table = <T,>({
                               : 'max-h-0 opacity-0'
                           }`}
                         >
-                          {renderDetailTable?.(row)}
+                          {expandedRows.includes(rowIndex) && renderDetailTable?.(row)}
                         </div>
                       </td>
                     </tr>
