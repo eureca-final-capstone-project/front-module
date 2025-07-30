@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import React from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useDeviceType } from '../../hooks/useDeviceType'
@@ -14,6 +14,7 @@ import PostCard from '../../components/PostCard/PostCard'
 import { buttonOptions } from './components/config'
 import HeartIcon from '@/assets/icons/heart-bold.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
+import { useSearchParams } from 'react-router-dom'
 
 const FavoritesPage = () => {
   const deviceType = useDeviceType()
@@ -22,6 +23,14 @@ const FavoritesPage = () => {
   const [page, setPage] = useState(1)
   const [selectedType, setSelectedType] = useState<'all' | 'normal' | 'bid'>('all')
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
+  const bottomRef = useRef<HTMLDivElement>(null)
+  const [searchParams] = useSearchParams()
+  useEffect(() => {
+    const scroll = searchParams.get('scroll')
+    if (scroll === 'bottom') {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [])
 
   useEffect(() => {
     setPage(1)
@@ -162,6 +171,7 @@ const FavoritesPage = () => {
       <div className="mt-3 flex justify-center pb-6">
         <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
       </div>
+      <div ref={bottomRef} />
     </div>
   )
 }
