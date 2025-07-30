@@ -9,6 +9,7 @@ import ReportIcon from '@/assets/icons/report-bold.svg?react'
 import { useState } from 'react'
 import ReportModal from './components/Modal/ReportModal'
 import { getStatusLabelAndClass } from './components/config'
+import { formatDataSize } from '../../utils/format'
 
 const ReportHistoryPage = () => {
   const {
@@ -80,7 +81,15 @@ const ReportHistoryPage = () => {
             <FadeInUpMotion key={item.transactionFeedId} custom={i} delayUnit={0.07} duration={0.3}>
               <ListTile onClick={() => handleOpenModal(item)}>
                 <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
-                  <p className="truncate text-left">{item.title}</p>
+                  <div className="flex gap-1">
+                    <Badge
+                      size="small"
+                      variant="default"
+                      label={formatDataSize(item.salesDataAmount)}
+                      className="bg-pri-500"
+                    />
+                    <p className="truncate text-left">{item.title}</p>
+                  </div>
                   <p className="hidden truncate text-center sm:block">{item.reportType}</p>
                   <p className="hidden text-center sm:block">{formatCompactDate(item.createdAt)}</p>
                   <div className="flex justify-end">

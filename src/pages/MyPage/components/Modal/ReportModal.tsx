@@ -57,7 +57,7 @@ const ReportModal = ({ isOpen, onClose, report }: ReportModalProps) => {
               <CircleReportIcon className="h-6.5 w-6.5" />
             </div>
             <div className="flex w-82 flex-col overflow-hidden rounded-md sm:w-[31rem]">
-              <div className="bg-gray-10 flex flex-col gap-5 px-4 py-9">
+              <div className="bg-gray-10 flex flex-col gap-5 px-4 pt-9 pb-5">
                 <div className="flex flex-col gap-[0.5rem]">
                   <div className="-mb-2 flex justify-end">
                     <CloseIcon
