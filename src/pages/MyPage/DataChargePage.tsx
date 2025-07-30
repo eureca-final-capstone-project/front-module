@@ -5,6 +5,8 @@ import { DataCoupon, getDataCoupons } from '../../apis/dataVoucher'
 import Button from '../../components/Button/Button'
 import { useNavigate } from 'react-router-dom'
 import DataChargeIcon from '@/assets/icons/data-charge.svg?react'
+import { useState } from 'react'
+import Pagination from '../../components/Pagination/Pagination'
 
 const sortByStatusAndCreatedAt = (a: DataCoupon, b: DataCoupon) => {
   const getPriority = (statusCode: string) => {
@@ -24,7 +26,7 @@ const sortByStatusAndCreatedAt = (a: DataCoupon, b: DataCoupon) => {
   return b.userDataCouponId - a.userDataCouponId
 }
 
-const useDataCoupons = (page = 0, size = 20) => {
+const useDataCoupons = (page = 0, size = 6) => {
   return useQuery({
     queryKey: ['dataCoupons', page, size],
     queryFn: () => getDataCoupons(page, size),
@@ -36,7 +38,8 @@ const DataChargePage = () => {
   const deviceType = useDeviceType()
   const navigate = useNavigate()
 
-  const { data, isLoading, isError } = useDataCoupons()
+  const [page, setPage] = useState(1)
+  const { data, isLoading, isError } = useDataCoupons(page - 1, 6)
   const coupons = (data?.content ?? []).slice().sort(sortByStatusAndCreatedAt)
 
   const gridCols = {
@@ -81,10 +84,17 @@ const DataChargePage = () => {
 
   return (
     <div>
-      <div className={`grid ${gridCols} gap-5 px-4 sm:p-0`}>
+      <div className={`grid ${gridCols} mb-5 gap-5 px-4 pb-4 sm:p-0`}>
         {coupons.map(coupon => (
           <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
         ))}
+      </div>
+      <div className="mt-3 flex justify-center pb-6">
+        <Pagination
+          currentPage={(data?.number ?? 0) + 1}
+          totalPages={data?.totalPages ?? 1}
+          onPageChange={setPage}
+        />
       </div>
     </div>
   )

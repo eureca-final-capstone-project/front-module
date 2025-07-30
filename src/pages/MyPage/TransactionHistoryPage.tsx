@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDeviceType } from '../../hooks/useDeviceType'
-// import { useToast } from '../../hooks/useToast'
 import useModal from '../../hooks/useModal'
 import { getTransactionHistory } from '../../apis/userInfo'
 import TransactionHeader from './components/ButtonHeader/ButtonHeader'
@@ -14,19 +13,30 @@ import { buttonOptions } from './components/config'
 import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import ListIcon from '@/assets/icons/list.svg?react'
+import Pagination from '../../components/Pagination/Pagination'
 const TransactionHistoryPage = () => {
   const deviceType = useDeviceType()
-  // const { showToast } = useToast()
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
   const navigate = useNavigate()
-
+  const [page, setPage] = useState(1)
   const [selectedType, setSelectedType] = useState<'ALL' | 'PURCHASE' | 'SALE'>('ALL')
 
+  useEffect(() => {
+    setPage(1)
+  }, [selectedType])
+
   const { data, isPending, isError } = useQuery({
-    queryKey: ['transactionHistory', selectedType],
+    queryKey: ['transactionHistory', selectedType, page],
     queryFn: async () => {
-      const res = await getTransactionHistory({ type: selectedType })
-      return res.content.map(item => transformTransactionPostCard(item, 'row'))
+      const res = await getTransactionHistory({
+        type: selectedType,
+        page: page - 1,
+        size: 4,
+      })
+      return {
+        posts: res.content.map(item => transformTransactionPostCard(item, 'row')),
+        totalPages: res.totalPages,
+      }
     },
     placeholderData: previousData => previousData,
     retry: 1,
@@ -88,24 +98,27 @@ const TransactionHistoryPage = () => {
         hideActionButtons={true}
       />
       {/* 콘텐츠 */}
-      {isPending || isError || data?.length === 0 ? (
+      {isPending || isError || data?.posts.length === 0 ? (
         renderStatusFallback()
       ) : (
         <div className={`grid gap-4 ${gridColsClass}`}>
-          {data.map((post, index) => (
+          {data.posts.map((post, index) => (
             <React.Fragment key={post.transactionFeedId}>
               <div className="flex items-start gap-2">
                 <div className="sm:bg-gray-10 sm:shadow-card-shadow sm:rounded-custom-m h-full min-w-0 flex-1 sm:block sm:p-3 lg:p-5">
                   <PostCard {...post} type="row" page="tradehistory" />
                 </div>
               </div>
-              {index < data.length - 1 && (
+              {index < data.posts.length - 1 && (
                 <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
               )}
             </React.Fragment>
           ))}
         </div>
       )}
+      <div className="mt-3 flex justify-center pb-6">
+        <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
+      </div>
       {modalType && (
         <BasicModal
           isOpen={isModalOpen}

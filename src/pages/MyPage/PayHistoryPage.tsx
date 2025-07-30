@@ -10,6 +10,7 @@ import ReceiptModal, { ReceiptProps } from '../../components/ReceiptModal/Receip
 import Button from '../../components/Button/Button'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin-bold.svg?react'
 import { useNavigate } from 'react-router-dom'
+import Pagination from '../../components/Pagination/Pagination'
 
 const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
   if (type === '구매' || type === '판매') {
@@ -22,6 +23,7 @@ const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
 }
 
 const PayHistoryPage = () => {
+  const [page, setPage] = useState(1)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const navigate = useNavigate()
   const { data: detail, isSuccess: isDetailSuccess } = useQuery({
@@ -56,14 +58,12 @@ const PayHistoryPage = () => {
     return null
   }
 
-  const {
-    data: payHistory = [],
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ['payHistory'],
-    queryFn: () => getPayHistory(0, 20),
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['payHistory', page],
+    queryFn: () => getPayHistory(page - 1, 6),
+    placeholderData: previousData => previousData,
   })
+
   const getFormattedAmount = (type: '충전' | '환전' | '구매' | '판매', amount: number) => {
     const isIncome = type === '판매' || type === '충전'
     const sign = isIncome ? '+' : '-'
@@ -116,7 +116,7 @@ const PayHistoryPage = () => {
     )
   }
 
-  if (isLoading || isError || payHistory.length === 0) return renderStatusFallback()
+  if (isLoading || isError || !data || data.posts.length === 0) return renderStatusFallback()
 
   return (
     <div className="flex flex-col gap-5">
@@ -124,8 +124,8 @@ const PayHistoryPage = () => {
         <p>사용 유형</p>
         <p>페이 변동</p>
       </ListTile>
-      <div className="flex flex-col gap-2 px-5 sm:px-0">
-        {payHistory.map((item, i) => {
+      <div className="flex flex-col gap-2 px-5 pb-4 sm:px-0">
+        {data.posts.map((item, i) => {
           const { sign, text, colorClass } = getFormattedAmount(item.changeType, item.changePay)
           const labelText =
             item.changeType === '구매'
@@ -154,10 +154,14 @@ const PayHistoryPage = () => {
             </FadeInUpMotion>
           )
         })}
+
+        {selectedId && isDetailSuccess && detail && (
+          <ReceiptModal {...parseToReceipt(detail)!} onClose={() => setSelectedId(null)} />
+        )}
       </div>
-      {selectedId && isDetailSuccess && detail && (
-        <ReceiptModal {...parseToReceipt(detail)!} onClose={() => setSelectedId(null)} />
-      )}
+      <div className="mt-3 flex justify-center pb-6">
+        <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
+      </div>
     </div>
   )
 }

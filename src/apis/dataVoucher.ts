@@ -28,13 +28,13 @@ export interface DataCouponResponse {
 
 export const getDataCoupons = async (
   page: number = 0,
-  size: number = 20
+  size: number = 6
 ): Promise<DataCouponResponse> => {
   const response = await client.get('/data-coupon', {
     params: {
       page,
       size,
-      sort: 'expiresAt,ASC&sort=dataAmount,DESC',
+      sort: 'sort=status.code,ASC&sort=expiresAt,ASC&sort=dataAmount,DESC',
     },
   })
   return response.data.data

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useDeviceType } from '../../hooks/useDeviceType'
@@ -13,27 +13,35 @@ import FavoritesHeader from './components/ButtonHeader/ButtonHeader'
 import PostCard from '../../components/PostCard/PostCard'
 import { buttonOptions } from './components/config'
 import HeartIcon from '@/assets/icons/heart-bold.svg?react'
+import Pagination from '../../components/Pagination/Pagination'
 
 const FavoritesPage = () => {
   const deviceType = useDeviceType()
   const { showToast } = useToast()
   const queryClient = useQueryClient()
-
+  const [page, setPage] = useState(1)
   const [selectedType, setSelectedType] = useState<'all' | 'normal' | 'bid'>('all')
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
 
+  useEffect(() => {
+    setPage(1)
+  }, [selectedType])
+
   const { data, isPending, isError } = useQuery({
-    queryKey: ['wishList', selectedType],
+    queryKey: ['wishList', selectedType, page],
     queryFn: async () => {
       const filterParam = mapFilterToApiParam(selectedType)
-      const res = await getWishList({ filter: filterParam, page: 0, size: 20 })
-      return res.data.content.map((item: WishPost) => transformPostCard(item, 'row'))
+      const res = await getWishList({ filter: filterParam, page: page - 1, size: 4 })
+      return {
+        posts: res.data.content.map((item: WishPost) => transformPostCard(item, 'row')),
+        totalPages: res.data.totalPages,
+      }
     },
     placeholderData: previousData => previousData,
     retry: 1,
   })
 
-  const postIds = data?.map(post => post.transactionFeedId) || []
+  const postIds = data?.posts.map(post => post.transactionFeedId) || []
   const { selectedIds, toggleId, selectAll, clearAll, isSelected } = useSelect(postIds)
   const allChecked = postIds.length > 0 && postIds.every(id => selectedIds.includes(id))
   const gridColsClass =
@@ -119,11 +127,11 @@ const FavoritesPage = () => {
         allChecked={allChecked}
       />
       {/* 콘텐츠 */}
-      {isPending || isError || data?.length === 0 ? (
+      {isPending || isError || data?.posts.length === 0 ? (
         renderStatusFallback()
       ) : (
         <div className={`grid gap-4 ${gridColsClass}`}>
-          {data.map((post, index) => (
+          {data.posts.map((post, index) => (
             <React.Fragment key={post.transactionFeedId}>
               <div className="flex items-start gap-2">
                 <CheckBox
@@ -135,7 +143,7 @@ const FavoritesPage = () => {
                   <PostCard {...post} type="row" page="favorite" />
                 </div>
               </div>
-              {index < data.length - 1 && (
+              {index < data.posts.length - 1 && (
                 <hr className="border-0.5 block border-t border-gray-200 sm:hidden" />
               )}
             </React.Fragment>
@@ -151,6 +159,9 @@ const FavoritesPage = () => {
           onClickRight={handleConfirmDelete}
         />
       )}
+      <div className="mt-3 flex justify-center pb-6">
+        <Pagination currentPage={page} totalPages={data?.totalPages ?? 1} onPageChange={setPage} />
+      </div>
     </div>
   )
 }

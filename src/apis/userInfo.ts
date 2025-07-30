@@ -129,14 +129,21 @@ export interface PayHistoryResponse {
   message: string
   data: PayHistoryPageData
 }
-export const getPayHistory = async (page = 0, size = 20): Promise<PayHistoryItem[]> => {
+export const getPayHistory = async (
+  page = 0,
+  size = 20
+): Promise<{ posts: PayHistoryItem[]; totalPages: number }> => {
   const res = await client.get<PayHistoryResponse>('/pay-history', {
     params: {
-      'pageable.page': page,
-      'pageable.size': size,
+      page,
+      size,
     },
   })
-  return res.data.data.content
+
+  return {
+    posts: res.data.data.content,
+    totalPages: res.data.data.totalPages,
+  }
 }
 export interface PayHistoryDetailResponse {
   statusCode: number
