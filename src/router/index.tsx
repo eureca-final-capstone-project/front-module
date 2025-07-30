@@ -29,6 +29,7 @@ import AdminLoginPage from '../pages/AdminPage/AdminLoginPage'
 import RefundPage from '../pages/RefundPage'
 import ReportHistory from '../pages/AdminPage/ReportHistory'
 import RestrictionHistory from '../pages/AdminPage/RestrictionHistory'
+import ReportDetailPage from '../pages/AdminPage/ReportDetailPage'
 
 export const router = createBrowserRouter([
   {
@@ -148,6 +149,10 @@ export const router = createBrowserRouter([
       {
         path: '/admin/restrictions',
         element: <RestrictionHistory />,
+      },
+      {
+        path: '/admin/reports/:reportId',
+        element: <ReportDetailPage />,
       },
     ],
   },

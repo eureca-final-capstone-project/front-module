@@ -109,7 +109,7 @@ const ReportHistroy = () => {
             renderCell={renderReportCell}
             isArrow={false}
             isClickable={() => true}
-            onRowClick={row => navigate(`/report/${row.reportHistoryId}`)}
+            onRowClick={row => navigate(`/admin/reports/${row.reportHistoryId}`)}
           />
         </div>
       </section>
