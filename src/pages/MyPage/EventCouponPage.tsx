@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import EventCouponIcon from '@/assets/icons/event-coupon.svg?react'
 import { useState } from 'react'
 import Pagination from '../../components/Pagination/Pagination'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 
 const EventCouponPage = () => {
   const deviceType = useDeviceType()
@@ -59,6 +60,8 @@ const EventCouponPage = () => {
 
   return (
     <div className="p-4 sm:p-0">
+      {deviceType === 'mobile' ? <Breadcrumb current="이벤트 쿠폰함" /> : ''}
+
       <div className={`grid gap-4 ${gridColsClass}`}>
         {pagedCoupons.map(eventCoupon => (
           <EventCoupon
@@ -68,7 +71,7 @@ const EventCouponPage = () => {
           />
         ))}
       </div>
-      <div className="mt-8 flex justify-center pb-6">
+      <div className="mt-3 flex justify-center pb-6">
         <Pagination
           currentPage={page}
           totalPages={Math.ceil(eventCoupons.length / 4)}
