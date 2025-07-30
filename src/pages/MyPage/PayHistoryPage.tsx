@@ -78,7 +78,7 @@ const PayHistoryPage = () => {
         <p>사용 유형</p>
         <p>페이 변동</p>
       </ListTile>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 px-5 sm:px-0">
         {payHistory.map((item, i) => {
           const { sign, text, colorClass } = getFormattedAmount(item.changeType, item.changePay)
           const labelText =
