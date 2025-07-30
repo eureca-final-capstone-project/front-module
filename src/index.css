@@ -154,6 +154,10 @@
   }
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: var(--font-pretendard);
   color: var(--color-gray-900);
@@ -257,4 +261,17 @@ input[type='number'] {
 .scrollbar-hide {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+#nprogress .bar {
+  background: var(--color-pri-500) !important;
+  height: 4px !important;
+}
+
+#nprogress .spinner {
+  display: none !important;
+}
+
+#nprogress .spinner-icon {
+  display: none !important;
 }

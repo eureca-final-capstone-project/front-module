@@ -1,22 +1,36 @@
 import Container from '../Container/Container'
 import LogoPrimary from '@/assets/images/logo-primary.svg'
 import SearchBar from '../SearchBar/SearchBar'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import HeaderNav from './HeaderNav'
 
 const Header = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const deviceType = useDeviceType()
 
   const [showMobileSearch, setShowMobileSearch] = useState(false)
+  const [currentKeyword, setCurrentKeyword] = useState('')
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    setCurrentKeyword(params.get('keyword') || '')
+  }, [location.search])
 
   const handleSearch = (keyword: string) => {
-    if (!keyword.trim()) return
+    const currentParams = new URLSearchParams(location.search)
+
+    if (!keyword.trim()) {
+      currentParams.delete('keyword')
+    } else {
+      currentParams.set('keyword', keyword.trim())
+    }
+
     setShowMobileSearch(false)
-    navigate(`/posts?keyword=${encodeURIComponent(keyword.trim())}`)
+    navigate(`/posts?${currentParams.toString()}`)
   }
 
   return (
@@ -31,7 +45,9 @@ const Header = () => {
         >
           <img src={LogoPrimary} alt="로고" className="h-full" />
         </div>
-        {deviceType !== 'mobile' && <SearchBar onSubmit={handleSearch} className="max-w-171" />}
+        {deviceType !== 'mobile' && (
+          <SearchBar onSubmit={handleSearch} defaultValue={currentKeyword} className="max-w-171" />
+        )}
         <HeaderNav deviceType={deviceType} setShowMobileSearch={setShowMobileSearch} />
 
         {/* 모바일일 때, 아래로 내려오는 검색바 */}
@@ -50,7 +66,7 @@ const Header = () => {
                   transition={{ duration: 0.2, ease: 'easeInOut' }}
                   className="absolute top-16 right-0 left-0 z-1 p-4"
                 >
-                  <SearchBar onSubmit={handleSearch} />
+                  <SearchBar onSubmit={handleSearch} defaultValue={currentKeyword} />
                 </motion.div>
               </>
             )}

@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react'
 import DropDown from '../../../components/DropDown/DropDown'
 import CheckBox from '../../../components/CheckBox/CheckBox'
 import FilterIcon from '@/assets/icons/filter.svg?react'
 import Button from '../../../components/Button/Button'
 import { getRangeErrorMessage } from '../../../utils/validation'
 import RangeInput from './RangeInput'
-
 import {
   TELECOMCOMPANY_OPTIONS,
   SALES_TYPE_OPTIONS,
@@ -13,53 +11,34 @@ import {
   SALES_DATA_AMOUNT_OPTIONS,
   PRICE_OPTIONS,
 } from '../../../constants/filterOptions'
+import { Statuses } from '../../../apis/transactionFeed'
+import { useState } from 'react'
 
 type RangeValue = { min: string; max: string }
 
-type FilterState = {
-  telecomCompanyIds: number[]
-  salesTypeIds: number[]
-  statuses: string[]
+export type FilterState = {
+  telecomCompanyIds: (string | number)[]
+  salesTypeIds: (string | number)[]
+  statuses: Statuses[]
   selectedDataRange: number | null
   selectedPriceRange: number | null
-  customDataRange: RangeValue
-  customPriceRange: RangeValue
   appliedDataRange: RangeValue
   appliedPriceRange: RangeValue
 }
 
-const initialFilterState: FilterState = {
-  telecomCompanyIds: [],
-  salesTypeIds: [],
-  statuses: [],
-  selectedDataRange: null,
-  selectedPriceRange: null,
-  customDataRange: { min: '', max: '' },
-  customPriceRange: { min: '', max: '' },
-  appliedDataRange: { min: '', max: '' },
-  appliedPriceRange: { min: '', max: '' },
+interface FilterBarProps {
+  filterState: FilterState
+  onFilterChange: (updated: Partial<FilterState>) => void
+  onReset: () => void
 }
 
-const FilterBar = () => {
-  const [filterState, setFilterState] = useState<FilterState>(initialFilterState)
-
-  const updateFilter = <K extends keyof FilterState>(
-    key: K,
-    value: FilterState[K] | ((prev: FilterState[K]) => FilterState[K])
-  ) => {
-    setFilterState(prev => ({
-      ...prev,
-      [key]:
-        typeof value === 'function'
-          ? (value as (v: FilterState[K]) => FilterState[K])(prev[key])
-          : value,
-    }))
-  }
-
-  const resetFilters = () => {
-    setFilterState(initialFilterState)
-    console.log('🔄 필터 초기화됨')
-  }
+const FilterBar = ({ filterState, onFilterChange, onReset }: FilterBarProps) => {
+  const [tempCustomDataRange, setTempCustomDataRange] = useState<RangeValue>(
+    filterState.appliedDataRange
+  )
+  const [tempCustomPriceRange, setTempCustomPriceRange] = useState<RangeValue>(
+    filterState.appliedPriceRange
+  )
 
   const getColorClass = (label: string) => {
     if (label === 'SKT') return 'text-skt'
@@ -69,13 +48,13 @@ const FilterBar = () => {
   }
 
   const dataRangeErrorMessage = getRangeErrorMessage(
-    filterState.customDataRange.min,
-    filterState.customDataRange.max,
+    tempCustomDataRange.min,
+    tempCustomDataRange.max,
     '데이터'
   )
   const priceRangeErrorMessage = getRangeErrorMessage(
-    filterState.customPriceRange.min,
-    filterState.customPriceRange.max,
+    tempCustomPriceRange.min,
+    tempCustomPriceRange.max,
     '금액'
   )
 
@@ -84,57 +63,35 @@ const FilterBar = () => {
 
   const handleSelectDataRange = (index: number) => {
     const selected = SALES_DATA_AMOUNT_OPTIONS[index]
-    updateFilter('selectedDataRange', index)
-    updateFilter('customDataRange', {
+    const newAppliedRange = {
       min: selected.minDataAmount.toString(),
       max: selected.maxDataAmount.toString(),
+    }
+    onFilterChange({
+      selectedDataRange: index,
+      appliedDataRange: newAppliedRange,
     })
+    setTempCustomDataRange(newAppliedRange)
   }
 
   const handleSelectPriceRange = (index: number) => {
     const selected = PRICE_OPTIONS[index]
-    updateFilter('selectedPriceRange', index)
-    updateFilter('customPriceRange', {
+    const newAppliedRange = {
       min: selected.minPrice.toString(),
       max: selected.maxPrice.toString(),
-    })
-  }
-
-  // 🔹 4. 쿼리 생성 로직
-  useEffect(() => {
-    const selectedData =
-      filterState.selectedDataRange !== null
-        ? SALES_DATA_AMOUNT_OPTIONS[filterState.selectedDataRange]
-        : null
-    const selectedPrice =
-      filterState.selectedPriceRange !== null ? PRICE_OPTIONS[filterState.selectedPriceRange] : null
-
-    const query = {
-      telecomCompanyIds: filterState.telecomCompanyIds,
-      salesTypeIds: filterState.salesTypeIds,
-      statuses: filterState.statuses,
-      minDataAmount: selectedData
-        ? selectedData.minDataAmount
-        : Number(filterState.appliedDataRange.min) || null,
-      maxDataAmount: selectedData
-        ? selectedData.maxDataAmount
-        : Number(filterState.appliedDataRange.max) || null,
-      minPrice: selectedPrice
-        ? selectedPrice.minPrice
-        : Number(filterState.appliedPriceRange.min) || null,
-      maxPrice: selectedPrice
-        ? selectedPrice.maxPrice
-        : Number(filterState.appliedPriceRange.max) || null,
     }
-
-    console.log('최종 선택값:', query)
-  }, [filterState])
+    onFilterChange({
+      selectedPriceRange: index,
+      appliedPriceRange: newAppliedRange,
+    })
+    setTempCustomPriceRange(newAppliedRange)
+  }
 
   const renderFilterSectionMulti = <T,>(
     title: string,
     options: { id?: T; value?: T; label: string }[],
     selected: T[],
-    setSelected: (list: T[]) => void,
+    key: keyof FilterState,
     getClass: (label: string) => string = () => 'text-gray-800',
     showDivider = true,
     defaultOpen = true
@@ -157,12 +114,17 @@ const FilterBar = () => {
               const newList = checked
                 ? selected.filter(item => item !== value)
                 : [...selected, value]
-              setSelected(newList)
+
+              onFilterChange({ [key]: newList } as Partial<FilterState>)
             }
 
             return (
-              <div key={option.label} className="flex items-center gap-2 p-2">
-                <CheckBox checked={checked} onChange={handleClick} />
+              <div
+                key={option.label}
+                className="flex cursor-pointer items-center gap-2 p-2"
+                onClick={handleClick}
+              >
+                <CheckBox checked={checked} onChange={() => {}} />
                 <span className={getClass(option.label)}>{option.label}</span>
               </div>
             )
@@ -196,8 +158,12 @@ const FilterBar = () => {
             const checked = selected === option.value
             const handleClick = () => setSelected(option.value)
             return (
-              <div key={option.label} className="flex items-center gap-2 p-2">
-                <CheckBox checked={checked} onChange={handleClick} />
+              <div
+                key={option.label}
+                className="flex cursor-pointer items-center gap-2 p-2"
+                onClick={handleClick}
+              >
+                <CheckBox checked={checked} onChange={() => {}} />
                 <span className={getClass(option.label)}>{option.label}</span>
               </div>
             )
@@ -211,8 +177,8 @@ const FilterBar = () => {
 
   return (
     <div
-      className="h-[calc(100vh-10rem)] overflow-y-auto"
-      style={{ scrollbarGutter: 'stable both-edges' }}
+      className="h-[calc(100vh-10rem)] overflow-y-auto rounded-lg"
+      style={{ scrollbarGutter: 'stable' }}
     >
       <div className="bg-gray-10 effect-side-filter flex w-65 flex-col gap-0.5 rounded-lg p-2 lg:w-71.75">
         <div className="flex items-center justify-between p-2">
@@ -224,7 +190,11 @@ const FilterBar = () => {
             text="초기화"
             shape="underline"
             className="text-fs14 text-gray-700"
-            onClick={resetFilters}
+            onClick={() => {
+              onReset()
+              setTempCustomDataRange({ min: '', max: '' })
+              setTempCustomPriceRange({ min: '', max: '' })
+            }}
           />
         </div>
 
@@ -232,7 +202,7 @@ const FilterBar = () => {
           '통신사',
           TELECOMCOMPANY_OPTIONS,
           filterState.telecomCompanyIds,
-          list => updateFilter('telecomCompanyIds', list),
+          'telecomCompanyIds',
           getColorClass
         )}
 
@@ -240,28 +210,28 @@ const FilterBar = () => {
           '판매글 유형',
           SALES_TYPE_OPTIONS,
           filterState.salesTypeIds,
-          list => updateFilter('salesTypeIds', list)
+          'salesTypeIds'
         )}
 
         {renderFilterSectionMulti(
           '거래 상태',
           STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label })),
           filterState.statuses,
-          list => updateFilter('statuses', list)
+          'statuses'
         )}
 
         {renderFilterSectionSingle(
           '데이터',
           SALES_DATA_AMOUNT_OPTIONS.map((opt, i) => ({ value: i, label: opt.label })),
           filterState.selectedDataRange,
-          val => handleSelectDataRange(val),
+          handleSelectDataRange,
           undefined,
           true,
           <RangeInput
             idPrefix="data"
             type="dataAmount"
-            minValue={filterState.customDataRange.min}
-            maxValue={filterState.customDataRange.max}
+            minValue={tempCustomDataRange.min}
+            maxValue={tempCustomDataRange.max}
             error={isDataRangeError}
             errorMessage={dataRangeErrorMessage}
             selectedMin={
@@ -274,52 +244,26 @@ const FilterBar = () => {
                 ? SALES_DATA_AMOUNT_OPTIONS[filterState.selectedDataRange].maxDataAmount.toString()
                 : undefined
             }
-            onResetSelected={() => updateFilter('selectedDataRange', null)}
+            onResetSelected={() => {
+              onFilterChange({ selectedDataRange: null, appliedDataRange: { min: '', max: '' } })
+              setTempCustomDataRange({ min: '', max: '' })
+            }}
             onApply={() => {
               const matchedIndex = SALES_DATA_AMOUNT_OPTIONS.findIndex(
                 option =>
-                  option.minDataAmount.toString() === filterState.customDataRange.min &&
-                  option.maxDataAmount.toString() === filterState.customDataRange.max
+                  option.minDataAmount.toString() === tempCustomDataRange.min &&
+                  option.maxDataAmount.toString() === tempCustomDataRange.max
               )
-              if (matchedIndex !== -1) {
-                updateFilter('selectedDataRange', matchedIndex)
-              } else {
-                updateFilter('selectedDataRange', null)
-                updateFilter('appliedDataRange', filterState.customDataRange)
-              }
-              console.log('데이터 범위 적용:', filterState.customDataRange)
+              onFilterChange({
+                selectedDataRange: matchedIndex !== -1 ? matchedIndex : null,
+                appliedDataRange: tempCustomDataRange,
+              })
             }}
             onChangeMin={val => {
-              const selected =
-                filterState.selectedDataRange !== null
-                  ? SALES_DATA_AMOUNT_OPTIONS[filterState.selectedDataRange]
-                  : null
-              updateFilter('customDataRange', prev => {
-                if (
-                  selected &&
-                  (selected.minDataAmount.toString() !== val ||
-                    selected.maxDataAmount.toString() !== prev.max)
-                ) {
-                  updateFilter('selectedDataRange', null)
-                }
-                return { ...prev, min: val }
-              })
+              setTempCustomDataRange(prev => ({ ...prev, min: val }))
             }}
             onChangeMax={val => {
-              const selected =
-                filterState.selectedDataRange !== null
-                  ? SALES_DATA_AMOUNT_OPTIONS[filterState.selectedDataRange]
-                  : null
-              updateFilter('customDataRange', prev => {
-                if (
-                  selected &&
-                  (selected.maxDataAmount.toString() !== val ||
-                    selected.minDataAmount.toString() !== prev.min)
-                ) {
-                  updateFilter('selectedDataRange', null)
-                }
-                return { ...prev, max: val }
-              })
+              setTempCustomDataRange(prev => ({ ...prev, max: val }))
             }}
           />
         )}
@@ -328,14 +272,14 @@ const FilterBar = () => {
           '가격',
           PRICE_OPTIONS.map((opt, i) => ({ value: i, label: opt.label })),
           filterState.selectedPriceRange,
-          val => handleSelectPriceRange(val),
+          handleSelectPriceRange,
           undefined,
           false,
           <RangeInput
             idPrefix="price"
             type="price"
-            minValue={filterState.customPriceRange.min}
-            maxValue={filterState.customPriceRange.max}
+            minValue={tempCustomPriceRange.min}
+            maxValue={tempCustomPriceRange.max}
             error={isPriceRangeError}
             errorMessage={priceRangeErrorMessage}
             selectedMin={
@@ -348,52 +292,29 @@ const FilterBar = () => {
                 ? PRICE_OPTIONS[filterState.selectedPriceRange].maxPrice.toString()
                 : undefined
             }
-            onResetSelected={() => updateFilter('selectedPriceRange', null)}
+            onResetSelected={() => {
+              onFilterChange({
+                selectedPriceRange: null,
+                appliedPriceRange: { min: '', max: '' },
+              })
+              setTempCustomPriceRange({ min: '', max: '' })
+            }}
             onApply={() => {
               const matchedIndex = PRICE_OPTIONS.findIndex(
                 option =>
-                  option.minPrice.toString() === filterState.customPriceRange.min &&
-                  option.maxPrice.toString() === filterState.customPriceRange.max
+                  option.minPrice.toString() === tempCustomPriceRange.min &&
+                  option.maxPrice.toString() === tempCustomPriceRange.max
               )
-              if (matchedIndex !== -1) {
-                updateFilter('selectedPriceRange', matchedIndex)
-              } else {
-                updateFilter('selectedPriceRange', null)
-                updateFilter('appliedPriceRange', filterState.customPriceRange)
-              }
-              console.log('가격 범위 적용:', filterState.customPriceRange)
+              onFilterChange({
+                selectedPriceRange: matchedIndex !== -1 ? matchedIndex : null,
+                appliedPriceRange: tempCustomPriceRange,
+              })
             }}
             onChangeMin={val => {
-              const selected =
-                filterState.selectedPriceRange !== null
-                  ? PRICE_OPTIONS[filterState.selectedPriceRange]
-                  : null
-              updateFilter('customPriceRange', prev => {
-                if (
-                  selected &&
-                  (selected.minPrice.toString() !== val ||
-                    selected.maxPrice.toString() !== prev.max)
-                ) {
-                  updateFilter('selectedPriceRange', null)
-                }
-                return { ...prev, min: val }
-              })
+              setTempCustomPriceRange(prev => ({ ...prev, min: val }))
             }}
             onChangeMax={val => {
-              const selected =
-                filterState.selectedPriceRange !== null
-                  ? PRICE_OPTIONS[filterState.selectedPriceRange]
-                  : null
-              updateFilter('customPriceRange', prev => {
-                if (
-                  selected &&
-                  (selected.maxPrice.toString() !== val ||
-                    selected.minPrice.toString() !== prev.min)
-                ) {
-                  updateFilter('selectedPriceRange', null)
-                }
-                return { ...prev, max: val }
-              })
+              setTempCustomPriceRange(prev => ({ ...prev, max: val }))
             }}
           />
         )}
