@@ -45,7 +45,7 @@ const VolumeGraph = () => {
         />
       </div>
 
-      <Card className="px-0">
+      <Card className="px-4">
         <Graph
           type="bar"
           data={formattedVolumes}

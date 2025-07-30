@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 
 import Profile from './components/InfoCard/Profile'
@@ -14,6 +14,7 @@ import EventCouponPage from './EventCouponPage'
 import TransactionHistoryPage from './TransactionHistoryPage'
 import PayHistoryPage from './PayHistoryPage'
 import ReportHistoryPage from './ReportHistoryPage'
+import { useScrollStore } from '../../store/scrollStore'
 
 const tabData = [
   { id: 'data-charge', label: '데이터 충전권', content: <DataChargePage /> },
@@ -28,6 +29,20 @@ const MyPage = () => {
   const { tabId } = useParams()
   const navigate = useNavigate()
   const deviceType = useDeviceType()
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  const shouldScrollToBottom = useScrollStore(s => s.scrollToBottom)
+  const resetScrollFlag = useScrollStore(s => s.reset)
+  const triggerScrollToBottom = useScrollStore(s => s.triggerScrollToBottom)
+
+  useEffect(() => {
+    if (shouldScrollToBottom) {
+      contentRef.current?.scrollIntoView({ behavior: 'smooth' })
+      resetScrollFlag()
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [tabId])
 
   useEffect(() => {
     if (!tabData.some(tab => tab.id === tabId)) {
@@ -57,11 +72,14 @@ const MyPage = () => {
         tabs={tabData}
         defaultTabId={tabId}
         onTabChange={id => {
+          triggerScrollToBottom()
           navigate(`/mypage/${id}`)
         }}
       />
       {/* 콘텐츠 */}
-      <div className="px-5 py-8">{selected.content}</div>
+      <div ref={contentRef} className="px-5 py-8">
+        {selected.content}
+      </div>
     </div>
   )
 }

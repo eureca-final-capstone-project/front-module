@@ -65,7 +65,10 @@ export const formatCompactDateTime = (
 
   return `${year}. ${month}. ${day} | ${hour}:${minute}`
 }
-export const formatCompactDate = (dateString: string, style: 'dot' | 'dash' = 'dot'): string => {
+export const formatCompactDate = (
+  dateString: string,
+  style: 'dot' | 'dash' | 'text' = 'dot'
+): string => {
   const date = new Date(dateString)
 
   const year = date.getFullYear()
@@ -74,6 +77,8 @@ export const formatCompactDate = (dateString: string, style: 'dot' | 'dash' = 'd
 
   if (style === 'dash') {
     return `${year}-${month}-${day}`
+  } else if (style === 'text') {
+    return `${year}년 ${month}월 ${day}일`
   }
 
   return `${year}. ${month}. ${day}`

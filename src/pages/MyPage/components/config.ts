@@ -23,6 +23,12 @@ export const modalTexts = {
     leftButtonText: '닫기',
     rightButtonText: '환전하기',
   },
+  'data-charge': {
+    title: '충전권을 사용하시겠습니까?',
+    description: '충전된 데이터는 구매 데이터로 표시됩니다.',
+    leftButtonText: '닫기',
+    rightButtonText: '충전하기',
+  },
 } as const
 
 export const buttonOptions = {
@@ -61,9 +67,9 @@ export const passwordFields = [
 ] as const
 
 export const getStatusLabelAndClass = (status: string): { label: string; className: string } => {
-  const pending = ['검수 대기중']
-  const rejected = ['AI 거절', '관리자 거절', '제재 미승인']
-  const accepted = ['AI 승인', '관리자 승인', '제재 완료']
+  const pending = ['PENDING']
+  const rejected = ['AI_REJECTED', 'ADMIN_REJECTED', 'REJECTED']
+  const accepted = ['AI_ACCEPTED', 'ADMIN_ACCEPTED', 'COMPLETED']
 
   if (pending.includes(status)) return { label: '처리 대기', className: 'bg-pri-300' }
   if (rejected.includes(status)) return { label: '신고 거부', className: 'bg-gray-300' }
