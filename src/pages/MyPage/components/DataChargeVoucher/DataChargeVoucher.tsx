@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { DataCoupon, postUseDataCoupon } from '../../../../apis/dataVoucher'
 import ScaleDownMotion from '../../../../components/Animation/ScaleDownMotion'
 import Badge from '../../../../components/Badge/Badge'
@@ -6,6 +6,8 @@ import { formatDataSize } from '../../../../utils/format'
 import { getTelecomBadgeColor } from '../../../../utils/telecom'
 import { useToast } from '../../../../hooks/useToast'
 import { formatCompactDate } from '../../../../utils/time'
+import { useState } from 'react'
+import BasicModal from '../Modal/BasicModal'
 
 interface Props {
   coupon: DataCoupon
@@ -16,11 +18,13 @@ const DataChargeVoucher = ({ coupon }: Props) => {
   const formatted = formatDataSize(dataAmount)
   const [value, unit] = formatted.match(/^([\d.]+)([a-zA-Z]+)$/)?.slice(1) || []
   const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
-  const { mutate, status: mutationStatus } = useMutation<void, Error, void>({
-    mutationFn: () => postUseDataCoupon(userDataCouponId),
+  const { mutate, status: mutationStatus } = useMutation<void, Error, number>({
+    mutationFn: couponId => postUseDataCoupon(couponId),
     onSuccess: () => {
       showToast({ type: 'success', msg: '데이터 충전권이 구매 데이터로 전환되었습니다.' })
+      queryClient.invalidateQueries({ queryKey: ['dataCoupons'] })
     },
     onError: () => {
       showToast({ type: 'error', msg: '데이터 충전에 실패했습니다.' })
@@ -30,6 +34,22 @@ const DataChargeVoucher = ({ coupon }: Props) => {
   const isUsed = status.code === 'USED'
   const isExpired = status.code === 'EXPIRED'
   const bgClass = unit === 'GB' ? 'bg-coupon-gradation-gb' : 'bg-coupon-gradation-mb'
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedCouponId, setSelectedCouponId] = useState<number | null>(null)
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => {
+    setIsModalOpen(false)
+    setSelectedCouponId(null)
+  }
+
+  const handleConfirmCharge = () => {
+    if (selectedCouponId !== null) {
+      mutate(selectedCouponId)
+      closeModal()
+    }
+  }
+
   return (
     <ScaleDownMotion disabled={isUsed || isExpired}>
       <div className="relative mx-auto h-40 w-full">
@@ -71,7 +91,8 @@ const DataChargeVoucher = ({ coupon }: Props) => {
         <div
           onClick={() => {
             if (!isUsed && !isExpired && mutationStatus !== 'pending') {
-              mutate()
+              setSelectedCouponId(userDataCouponId)
+              openModal()
             }
           }}
           className={`${bgClass} relative flex h-full w-full rounded-md ${
@@ -145,6 +166,15 @@ const DataChargeVoucher = ({ coupon }: Props) => {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <BasicModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          modalType="data-charge"
+          onClickLeft={closeModal}
+          onClickRight={handleConfirmCharge}
+        />
+      )}
     </ScaleDownMotion>
   )
 }

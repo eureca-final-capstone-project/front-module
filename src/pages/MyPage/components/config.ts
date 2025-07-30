@@ -23,6 +23,12 @@ export const modalTexts = {
     leftButtonText: '닫기',
     rightButtonText: '환전하기',
   },
+  'data-charge': {
+    title: '충전권을 사용하시겠습니까?',
+    description: '충전된 데이터는 구매 데이터로 표시됩니다.',
+    leftButtonText: '닫기',
+    rightButtonText: '충전하기',
+  },
 } as const
 
 export const buttonOptions = {

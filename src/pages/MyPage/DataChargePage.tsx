@@ -24,7 +24,7 @@ const sortByStatusAndCreatedAt = (a: DataCoupon, b: DataCoupon) => {
   return b.userDataCouponId - a.userDataCouponId
 }
 
-const useDataCoupons = (page = 0, size = 10) => {
+const useDataCoupons = (page = 0, size = 20) => {
   return useQuery({
     queryKey: ['dataCoupons', page, size],
     queryFn: () => getDataCoupons(page, size),

@@ -28,7 +28,7 @@ export interface DataCouponResponse {
 
 export const getDataCoupons = async (
   page: number = 0,
-  size: number = 10
+  size: number = 20
 ): Promise<DataCouponResponse> => {
   const response = await client.get('/data-coupon', {
     params: {
