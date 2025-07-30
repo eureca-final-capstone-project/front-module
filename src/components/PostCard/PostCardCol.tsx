@@ -9,7 +9,6 @@ import { formatDataSize, formatAmount } from '../../utils/format'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import { imageData as PostImage } from '../../constants/imageData'
 import { formatRelativeTime } from '../../utils/time'
-import { useState, useEffect } from 'react'
 
 const PostCardCol = ({
   telecomCompany,
@@ -27,11 +26,6 @@ const PostCardCol = ({
   onClick,
 }: PostCardProps) => {
   const deviceType = useDeviceType()
-  const [localLiked, setLocalLiked] = useState(liked)
-
-  useEffect(() => {
-    setLocalLiked(liked)
-  }, [liked])
 
   return (
     <div
@@ -62,11 +56,10 @@ const PostCardCol = ({
           className={`absolute z-10 ${deviceType === 'mobile' ? 'top-2.75 left-2.75 w-4' : 'top-3.75 left-3.75 w-5'}`}
           onClick={e => {
             e.stopPropagation()
-            setLocalLiked(prev => !prev)
             onToggleLike()
           }}
         >
-          {localLiked ? (
+          {liked ? (
             <HeartFillIcon className="h-full w-full" />
           ) : (
             <HeartIcon className="h-full w-full" />
