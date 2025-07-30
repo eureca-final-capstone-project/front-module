@@ -1,19 +1,19 @@
-import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { restrictionAccept, restrictionReject } from '../../../apis/admin/restrictions'
+import { RestrictionStatus } from '../../../types/admin'
 
 interface AcceptRejectButtonProps {
   restrictionTargetId: number
-  status: 'COMPLETED' | 'REJECTED' | 'PENDING'
+  status: RestrictionStatus
 }
 
 const AcceptRejectButton = ({ restrictionTargetId, status }: AcceptRejectButtonProps) => {
-  const [isSubmitted, setIsSubmitted] = useState(['COMPLETED', 'REJECTED'].includes(status))
+  const queryClient = useQueryClient()
 
   const approveMutation = useMutation({
     mutationFn: restrictionAccept,
     onSuccess: () => {
-      setIsSubmitted(true)
+      queryClient.invalidateQueries({ queryKey: ['restrictions'] })
     },
     onError: error => {
       alert(error)
@@ -23,28 +23,37 @@ const AcceptRejectButton = ({ restrictionTargetId, status }: AcceptRejectButtonP
   const rejectMutation = useMutation({
     mutationFn: restrictionReject,
     onSuccess: () => {
-      setIsSubmitted(true)
+      queryClient.invalidateQueries({ queryKey: ['restrictions'] })
     },
     onError: error => {
       alert(error)
     },
   })
 
-  if (isSubmitted) return null
+  const isPending = approveMutation.isPending || rejectMutation.isPending
+  const isAlreadyHandled = ['COMPLETED', 'REJECTED', 'RESTRICT_EXPIRATION'].includes(status)
+
+  if (isAlreadyHandled) return null
 
   return (
     <div className="text-fs12 inline-flex overflow-hidden rounded-sm border border-gray-300 font-medium">
       <button
-        onClick={() => approveMutation.mutate(restrictionTargetId)}
-        disabled={approveMutation.isPending}
+        onClick={e => {
+          e.stopPropagation()
+          approveMutation.mutate(restrictionTargetId)
+        }}
+        disabled={isPending}
         className="bg-gray-10 px-4 py-2 hover:bg-gray-200"
       >
         승인
       </button>
       <div className="w-0.25 bg-gray-300" />
       <button
-        onClick={() => rejectMutation.mutate(restrictionTargetId)}
-        disabled={rejectMutation.isPending}
+        onClick={e => {
+          e.stopPropagation()
+          rejectMutation.mutate(restrictionTargetId)
+        }}
+        disabled={isPending}
         className="bg-gray-10 px-4 py-2 hover:bg-gray-200"
       >
         거절
