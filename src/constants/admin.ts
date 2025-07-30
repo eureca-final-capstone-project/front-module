@@ -40,6 +40,25 @@ export const STATUS_STYLE: Record<string, StatusStyle> = {
   '제재 대기 중': { variant: 'secondary', background: 'gray200' },
 }
 
+export const reportTab = [
+  { id: '', label: '전체' },
+  { id: 'pending', label: '검수 대기' },
+  { id: 'ai-accept', label: 'AI 승인' },
+  { id: 'ai-reject', label: 'AI 거절' },
+  { id: 'admin-accept', label: '관리자 승인' },
+  { id: 'admin-reject', label: '관리자 거절' },
+  { id: 'restrict-accept', label: '제재 완료' },
+]
+
+export const reportTabCode: Record<string, ReportStatus> = {
+  pending: 'PENDING',
+  'ai-accept': 'AI_ACCEPTED',
+  'ai-reject': 'AI_REJECTED',
+  'admin-accept': 'ADMIN_ACCEPTED',
+  'admin-reject': 'ADMIN_REJECTED',
+  'restrict-accept': 'COMPLETED',
+}
+
 export const reportColumns: { header: string; key: keyof Report }[] = [
   { header: '신고 번호', key: 'reportHistoryId' },
   { header: '신고글 제목', key: 'transactionFeedTitle' },
