@@ -6,6 +6,7 @@ interface TableProps<T> {
   data: T[]
   renderCell?: (key: keyof T, row: T) => ReactNode
   isClickable?: (row: T) => boolean
+  isArrow?: boolean
   onRowClick?: (row: T) => void
   renderDetailTable?: (row: T) => ReactNode
 }
@@ -15,6 +16,7 @@ const Table = <T,>({
   data,
   renderCell,
   isClickable,
+  isArrow = true,
   onRowClick,
   renderDetailTable,
 }: TableProps<T>) => {
@@ -68,7 +70,7 @@ const Table = <T,>({
                     onClick={() => clickable && handleRowClick(row, rowIndex)}
                   >
                     <td
-                      className={`py-4 pl-4 text-right ${clickable ? 'opacity-100' : 'opacity-0'}`}
+                      className={`py-4 pl-4 text-right ${clickable && isArrow ? 'opacity-100' : 'opacity-0'}`}
                     >
                       <ArrowBottomIcon
                         className={`w-3 text-gray-700 transition-transform duration-300 ease-in-out ${
