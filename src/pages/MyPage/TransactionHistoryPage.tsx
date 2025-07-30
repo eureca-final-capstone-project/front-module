@@ -85,6 +85,7 @@ const TransactionHistoryPage = () => {
         onOpenDeleteModal={handleOpenModal}
         onSelectAll={() => {}}
         allChecked={false}
+        hideActionButtons={true}
       />
       {/* 콘텐츠 */}
       {isPending || isError || data?.length === 0 ? (
