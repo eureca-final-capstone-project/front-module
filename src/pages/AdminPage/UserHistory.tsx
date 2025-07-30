@@ -10,7 +10,7 @@ import { useSearchParams } from 'react-router-dom'
 import Pagination from '../../components/Pagination/Pagination'
 import { getTelecomBadgeColor } from '../../utils/telecom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { banUser, getUserReport, getUsers } from '../../apis/admin/dashboard'
+import { banUser, getUserReport, getUsers } from '../../apis/admin/users'
 import { formatPhoneNumber } from '../../utils/format'
 import { useToast } from '../../hooks/useToast'
 
@@ -24,6 +24,7 @@ const UserHistory = () => {
 
   const [currentPage, setCurrentPage] = useState(pageParam)
   const [reportsByUser, setReportsByUser] = useState<Record<number, UserReport[]>>({})
+  const [keyword, setKeyword] = useState('')
 
   const itemsPerPage = 10
 
@@ -33,8 +34,8 @@ const UserHistory = () => {
   }
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['users', currentPage],
-    queryFn: () => getUsers(pageable),
+    queryKey: ['users', currentPage, keyword],
+    queryFn: () => getUsers({ keyword, pageable }),
   })
 
   const banMutation = useMutation({
@@ -100,6 +101,13 @@ const UserHistory = () => {
     }
   }
 
+  const handleSearch = (value: string) => {
+    setKeyword(value)
+    setCurrentPage(1)
+    setSearchParams({ page: '1' })
+    setReportsByUser({})
+  }
+
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage)
     setSearchParams({ page: String(newPage) })
@@ -110,7 +118,7 @@ const UserHistory = () => {
 
   return (
     <main className="space-y-13">
-      <SearchBar onSubmit={keyword => console.log(keyword)} />
+      <SearchBar defaultValue={keyword} onSubmit={handleSearch} />
       <section className="space-y-7">
         <h1 className="text-fs24 font-medium">회원 내역</h1>
         <div className="relative">
@@ -122,7 +130,7 @@ const UserHistory = () => {
             columns={userColumns}
             data={usersData}
             renderCell={renderUserCell}
-            isClickable={row => row.reportCount > 0}
+            isClickable={row => row.reportCount > 0 || row.email.length >= 18}
             onRowClick={handleRowClick}
             renderDetailTable={row => (
               <UserDetailRow email={row.email} reports={reportsByUser[row.userId] ?? []} />
