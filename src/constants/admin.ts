@@ -31,7 +31,7 @@ type StatusStyle =
 export const STATUS_STYLE: Record<string, StatusStyle> = {
   활성: { variant: 'default' },
   차단: { variant: 'secondary', background: 'gray50' },
-  검수대기: { variant: 'secondary', background: 'gray200' },
+  '검수 대기': { variant: 'secondary', background: 'gray200' },
   'AI 승인': { variant: 'outline', status: 'success' },
   'AI 거절': { variant: 'outline', status: 'error' },
   '관리자 승인': { className: 'bg-success' },
@@ -50,7 +50,7 @@ export const reportColumns: { header: string; key: keyof Report }[] = [
 ]
 
 export const REPORT_STATUS_LABEL: Record<ReportStatus, string> = {
-  PENDING: '검수대기',
+  PENDING: '검수 대기',
   AI_ACCEPTED: 'AI 승인',
   AI_REJECTED: 'AI 거절',
   ADMIN_ACCEPTED: '관리자 승인',
