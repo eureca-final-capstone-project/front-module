@@ -50,7 +50,7 @@ export const transformTransactionPostCard = (
   salesDataAmount: data.salesDataAmount,
   defaultImageNumber: data.defaultImageNumber,
   createdAt: data.transactionDate,
-  liked: false,
+  liked: data.liked,
   telecomCompany: data.telecomCompany as 'LG U+' | 'KT' | 'SKT',
   status: mapStatusFromServer(data.transactionType), // PURCHASE | SALE → 'donePurchase' | 'doneSale' 등으로 매핑 필요
   salesType: mapSalesTypeFromServer(data.salesType),

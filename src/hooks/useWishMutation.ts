@@ -18,6 +18,12 @@ export const useWishMutation = (transactionFeedId: number) => {
         queryClient.invalidateQueries({
           queryKey: ['transactionFeedDetail', String(transactionFeedId)],
         })
+        queryClient.invalidateQueries({ queryKey: ['recommended-posts'] })
+        queryClient.invalidateQueries({ queryKey: ['latest-posts'] })
+        queryClient.invalidateQueries({ queryKey: ['bid-posts'] })
+        queryClient.invalidateQueries({ queryKey: ['transactionHistory'] })
+        queryClient.invalidateQueries({ queryKey: ['transactionFeeds'] })
+        queryClient.invalidateQueries({ queryKey: ['recommendedPosts'] })
         break
       case 10004:
         showToast({ type: 'default', msg: '로그인 후 이용 가능합니다.' })
