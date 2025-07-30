@@ -10,19 +10,18 @@ const RestrictionDetailRow = ({ reports }: RestrictionDetailRowwProps) => {
   return (
     <table className="w-full">
       <colgroup>
-        <col style={{ width: '4%' }} />
-        <col style={{ width: '5%' }} />
+        <col style={{ width: '3%' }} />
+        <col style={{ width: '3%' }} />
         <col style={{ width: '10%' }} />
-        <col style={{ width: '28%' }} />
-        <col style={{ width: '10%' }} />
-        <col style={{ width: '15%' }} />
+        <col style={{ width: '27%' }} />
+        <col style={{ width: '12%' }} />
+        <col style={{ width: '14%' }} />
       </colgroup>
 
       <tbody>
         {reports &&
           reports.length > 0 &&
           reports.map(report => {
-            console.log(report)
             return (
               <tr key={report.reportId} className="bg-gray-30 border-t border-gray-100">
                 <td></td>
