@@ -24,6 +24,6 @@ export interface ReportHistoryItem {
 }
 
 export const getMyReportHistory = async (): Promise<ReportHistoryItem[]> => {
-  const res = await adminClient.get<{ data: ReportHistoryItem[] }>('/mypage/reports')
-  return res.data.data
+  const res = await adminClient.get<{ data: { content: ReportHistoryItem[] } }>('/mypage/reports')
+  return res.data.data.content
 }
