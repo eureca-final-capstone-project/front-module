@@ -81,7 +81,7 @@ const Table = <T,>({
                     {columns.map(col => (
                       <td
                         key={String(col.key)}
-                        className="max-w-47 overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap"
+                        className={`${col.key === 'email' ? 'max-w-47' : 'max-w-130'} overflow-hidden px-3 py-4 text-ellipsis whitespace-nowrap`}
                         colSpan={col.key === 'email' ? 3 : 1}
                       >
                         {renderCell ? renderCell(col.key, row) : String(row[col.key])}
