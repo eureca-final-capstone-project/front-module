@@ -15,3 +15,8 @@ export const getReports = async ({
   })
   return response.data
 }
+
+export const getReportDetail = async (reportId: number) => {
+  const response = await admin.get(`/reports/${reportId}/detail`)
+  return response.data
+}
