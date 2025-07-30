@@ -61,7 +61,7 @@ const ChargeReceipt = ({ type, pay, info }: ReceiptProps<ChargeDetail>) => {
               const rawValue = info[item.key as keyof ChargeDetail]
               const value =
                 item.key === 'chargedAt'
-                  ? formatCompactDateTime(rawValue as string)
+                  ? formatCompactDateTime(rawValue as string, 'dot', true)
                   : typeof rawValue === 'number'
                     ? formatAmount(rawValue)
                     : typeof rawValue === 'string'
