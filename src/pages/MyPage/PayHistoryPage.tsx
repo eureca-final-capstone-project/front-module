@@ -7,6 +7,9 @@ import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import { getPayHistory, getPayHistoryDetail, PayHistoryDetailResponse } from '../../apis/userInfo'
 import { useState } from 'react'
 import ReceiptModal, { ReceiptProps } from '../../components/ReceiptModal/ReceiptModal'
+import Button from '../../components/Button/Button'
+import DatchaCoinIcon from '@/assets/icons/datcha-coin-bold.svg?react'
+import { useNavigate } from 'react-router-dom'
 
 const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
   if (type === '구매' || type === '판매') {
@@ -20,7 +23,7 @@ const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
 
 const PayHistoryPage = () => {
   const [selectedId, setSelectedId] = useState<number | null>(null)
-
+  const navigate = useNavigate()
   const { data: detail, isSuccess: isDetailSuccess } = useQuery({
     queryKey: ['payHistoryDetail', selectedId],
     queryFn: () => getPayHistoryDetail(selectedId!),
@@ -68,9 +71,52 @@ const PayHistoryPage = () => {
     return { sign, text: formatAmount(Math.abs(amount)), colorClass }
   }
 
-  if (isLoading) return <p>로딩중</p>
-  if (isError) return <p>에러</p>
-  if (payHistory.length === 0) return <p>페이 변동 내역 없음</p>
+  const renderStatusFallback = () => {
+    let title = ''
+    let subtitle: React.ReactNode = null
+    let textColor = 'text-gray-500'
+
+    if (isLoading) {
+      title = '페이 변동 내역을 불러오는 중이에요'
+    } else if (isError) {
+      title = '페이 변동 내역을 불러오지 못했습니다'
+      subtitle = (
+        <p className="text-fs12 sm:text-fs14 mt-2 text-gray-400">잠시 후 다시 시도해주세요</p>
+      )
+      textColor = 'text-error'
+    } else {
+      title = '페이 변동 내역이 존재하지 않습니다'
+      subtitle = (
+        <div className="text-fs12 sm:text-fs14 mt-2 text-gray-400">
+          <Button
+            text="데이터 거래"
+            shape="underline"
+            onClick={() => navigate('/posts')}
+            className="text-fs12 sm:text-fs14 hover:text-pri-400 inline p-0 text-gray-400"
+          />
+          <span> 또는 </span>
+          <Button
+            text="페이 충전"
+            shape="underline"
+            onClick={() => navigate('/payment')}
+            className="text-fs12 sm:text-fs14 hover:text-pri-400 inline p-0 text-gray-400"
+          />
+          <span>을 진행해보세요!</span>
+        </div>
+      )
+    }
+    return (
+      <div
+        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+      >
+        <DatchaCoinIcon className="h-6 w-8 sm:h-8 sm:w-10" />
+        <p className="text-fs16 sm:text-fs18 pt-3 font-medium">{title}</p>
+        {subtitle}
+      </div>
+    )
+  }
+
+  if (isLoading || isError || payHistory.length === 0) return renderStatusFallback()
 
   return (
     <div className="flex flex-col gap-5">
