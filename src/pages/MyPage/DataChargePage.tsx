@@ -1,10 +1,28 @@
 import { useQuery } from '@tanstack/react-query'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import DataChargeVoucher from './components/DataChargeVoucher/DataChargeVoucher'
-import { getDataCoupons } from '../../apis/dataVoucher'
+import { DataCoupon, getDataCoupons } from '../../apis/dataVoucher'
 import Button from '../../components/Button/Button'
 import { useNavigate } from 'react-router-dom'
 import DataChargeIcon from '@/assets/icons/data-charge.svg?react'
+
+const sortByStatusAndCreatedAt = (a: DataCoupon, b: DataCoupon) => {
+  const getPriority = (statusCode: string) => {
+    if (statusCode === 'ISSUED') return 0
+    if (statusCode === 'USED') return 1
+    if (statusCode === 'EXPIRED') return 2
+    return 3
+  }
+
+  const statusPriorityA = getPriority(a.status.code)
+  const statusPriorityB = getPriority(b.status.code)
+
+  if (statusPriorityA !== statusPriorityB) {
+    return statusPriorityA - statusPriorityB
+  }
+
+  return b.userDataCouponId - a.userDataCouponId
+}
 
 const useDataCoupons = (page = 0, size = 10) => {
   return useQuery({
@@ -19,7 +37,7 @@ const DataChargePage = () => {
   const navigate = useNavigate()
 
   const { data, isLoading, isError } = useDataCoupons()
-  const coupons = data?.content ?? []
+  const coupons = (data?.content ?? []).slice().sort(sortByStatusAndCreatedAt)
 
   const gridCols = {
     mobile: 'grid-cols-1',
@@ -63,7 +81,7 @@ const DataChargePage = () => {
 
   return (
     <div>
-      <div className={`grid ${gridCols} gap-4`}>
+      <div className={`grid ${gridCols} gap-5 px-4 sm:p-0`}>
         {coupons.map(coupon => (
           <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
         ))}

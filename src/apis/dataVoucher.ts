@@ -31,7 +31,11 @@ export const getDataCoupons = async (
   size: number = 10
 ): Promise<DataCouponResponse> => {
   const response = await client.get('/data-coupon', {
-    params: { page, size },
+    params: {
+      page,
+      size,
+      sort: 'expiresAt,ASC&sort=dataAmount,DESC',
+    },
   })
   return response.data.data
 }

@@ -5,6 +5,7 @@ import Badge from '../../../../components/Badge/Badge'
 import { formatDataSize } from '../../../../utils/format'
 import { getTelecomBadgeColor } from '../../../../utils/telecom'
 import { useToast } from '../../../../hooks/useToast'
+import { formatCompactDate } from '../../../../utils/time'
 
 interface Props {
   coupon: DataCoupon
@@ -118,7 +119,7 @@ const DataChargeVoucher = ({ coupon }: Props) => {
               <p className="text-fs12 md:text-fs14 text-pri-600">{couponNumber}</p>
             </div>
             <p className={`text-fs12 text-gray-500 ${isUsed || isExpired ? 'opacity-30' : ''}`}>
-              유효기간 | {new Date(expiresAt).toLocaleString('ko-KR')}
+              유효기간 | {formatCompactDate(expiresAt, 'text')}
             </p>
 
             {/* 상태 텍스트 오버레이 */}
