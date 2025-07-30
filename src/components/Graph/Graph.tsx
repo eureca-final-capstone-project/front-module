@@ -48,7 +48,7 @@ const Graph = ({
 
   const commonChart = {
     data,
-    margin: { top: 10, right: 30, left: 20, bottom: 5 },
+    // margin: { top: 10, right: 30, left: 20, bottom: 5 },
   }
 
   return (
