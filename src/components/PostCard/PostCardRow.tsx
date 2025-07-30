@@ -9,6 +9,7 @@ import { formatDataSize, formatAmount } from '../../utils/format'
 import { imageData as PostImage } from '../../constants/imageData'
 import { getSalesTypeLabel } from '../../utils/salesType'
 import { formatRelativeTime, formatFullDate } from '../../utils/time'
+import { useState, useEffect } from 'react'
 
 interface PostCardRowProps extends Omit<PostCardProps, 'type'> {
   type: 'row'
@@ -37,6 +38,12 @@ const PostCardRow = ({
   tradehistorytime,
   tradehistorypay,
 }: PostCardRowProps) => {
+  const [localLiked, setLocalLiked] = useState(liked)
+
+  useEffect(() => {
+    setLocalLiked(liked)
+  }, [liked])
+
   const renderImageSection = () => (
     // 이미지 영역
     <div
@@ -66,10 +73,11 @@ const PostCardRow = ({
           className="absolute top-2.75 left-2.75 z-10 w-4 sm:top-3.75 sm:left-3.75 sm:w-5"
           onClick={e => {
             e.stopPropagation()
+            setLocalLiked(prev => !prev)
             onToggleLike()
           }}
         >
-          {liked ? (
+          {localLiked ? (
             <HeartFillIcon className="h-full w-full" />
           ) : (
             <HeartIcon className="h-full w-full" />

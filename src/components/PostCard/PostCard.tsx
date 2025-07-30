@@ -2,6 +2,10 @@ import PostCardCol from './PostCardCol'
 import PostCardRow from './PostCardRow'
 import type { TradeStatus } from '../../utils/status'
 import { useNavigate } from 'react-router-dom'
+import { useToast } from '../../hooks/useToast'
+import { useWishMutation } from '../../hooks/useWishMutation'
+import { useQuery } from '@tanstack/react-query'
+import { getTokenParsed } from '../../apis/tokenParsed'
 
 type CommonProps = {
   transactionFeedId: number
@@ -32,6 +36,18 @@ export type PostCardProps =
 
 const PostCard = (props: PostCardProps) => {
   const navigate = useNavigate()
+  const { showToast } = useToast()
+  const { addWishMutation, deleteWishMutation } = useWishMutation(props.transactionFeedId)
+
+  const { data: userInfo } = useQuery({
+    queryKey: ['tokenParsed'],
+    queryFn: getTokenParsed,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: !!sessionStorage.getItem('userAccessToken'),
+  })
+
+  const isLoggedIn = !!userInfo
 
   const handleClick = () => {
     if (props.onClick) {
@@ -41,10 +57,35 @@ const PostCard = (props: PostCardProps) => {
     }
   }
 
-  if (props.type === 'row') {
-    return <PostCardRow {...props} onClick={handleClick} />
+  const handleToggleLike = () => {
+    if (!isLoggedIn) {
+      showToast({ type: 'default', msg: '로그인이 필요한 기능입니다.' })
+      navigate('/login')
+      return
+    }
+
+    if (props.liked) {
+      deleteWishMutation.mutate([Number(props.transactionFeedId)])
+    } else {
+      addWishMutation.mutate(props.transactionFeedId)
+    }
   }
-  return <PostCardCol {...props} onClick={handleClick} />
+
+  if (props.type === 'row') {
+    const rowProps = {
+      ...props,
+      onClick: handleClick,
+      onToggleLike: handleToggleLike,
+    } as Extract<PostCardProps, { type: 'row' }>
+    return <PostCardRow {...rowProps} />
+  }
+
+  const colProps = {
+    ...props,
+    onClick: handleClick,
+    onToggleLike: handleToggleLike,
+  } as Extract<PostCardProps, { type: 'col' }>
+  return <PostCardCol {...colProps} />
 }
 
 export default PostCard
