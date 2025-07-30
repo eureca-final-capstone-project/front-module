@@ -1,23 +1,48 @@
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import Button from '../../components/Button/Button'
 import ReportDetailTable from './components/ReportDetailTable'
 import ReportTransactionFeed from './components/ReportTransactionFeed'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getReportDetail } from '../../apis/admin/reports'
+import { getReportDetail, processReportByAdmin } from '../../apis/admin/reports'
+import { useToast } from '../../hooks/useToast'
 
 const ReportDetailPage = () => {
+  const queryClient = useQueryClient()
+
   const navigate = useNavigate()
   const { reportId } = useParams()
+
+  const { showToast } = useToast()
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['detail', reportId],
     queryFn: () => getReportDetail(Number(reportId)),
   })
 
+  const mutation = useMutation({
+    mutationFn: processReportByAdmin,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          queryClient.invalidateQueries({ queryKey: ['detail', reportId] })
+          break
+        default:
+          showToast({ type: 'error', msg: '신고 처리에 문제가 발생했습니다.' })
+      }
+    },
+    onError: () => {
+      showToast({ type: 'error', msg: '신고 처리에 문제가 발생했습니다.' })
+    },
+  })
+
   if (isLoading) return <div>데이터를 불러오는 중입니다...</div>
   if (isError || !data?.data) return <div>데이터를 불러오지 못했습니다.</div>
 
   const reportDetailData = data.data
+
+  const handleReportProcess = (state: boolean) => {
+    mutation.mutate({ reportHistoryId: Number(reportId), approved: state })
+  }
 
   return (
     <main className="space-y-6">
@@ -40,19 +65,28 @@ const ReportDetailPage = () => {
           content={reportDetailData.reportContent}
         />
       </div>
-      {['AI_REJECTED', 'PENDING'].includes(reportDetailData.status) && (
-        <div className="mt-28 flex justify-between gap-4">
-          <Button
-            text="목록으로"
-            className="text-gray-10 w-32 bg-gray-400"
-            onClick={() => navigate(-1)}
-          />
+
+      <div className="mt-28 flex justify-between gap-4">
+        <Button
+          text="목록으로"
+          className="text-gray-10 w-32 bg-gray-400"
+          onClick={() => navigate(-1)}
+        />
+        {['AI_REJECTED', 'PENDING'].includes(reportDetailData.status) && (
           <div className="flex gap-4">
-            <Button text="관리자 거절" className="text-gray-10 bg-error w-40" />
-            <Button text="관리자 승인" className="text-gray-10 bg-success w-40" />
+            <Button
+              text="관리자 거절"
+              className="text-gray-10 bg-error w-40"
+              onClick={() => handleReportProcess(false)}
+            />
+            <Button
+              text="관리자 승인"
+              className="text-gray-10 bg-success w-40"
+              onClick={() => handleReportProcess(true)}
+            />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </main>
   )
 }
