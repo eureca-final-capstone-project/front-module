@@ -28,11 +28,14 @@ import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 import { getTokenParsed } from '../../apis/tokenParsed'
 import { toast } from 'react-toastify'
+import FeedReportModal from './components/FeedReportModal'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
   const { transactionFeedId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+
   const navigate = useNavigate()
 
   const openModal = () => setIsModalOpen(true)
@@ -190,7 +193,7 @@ const BidDetailPage = () => {
                             navigate('/login')
                             return
                           }
-                          // 신고 처리 로직
+                          setIsReportModalOpen(true)
                         }}
                       />
                     </>
@@ -212,7 +215,7 @@ const BidDetailPage = () => {
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
                   <div className="flex items-end justify-end gap-1 lg:hidden">
-                    {isMyPost && (
+                    {!isMyPost && (
                       <>
                         <ReportStrokeIcon className="text-error" />
                         <Button
@@ -225,7 +228,7 @@ const BidDetailPage = () => {
                               navigate('/login')
                               return
                             }
-                            // 신고 처리 로직
+                            setIsReportModalOpen(true)
                           }}
                         />
                       </>
@@ -350,6 +353,11 @@ const BidDetailPage = () => {
         currentHeightPrice={data.currentHeightPrice || 0}
         onClickLeft={closeModal}
         onClickRight={handleBidSubmit}
+      />
+      <FeedReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        transactionFeedId={Number(transactionFeedId)}
       />
     </main>
   )

@@ -108,7 +108,7 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
         <div className="space-y-1">
           <p>신고 유형을 선택하고, 신고 사유를 작성해주세요.</p>
           <p className="text-fs13 text-gray-500">
-            ⚠ 이미 신고한 사용자의 다른 게시글은 신고하실 수 없습니다.
+            ⚠ 이미 신고한 사용자의 다른 게시글은 신고할 수 없습니다.
           </p>
         </div>
       }
