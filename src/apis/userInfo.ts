@@ -54,6 +54,7 @@ export interface TransactionHistoryItem {
   telecomCompany: string
   salesType: string
   transactionType: 'PURCHASE' | 'SALE'
+  liked: boolean
 }
 export interface TransactionHistoryResponse {
   content: TransactionHistoryItem[]
