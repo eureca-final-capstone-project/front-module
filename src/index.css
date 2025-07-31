@@ -3,6 +3,7 @@
 @import 'swiper/css';
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
+@import 'swiper/css/mousewheel';
 
 @theme {
   /* Pri 색상 계열 */
