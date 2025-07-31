@@ -30,6 +30,7 @@ import { toast } from 'react-toastify'
 import FeedReportModal from './components/FeedReportModal'
 import { AxiosError } from 'axios'
 import BasicModal from '../MyPage/components/Modal/BasicModal'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -137,6 +138,19 @@ const NormalDetailPage = () => {
   }
   return (
     <main>
+      {deviceType === 'mobile' ? (
+        <Breadcrumb
+          current="일반 판매"
+          clickableCurrent
+          currentPath="/posts?salesTypeIds=1&sortBy=최신순"
+        />
+      ) : (
+        <Breadcrumb
+          current={data.title}
+          isDesktop
+          prev={{ label: '일반 판매', path: '/posts?salesTypeIds=1&sortBy=최신순' }}
+        />
+      )}
       <div className="bg-gray-10 mb-15 flex flex-col px-4 pb-10 sm:border-b-1 sm:border-b-gray-200 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">
         {/* 이미지 */}
         <div className="relative h-full w-full overflow-hidden rounded-md md:max-w-75">

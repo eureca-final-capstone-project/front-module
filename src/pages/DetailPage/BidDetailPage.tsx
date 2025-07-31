@@ -29,12 +29,15 @@ import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 import { getTokenParsed } from '../../apis/tokenParsed'
 import { toast } from 'react-toastify'
 import FeedReportModal from './components/FeedReportModal'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
   const { transactionFeedId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const deviceType = useDeviceType()
 
   const navigate = useNavigate()
 
@@ -116,6 +119,19 @@ const BidDetailPage = () => {
 
   return (
     <main className="mb-18.75">
+      {deviceType === 'mobile' ? (
+        <Breadcrumb
+          current="입찰 판매"
+          clickableCurrent
+          currentPath="/posts?salesTypeIds=2&sortBy=최신순"
+        />
+      ) : (
+        <Breadcrumb
+          current={data.title}
+          isDesktop
+          prev={{ label: '입찰 판매', path: '/posts?salesTypeIds=2&sortBy=최신순' }}
+        />
+      )}
       <div className="bg-gray-10 flex flex-col px-4 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">
         {/* 이미지 */}
         <div className="relative h-full w-full overflow-hidden rounded-md md:max-w-75">
