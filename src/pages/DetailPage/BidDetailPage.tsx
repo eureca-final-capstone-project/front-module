@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
-import { imageData as PostImage } from '../../constants/imageData'
+import { imagePost } from '../../constants/imageData'
 import ProviderBadge from '../../components/PostCard/ProviderBadge'
 import DataBadge from '../../components/Badge/Badge'
 import { formatAmount, formatDataSize } from '../../utils/format'
@@ -97,6 +97,8 @@ const BidDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  const image = imagePost.find(img => img.id === data.defaultImageNumber)
+
   const handleWishClick = () => {
     if (!isLoggedIn) {
       toast.info('로그인이 필요한 기능입니다.')
@@ -116,11 +118,7 @@ const BidDetailPage = () => {
       <div className="bg-gray-10 flex flex-col px-4 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">
         {/* 이미지 */}
         <div className="relative h-full w-full overflow-hidden rounded-md md:max-w-75">
-          <img
-            src={PostImage[data.defaultImageNumber]}
-            alt={data.title}
-            className={`h-full w-full object-cover`}
-          />
+          <img src={image?.src} alt={data.title} className={`h-full w-full object-cover`} />
           {data.status.code !== 'ON_SALE' && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/70">
               <span className="text-fs16 text-gray-10 font-semibold transition-transform duration-200 group-hover:scale-105">

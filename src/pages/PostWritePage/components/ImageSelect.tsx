@@ -1,11 +1,21 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { imagePost } from '../../../constants/imageData'
 
-const ImageSelect = () => {
+interface ImageSelectProps {
+  transactionType: number
+}
+
+const ImageSelect = ({ transactionType }: ImageSelectProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
+
+  const filteredImages = [
+    ...imagePost.filter(img => img.option === transactionType),
+    ...imagePost.filter(img => img.option === 0),
+  ]
 
   return (
     <Controller
@@ -15,18 +25,15 @@ const ImageSelect = () => {
       render={({ field }) => (
         <div>
           <Swiper slidesPerView={4.5} spaceBetween={16} className="w-full">
-            {[...Array(9)].map((_, idx) => {
-              const isSelected = idx === field.value
+            {filteredImages.map(img => {
+              const isSelected = img.id === field.value
               return (
                 <SwiperSlide
-                  key={idx}
-                  className={`cursor-pointer overflow-hidden rounded-sm ${isSelected ? 'border-pri-500 border-4' : ''} transition-border max-h-30 max-w-30 duration-300 ease-in-out`}
-                  onClick={() => field.onChange(idx)}
+                  key={img.id}
+                  className={`cursor-pointer overflow-hidden rounded-sm ${isSelected ? 'border-pri-400 border-3' : ''} transition-border max-h-30 max-w-30 duration-300 ease-in-out`}
+                  onClick={() => field.onChange(img.id)}
                 >
-                  <img
-                    src={`https://swiperjs.com/demos/images/nature-${idx + 1}.jpg`}
-                    alt={`nature-${idx + 1}`}
-                  />
+                  <img src={img.src} alt={img.alt} />
                 </SwiperSlide>
               )
             })}
