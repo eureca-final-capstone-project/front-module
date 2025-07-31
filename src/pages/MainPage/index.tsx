@@ -49,12 +49,18 @@ const MainPage = () => {
                       시세 정보를 불러오는 중입니다...
                     </p>
                   ) : (
-                    <Graph
-                      type="line"
-                      data={graphData}
-                      yKeys={['LG U+', 'KT', 'SKT']}
-                      height={300}
-                    />
+                    <>
+                      <Graph
+                        type="line"
+                        data={graphData}
+                        yKeys={['LG U+', 'KT', 'SKT']}
+                        height={310}
+                      />
+                      <p className="bg-pri-100 rounded-xs py-1 text-center text-gray-800">
+                        통신사의 <span className="text-pri-500 font-semibold">100MB</span> 당 평균
+                        시세 정보입니다.
+                      </p>
+                    </>
                   )}
                 </Card>
               </div>

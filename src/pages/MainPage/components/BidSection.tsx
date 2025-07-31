@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperClass } from 'swiper'
-import { Pagination } from 'swiper/modules'
+import { Mousewheel, Pagination } from 'swiper/modules'
 import PostCard from '../../../components/PostCard/PostCard'
 import { getTransactionFeeds } from '../../../apis/transactionFeed'
 import { transformPostCard } from '../../../utils/postCardParse'
@@ -56,7 +56,8 @@ const BidSection = () => {
   return (
     <section>
       <Swiper
-        modules={[Pagination]}
+        modules={[Pagination, Mousewheel]}
+        mousewheel={true}
         pagination={{ clickable: true }}
         direction="vertical"
         slidesPerView={2.5}

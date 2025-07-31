@@ -4,8 +4,7 @@ import type { TradeStatus } from '../../utils/status'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../../hooks/useToast'
 import { useWishMutation } from '../../hooks/useWishMutation'
-import { useQuery } from '@tanstack/react-query'
-import { getTokenParsed } from '../../apis/tokenParsed'
+import { useAuthStore } from '../../store/authStore'
 
 type CommonProps = {
   transactionFeedId: number
@@ -39,15 +38,7 @@ const PostCard = (props: PostCardProps) => {
   const { showToast } = useToast()
   const { addWishMutation, deleteWishMutation } = useWishMutation(props.transactionFeedId)
 
-  const { data: userInfo } = useQuery({
-    queryKey: ['tokenParsed'],
-    queryFn: getTokenParsed,
-    staleTime: 1000 * 60 * 5,
-    retry: false,
-    enabled: !!sessionStorage.getItem('userAccessToken'),
-  })
-
-  const isLoggedIn = !!userInfo
+  const isLoggedIn = useAuthStore(state => state.isLogin)
 
   const handleClick = () => {
     if (props.onClick) {

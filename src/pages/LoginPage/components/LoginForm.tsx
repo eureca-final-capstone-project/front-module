@@ -63,9 +63,12 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
           })
 
           showToast({ type: 'success', msg: '로그인 되었습니다.' })
-          navigate(onSuccessNavigateTo)
+          navigate(onSuccessNavigateTo, { replace: true })
           break
         }
+        case 401:
+          showToast({ type: 'error', msg: '가입된 사용자가 아닙니다.' })
+          break
         case 10008:
           showToast({ type: 'error', msg: '해당 계정은 차단되어 로그인이 불가능합니다.' })
           break

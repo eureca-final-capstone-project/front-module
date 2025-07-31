@@ -87,11 +87,11 @@ const BidHistory = () => {
 
         {/* 이전 입찰 히스토리 */}
         {otherBids.length > 0 && (
-          <div className="z-4 mx-1 mt-2 h-[250px] overflow-y-hidden md:h-[277px]">
+          <div className="z-4 mx-1 mt-2 h-[250px] overflow-y-hidden md:h-[310px]">
             <Swiper
               modules={[Mousewheel]}
               direction="vertical"
-              slidesPerView={deviceType == 'mobile' ? 4.6 : 4.3}
+              slidesPerView={deviceType == 'mobile' ? 4.6 : 4.5}
               spaceBetween={4}
               slidesPerGroup={1}
               touchRatio={0.5}
@@ -104,7 +104,7 @@ const BidHistory = () => {
                   spaceBetween: 4,
                 },
                 768: {
-                  slidesPerView: 4.3,
+                  slidesPerView: 4.5,
                   spaceBetween: 4,
                 },
               }}
