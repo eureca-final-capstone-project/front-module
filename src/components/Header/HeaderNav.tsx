@@ -13,6 +13,7 @@ import DropdownMotion from '../Animation/DropDownMotion'
 import { useScrollStore } from '../../store/scrollStore'
 import { useAuthStore } from '../../store/authStore'
 import AlertModal from '../AlertModal/AlertModal'
+import { useToast } from '../../hooks/useToast'
 
 interface HeaderNavProps {
   deviceType: string
@@ -22,6 +23,7 @@ interface HeaderNavProps {
 const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { showToast } = useToast()
 
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -52,6 +54,9 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     if (isLoggedIn) {
       callback()
     } else {
+      if (key !== 'profile') {
+        showToast({ msg: '로그인이 필요한 기능입니다.', type: 'default' })
+      }
       navigate('/login')
     }
   }
@@ -86,11 +91,13 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       label: '데이터 거래',
       to: '/posts',
       matchPath: '/posts',
+      requiresLogin: false,
     },
     {
       label: '관심 거래',
       to: isLoggedIn ? '/mypage/favorites' : '/login',
       matchPath: '/mypage/favorites',
+      requiresLogin: true,
       onClick: () => {
         if (isLoggedIn) {
           useScrollStore.getState().triggerScrollToBottom()
@@ -101,6 +108,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       label: '내 판매글',
       to: isLoggedIn ? '/my-posts' : '/login',
       matchPath: '/my-posts',
+      requiresLogin: true,
     },
   ]
 
@@ -194,11 +202,19 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       {/* 하단 nav */}
       <nav className="text-fs20">
         <ul className="flex gap-4">
-          {navLinks.map(({ label, to, matchPath, onClick }) => (
+          {navLinks.map(({ label, to, matchPath, onClick, requiresLogin }) => (
             <li key={label}>
               <Link
                 to={to}
-                onClick={onClick}
+                onClick={e => {
+                  if (requiresLogin && !isLoggedIn) {
+                    e.preventDefault()
+                    showToast({ msg: '로그인이 필요한 기능입니다.', type: 'default' })
+                    navigate('/login')
+                  } else {
+                    onClick?.()
+                  }
+                }}
                 className={`hover:text-pri-500 ${isActiveLink(matchPath) ? 'text-pri-500' : ''}`}
               >
                 {label}
