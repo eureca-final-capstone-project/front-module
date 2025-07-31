@@ -55,6 +55,7 @@ export const attachResponseInterceptor = (
         // 이미 재시도 했으면 무한 루프 방지 위해 로그인 페이지로 이동
         if (originalRequest._retry) {
           console.log('이미 갱신 시도 했음!')
+          sessionStorage.removeItem(tokenKey)
           window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(new Error('토큰 갱신에 실패했습니다.'))
         }
@@ -102,6 +103,7 @@ export const attachResponseInterceptor = (
           return axiosInstance(originalRequest)
         } catch (error) {
           // 토큰 갱신 실패 시 로그인 페이지로 이동 유도
+          sessionStorage.removeItem(tokenKey)
           window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(error)
         }

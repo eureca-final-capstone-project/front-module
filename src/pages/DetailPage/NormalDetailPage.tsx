@@ -32,6 +32,7 @@ import { AxiosError } from 'axios'
 import BasicModal from '../MyPage/components/Modal/BasicModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useToast } from '../../hooks/useToast'
+import { useAuthStore } from '../../store/authStore'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -43,6 +44,9 @@ const NormalDetailPage = () => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const deviceType = useDeviceType()
   const { showToast } = useToast()
+
+  const isLoggedIn = useAuthStore(state => state.isLogin)
+
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
     queryFn: () => getTransactionFeedDetail(Number(transactionFeedId)),
@@ -106,7 +110,6 @@ const NormalDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
-  const isLoggedIn = !!userInfo
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
