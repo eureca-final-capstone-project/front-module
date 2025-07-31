@@ -7,8 +7,9 @@ import Button from '../../components/Button/Button'
 import ReportStrokeIcon from '@/assets/icons/report-stroke.svg?react'
 import UserIcon from '@/assets/icons/user.svg?react'
 import TimeIcon from '@/assets/icons/time.svg?react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import {
+  deleteTransactionFeed,
   getRecommendedPosts,
   getTransactionFeedDetail,
   TransactionFeedDetailResponse,
@@ -27,10 +28,15 @@ import { useWishMutation } from '../../hooks/useWishMutation'
 import { getTokenParsed } from '../../apis/tokenParsed'
 import { toast } from 'react-toastify'
 import FeedReportModal from './components/FeedReportModal'
+import { AxiosError } from 'axios'
+import BasicModal from '../MyPage/components/Modal/BasicModal'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const deviceType = useDeviceType()
@@ -46,6 +52,33 @@ const NormalDetailPage = () => {
     enabled: !!transactionFeedId,
   })
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteTransactionFeed(Number(transactionFeedId)),
+    onSuccess: () => {
+      toast.success('게시글이 삭제되었습니다.')
+      closeModal()
+      navigate('/my-posts')
+    },
+    onError: (error: AxiosError<{ statusCode: number; message: string }>) => {
+      const code = error.response?.data?.statusCode
+      console.error('삭제 실패:', error)
+
+      switch (code) {
+        case 30003:
+          toast.error('삭제할 게시글을 찾을 수 없습니다.')
+          break
+        case 30002:
+          toast.error('게시글 삭제 권한이 없습니다.')
+          break
+        case 30006:
+          toast.error('입찰 판매글은 삭제할 수 없습니다.')
+          break
+        default:
+          toast.error('게시글 삭제 중 오류가 발생했습니다.')
+      }
+    },
+  })
+
   const { data: userInfo } = useQuery({
     queryKey: ['tokenParsed'],
     queryFn: getTokenParsed,
@@ -59,16 +92,22 @@ const NormalDetailPage = () => {
   if (isLoading) return <p>로딩 중</p>
   if (isError || !data) return <p>에러</p>
 
-  const isLoggedIn = !!userInfo
-  const isMyPost = userInfo?.userId === data.sellerId
-  const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
-  const isBuyDisabled = isMyPost || !hasTransactionPermission
+  const validSalesTypes = ['일반 판매', '입찰 판매'] as const
+
+  if (!data?.salesType?.name || !validSalesTypes.includes(data.salesType.name)) {
+    return <Navigate to="/404" replace />
+  }
 
   const actualType = mapSalesTypeFromServer(data.salesType.name)
 
   if (actualType !== 'normal') {
     return <Navigate to="/404" replace />
   }
+
+  const isLoggedIn = !!userInfo
+  const isMyPost = userInfo?.userId === data.sellerId
+  const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
+  const isBuyDisabled = isMyPost || !hasTransactionPermission
 
   const handleWishClick = () => {
     if (!isLoggedIn) {
@@ -93,6 +132,9 @@ const NormalDetailPage = () => {
     navigate(`/data-purchase/${data.transactionFeedId}`)
   }
 
+  const handleConfirmDelete = () => {
+    deleteMutation.mutate()
+  }
   return (
     <main>
       <div className="bg-gray-10 mb-15 flex flex-col px-4 pb-10 sm:border-b-1 sm:border-b-gray-200 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">
@@ -161,7 +203,7 @@ const NormalDetailPage = () => {
                         text="삭제하기"
                         className="text-gray-700"
                         shape="underline"
-                        onClick={() => {}}
+                        onClick={openModal}
                       />
                     </>
                   ) : (
@@ -213,7 +255,7 @@ const NormalDetailPage = () => {
                           text="삭제하기"
                           shape="underline"
                           className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => {}}
+                          onClick={openModal}
                         />
                       </>
                     ) : (
@@ -365,6 +407,13 @@ const NormalDetailPage = () => {
         isOpen={isReportModalOpen}
         onClose={() => setIsReportModalOpen(false)}
         transactionFeedId={Number(transactionFeedId)}
+      />
+      <BasicModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        modalType="delete-feed"
+        onClickLeft={closeModal}
+        onClickRight={handleConfirmDelete}
       />
     </main>
   )
