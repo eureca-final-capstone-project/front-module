@@ -150,7 +150,10 @@ const NormalDetailPage = () => {
         <Breadcrumb
           current={data.title}
           isDesktop
-          prev={{ label: '일반 판매', path: '/posts?salesTypeIds=1&sortBy=최신순' }}
+          prevs={[
+            { label: '데이터 거래', path: '/posts' },
+            { label: '일반 판매', path: '/posts?salesTypeIds=1&sortBy=최신순' },
+          ]}
         />
       )}
       <div className="bg-gray-10 mb-15 flex flex-col px-4 pb-10 sm:border-b-1 sm:border-b-gray-200 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">

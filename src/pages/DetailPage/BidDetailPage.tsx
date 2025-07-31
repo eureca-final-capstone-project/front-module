@@ -130,7 +130,10 @@ const BidDetailPage = () => {
         <Breadcrumb
           current={data.title}
           isDesktop
-          prev={{ label: '입찰 판매', path: '/posts?salesTypeIds=2&sortBy=최신순' }}
+          prevs={[
+            { label: '데이터 거래', path: '/posts' },
+            { label: '입찰 판매', path: '/posts?salesTypeIds=2&sortBy=최신순' },
+          ]}
         />
       )}
       <div className="bg-gray-10 flex flex-col px-4 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">

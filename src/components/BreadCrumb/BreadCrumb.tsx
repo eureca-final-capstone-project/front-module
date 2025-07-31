@@ -6,10 +6,10 @@ interface BreadcrumbProps {
   clickableCurrent?: boolean
   currentPath?: string
   isDesktop?: boolean
-  prev?: {
+  prevs?: {
     label: string
     path: string
-  }
+  }[]
 }
 
 const Breadcrumb = ({
@@ -17,7 +17,7 @@ const Breadcrumb = ({
   clickableCurrent = false,
   currentPath,
   isDesktop = false,
-  prev,
+  prevs = [],
 }: BreadcrumbProps) => {
   const navigate = useNavigate()
 
@@ -32,14 +32,18 @@ const Breadcrumb = ({
           홈
         </button>
         <ArrowRightIcon className="w-1.75" />
-        {isDesktop && prev && (
-          <>
-            <button onClick={() => handleNavigate(prev.path)} className="font-medium text-gray-900">
-              {prev.label}
-            </button>
-            <ArrowRightIcon className="w-1.75" />
-          </>
-        )}
+        {isDesktop &&
+          prevs.map((item, idx) => (
+            <div key={item.path + idx} className="flex items-center gap-1.5">
+              <button
+                onClick={() => handleNavigate(item.path)}
+                className="font-medium text-gray-900"
+              >
+                {item.label}
+              </button>
+              <ArrowRightIcon className="w-1.75" />
+            </div>
+          ))}
 
         {clickableCurrent && currentPath ? (
           <button onClick={() => handleNavigate(currentPath)} className="font-medium text-gray-900">
