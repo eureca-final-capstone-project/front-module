@@ -215,7 +215,7 @@ const NormalDetailPage = () => {
                         text="수정하기"
                         className="text-gray-700"
                         shape="underline"
-                        onClick={() => {}}
+                        onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
                       />
                       <Button
                         text="삭제하기"
@@ -267,7 +267,7 @@ const NormalDetailPage = () => {
                           text="수정하기"
                           shape="underline"
                           className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => {}}
+                          onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
                         />
                         <Button
                           text="삭제하기"
