@@ -171,7 +171,7 @@ const BidDetailPage = () => {
             )}
             {data.priceCompare === 'SAME' && (
               <span className="text-gray-700">
-                현재 시세와 <span className="text-pri-500 font-semibold">동일</span>해요!
+                현재 시세와 <span className="text-pri-500 font-semibold">동일</span>한 가격이예요!
               </span>
             )}
           </div>
@@ -302,7 +302,8 @@ const BidDetailPage = () => {
                     )}
                     {data.priceCompare === 'SAME' && (
                       <span className="text-gray-700">
-                        현재 시세와 <span className="text-pri-500 font-semibold">동일</span>해요!
+                        현재 시세와 <span className="text-pri-500 font-semibold">동일</span>한
+                        가격이예요!
                       </span>
                     )}
                   </div>

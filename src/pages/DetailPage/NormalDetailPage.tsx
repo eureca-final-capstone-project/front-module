@@ -177,7 +177,7 @@ const NormalDetailPage = () => {
           {data.priceCompare === 'NO_STATISTIC' ? (
             '시세 정보가 부족해 비교가 어려워요'
           ) : data.priceCompare === 'SAME' ? (
-            '현재 시세와 동일해요!'
+            '현재 시세와 동일한 가격이예요!'
           ) : (
             <>
               현재 시세 대비{' '}
@@ -314,7 +314,7 @@ const NormalDetailPage = () => {
                   {data.priceCompare === 'NO_STATISTIC' ? (
                     '시세 정보가 부족해 비교가 어려워요'
                   ) : data.priceCompare === 'SAME' ? (
-                    '현재 시세와 동일해요!'
+                    '현재 시세와 동일한 가격이예요!'
                   ) : (
                     <>
                       현재 시세 대비{' '}
