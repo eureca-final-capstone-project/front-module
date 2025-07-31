@@ -175,15 +175,13 @@ const NormalDetailPage = () => {
         <div className="bg-pri-100 mt-2 mb-4 block rounded-xs p-1 text-center text-gray-700 md:hidden">
           {data.priceCompare === 'NO_STATISTIC' ? (
             '시세 정보가 부족해 비교가 어려워요'
+          ) : data.priceCompare === 'SAME' ? (
+            '현재 시세와 동일해요!'
           ) : (
             <>
               현재 시세 대비{' '}
               <span className="text-pri-500 font-semibold">약 {data.rate.toFixed(1)}</span>%{' '}
-              {data.priceCompare === 'CHEAPER'
-                ? '저렴해요!'
-                : data.priceCompare === 'EXPENSIVE'
-                  ? '비싸요!'
-                  : '동일해요!'}
+              {data.priceCompare === 'CHEAPER' ? '저렴해요!' : '비싸요!'}
             </>
           )}
         </div>
@@ -314,15 +312,13 @@ const NormalDetailPage = () => {
                 <div className="bg-pri-100 hidden rounded-xs p-1 text-center text-gray-700 md:block">
                   {data.priceCompare === 'NO_STATISTIC' ? (
                     '시세 정보가 부족해 비교가 어려워요'
+                  ) : data.priceCompare === 'SAME' ? (
+                    '현재 시세와 동일해요!'
                   ) : (
                     <>
-                      현재 시세 대비 약{' '}
-                      <span className="text-pri-500 font-semibold">{data.rate.toFixed(1)}</span>%{' '}
-                      {data.priceCompare === 'CHEAPER'
-                        ? '저렴해요!'
-                        : data.priceCompare === 'EXPENSIVE'
-                          ? '비싸요!'
-                          : '동일해요!'}
+                      현재 시세 대비{' '}
+                      <span className="text-pri-500 font-semibold">약 {data.rate.toFixed(1)}</span>%{' '}
+                      {data.priceCompare === 'CHEAPER' ? '저렴해요!' : '비싸요!'}
                     </>
                   )}
                 </div>
