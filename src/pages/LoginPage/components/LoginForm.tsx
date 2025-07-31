@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
-import { useAuthStore } from '../../../store/authStore'
+import { useAdminAuthStore, useAuthStore } from '../../../store/authStore'
 import { LoginSchemaType } from '../../../types/auth'
 import { adminLogin } from '../../../apis/admin/auth'
 
@@ -21,6 +21,7 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
   const deviceType = useDeviceType()
   const queryClient = useQueryClient()
   const setIsLogin = useAuthStore(state => state.setIsLogin)
+  const { setIsLogin: setIsAdminLogin } = useAdminAuthStore()
 
   const {
     control,
@@ -44,9 +45,11 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
       switch (data.statusCode) {
         case 200: {
           const accessToken = data.data.accessToken
-
           sessionStorage.setItem(isAdmin ? 'adminAccessToken' : 'userAccessToken', accessToken)
-          setIsLogin(true)
+
+          if (isAdmin) setIsAdminLogin(true)
+          else setIsLogin(true)
+
           await queryClient.invalidateQueries({
             queryKey: [isAdmin ? 'adminProfile' : 'userProfile'],
           })
