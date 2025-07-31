@@ -66,7 +66,7 @@ const Table = <T,>({
               return (
                 <Fragment key={rowIndex}>
                   <tr
-                    className={`border-t border-gray-100 ${clickable && 'cursor-pointer'}`}
+                    className={`border-t border-gray-100 ${clickable && 'cursor-pointer hover:bg-gray-100'}`}
                     onClick={() => clickable && handleRowClick(row, rowIndex)}
                   >
                     <td

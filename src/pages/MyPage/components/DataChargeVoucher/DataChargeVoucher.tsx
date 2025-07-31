@@ -52,7 +52,7 @@ const DataChargeVoucher = ({ coupon }: Props) => {
 
   return (
     <ScaleDownMotion disabled={isUsed || isExpired}>
-      <div className="relative mx-auto h-40 w-full">
+      <div className="relative mx-auto h-33 w-full sm:h-40">
         {/* 그림자 역할 카드 */}
         {!isUsed && !isExpired && (
           <div
@@ -158,7 +158,7 @@ const DataChargeVoucher = ({ coupon }: Props) => {
             {/* 상태 텍스트 오버레이 */}
             {(isUsed || isExpired) && (
               <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-                <span className="text-fs22 font-semibold text-gray-600 select-none">
+                <span className="text-fs20 sm:text-fs22 font-semibold text-gray-600 select-none">
                   {isUsed ? '사용 완료' : '기간 만료'}
                 </span>
               </div>

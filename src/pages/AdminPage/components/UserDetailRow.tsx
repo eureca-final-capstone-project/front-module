@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import Badge from '../../../components/Badge/Badge'
 import { STATUS_STYLE } from '../../../constants/admin'
 import { UserReport } from '../../../types/admin'
@@ -8,6 +9,8 @@ interface UserDetailRowProps {
 }
 
 const UserDetailRow = ({ email, reports }: UserDetailRowProps) => {
+  const navigate = useNavigate()
+
   return (
     <table className="w-full">
       <colgroup>
@@ -30,7 +33,11 @@ const UserDetailRow = ({ email, reports }: UserDetailRowProps) => {
           reports.length > 0 &&
           reports.map(report => {
             return (
-              <tr key={report.reportId} className="bg-gray-30 border-t border-gray-100">
+              <tr
+                key={report.reportId}
+                className="bg-gray-30 cursor-pointer border-t border-gray-100 hover:bg-gray-100"
+                onClick={() => navigate(`/admin/reports/${report.reportId}`)}
+              >
                 <td></td>
                 <td className="px-3 py-4">{report.reportId}</td>
                 <td className="px-3 py-4">{report.reportType}</td>
