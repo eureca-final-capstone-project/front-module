@@ -121,69 +121,45 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <WebMobileLayout />,
+    element: (
+      <AuthGuard>
+        <WebMobileLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: '/post-write',
-        element: (
-          <AuthGuard>
-            <PostWritePage />
-          </AuthGuard>
-        ),
+        element: <PostWritePage />,
         handle: { title: '내 데이터 판매' },
       },
       {
         path: '/change-data',
-        element: (
-          <AuthGuard>
-            <ChangeDataPage />
-          </AuthGuard>
-        ),
+        element: <ChangeDataPage />,
         handle: { title: '데이터 전환하기' },
       },
       {
         path: '/payment',
-        element: (
-          <AuthGuard>
-            <PaymentPage />
-          </AuthGuard>
-        ),
+        element: <PaymentPage />,
         handle: { title: '페이 충전하기' },
       },
       {
         path: '/payment-success',
-        element: (
-          <AuthGuard>
-            <PaymentSuccessPage />
-          </AuthGuard>
-        ),
+        element: <PaymentSuccessPage />,
         handle: { title: '결제 완료' },
       },
       {
         path: '/payment-fail',
-        element: (
-          <AuthGuard>
-            <PaymentFailPage />
-          </AuthGuard>
-        ),
+        element: <PaymentFailPage />,
         handle: { title: '결제 실패' },
       },
       {
         path: '/refund',
-        element: (
-          <AuthGuard>
-            <RefundPage />
-          </AuthGuard>
-        ),
+        element: <RefundPage />,
         handle: { title: '페이 환전하기' },
       },
       {
         path: '/data-purchase/:transactionFeedId',
-        element: (
-          <AuthGuard>
-            <DataPurchasePage />
-          </AuthGuard>
-        ),
+        element: <DataPurchasePage />,
         handle: { title: '데이터 구매' },
       },
     ],
