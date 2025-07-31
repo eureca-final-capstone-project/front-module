@@ -5,7 +5,11 @@ import Button from '../../../components/Button/Button'
 import { formatNumberWithComma } from '../../../utils/format'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 
-const TransactionInfoInput = () => {
+interface TransactionInfoInputProps {
+  isEditMode?: boolean // 수정 모드 여부
+}
+
+const TransactionInfoInput = ({ isEditMode = false }: TransactionInfoInputProps) => {
   const {
     control,
     setError,
@@ -37,6 +41,7 @@ const TransactionInfoInput = () => {
                     ? 'bg-pri-500 border-pri-500 text-gray-10'
                     : 'bg-background border-gray-400 text-gray-400'
                 }`}
+                disabled={isEditMode}
               />
             ))}
           </div>
