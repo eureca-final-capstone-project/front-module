@@ -63,7 +63,7 @@ const DataInput = () => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
                 const numberValue = rawValue === '' ? NaN : Number(rawValue)
 
-                const { amount, unit: newUnit } = convertAmountAndUnit(numberValue)
+                const { amount, unit: newUnit } = convertAmountAndUnit(unit, numberValue)
                 setValue('unit', newUnit)
 
                 field.onChange(amount)
@@ -79,7 +79,7 @@ const DataInput = () => {
         text="전체 판매"
         className="bg-pri-500 text-gray-10 max-h-13"
         onClick={() => {
-          const { amount, unit: newUnit } = convertAmountAndUnit(sellableDataMb)
+          const { amount, unit: newUnit } = convertAmountAndUnit(unit, sellableDataMb)
           setValue('unit', newUnit)
           setValue('salesDataAmount', amount)
 
