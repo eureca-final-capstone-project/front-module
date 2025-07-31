@@ -28,11 +28,17 @@ import WishIcon from '@/assets/icons/heart.svg?react'
 import WishFillIcon from '@/assets/icons/heart-fill.svg?react'
 import { getTokenParsed } from '../../apis/tokenParsed'
 import { toast } from 'react-toastify'
+import FeedReportModal from './components/FeedReportModal'
+import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
   const { transactionFeedId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
+  const deviceType = useDeviceType()
+
   const navigate = useNavigate()
 
   const openModal = () => setIsModalOpen(true)
@@ -89,7 +95,8 @@ const BidDetailPage = () => {
   const isLoggedIn = !!userInfo
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
-  const isBuyDisabled = isMyPost || !hasTransactionPermission
+  const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
+  const isBuyDisabled = isMyPost || !hasTransactionPermission || isCompletedOrExpired
 
   const actualType = mapSalesTypeFromServer(data.salesType.name)
 
@@ -115,6 +122,22 @@ const BidDetailPage = () => {
 
   return (
     <main className="mb-18.75">
+      {deviceType === 'mobile' ? (
+        <Breadcrumb
+          current="입찰 판매"
+          clickableCurrent
+          currentPath="/posts?salesTypeIds=2&sortBy=최신순"
+        />
+      ) : (
+        <Breadcrumb
+          current={data.title}
+          isDesktop
+          prevs={[
+            { label: '데이터 거래', path: '/posts' },
+            { label: '입찰 판매', path: '/posts?salesTypeIds=2&sortBy=최신순' },
+          ]}
+        />
+      )}
       <div className="bg-gray-10 flex flex-col px-4 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">
         {/* 이미지 */}
         <div className="relative h-full w-full overflow-hidden rounded-md md:max-w-75">
@@ -149,7 +172,7 @@ const BidDetailPage = () => {
             )}
             {data.priceCompare === 'SAME' && (
               <span className="text-gray-700">
-                현재 시세 대비 <span className="text-pri-500 font-semibold">동일</span>해요!
+                현재 시세와 <span className="text-pri-500 font-semibold">동일</span>한 가격이예요!
               </span>
             )}
           </div>
@@ -188,7 +211,7 @@ const BidDetailPage = () => {
                             navigate('/login')
                             return
                           }
-                          // 신고 처리 로직
+                          setIsReportModalOpen(true)
                         }}
                       />
                     </>
@@ -210,7 +233,7 @@ const BidDetailPage = () => {
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
                   <div className="flex items-end justify-end gap-1 lg:hidden">
-                    {isMyPost && (
+                    {!isMyPost && (
                       <>
                         <ReportStrokeIcon className="text-error" />
                         <Button
@@ -223,7 +246,7 @@ const BidDetailPage = () => {
                               navigate('/login')
                               return
                             }
-                            // 신고 처리 로직
+                            setIsReportModalOpen(true)
                           }}
                         />
                       </>
@@ -280,7 +303,8 @@ const BidDetailPage = () => {
                     )}
                     {data.priceCompare === 'SAME' && (
                       <span className="text-gray-700">
-                        현재 시세 대비 <span className="text-pri-500 font-semibold">동일</span>해요!
+                        현재 시세와 <span className="text-pri-500 font-semibold">동일</span>한
+                        가격이예요!
                       </span>
                     )}
                   </div>
@@ -348,6 +372,11 @@ const BidDetailPage = () => {
         currentHeightPrice={data.currentHeightPrice || 0}
         onClickLeft={closeModal}
         onClickRight={handleBidSubmit}
+      />
+      <FeedReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        transactionFeedId={Number(transactionFeedId)}
       />
     </main>
   )

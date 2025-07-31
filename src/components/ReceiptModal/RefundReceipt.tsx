@@ -62,7 +62,7 @@ const RefundReceipt = ({ type, pay, info }: ReceiptProps<ExchangeDetail>) => {
               const rawValue = info[item.key as keyof ExchangeDetail]
               const value =
                 item.key === 'exchangedAt' ? (
-                  formatCompactDateTime(info.exchangedAt)
+                  formatCompactDateTime(info.exchangedAt, 'dot', true)
                 ) : item.key === 'exchangeAccountWithBank' ? (
                   <>
                     {info.bankName}

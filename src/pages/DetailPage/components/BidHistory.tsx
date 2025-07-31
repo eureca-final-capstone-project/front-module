@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import { getBidHistory, Bids } from '../../../apis/transactionFeedDetail'
 import FadeInUpMotion from '../../../components/Animation/FadeInUpMotion'
+import { Mousewheel } from 'swiper/modules'
 
 const BidHistory = () => {
   const deviceType = useDeviceType()
@@ -88,13 +89,14 @@ const BidHistory = () => {
         {otherBids.length > 0 && (
           <div className="z-4 mx-1 mt-2 h-[250px] overflow-y-hidden md:h-[277px]">
             <Swiper
+              modules={[Mousewheel]}
               direction="vertical"
               slidesPerView={deviceType == 'mobile' ? 4.6 : 4.3}
               spaceBetween={4}
               slidesPerGroup={1}
               touchRatio={0.5}
               threshold={5}
-              mousewheel
+              mousewheel={true}
               className="h-full"
               breakpoints={{
                 0: {

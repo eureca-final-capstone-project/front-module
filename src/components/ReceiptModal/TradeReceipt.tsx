@@ -60,7 +60,7 @@ const TradeReceipt = ({ type, pay, info }: ReceiptProps<TransactionDetail>) => {
               const rawValue = info[item.key as keyof TransactionDetail]
               const value =
                 item.key === 'transactedAt'
-                  ? formatCompactDateTime(rawValue as string)
+                  ? formatCompactDateTime(rawValue as string, 'dot', true)
                   : typeof rawValue === 'number'
                     ? item.key === 'transactionHistoryId'
                       ? rawValue.toString()
