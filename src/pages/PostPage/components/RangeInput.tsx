@@ -74,13 +74,18 @@ const RangeInput = ({
       </div>
       {error && errorMessage && <span className="text-fs14 text-error">{errorMessage}</span>}
       {onApply && (
-        <Button
-          text="적용하기"
-          shape="underline"
-          onClick={onApply}
-          disabled={isApplyDisabled}
-          className="text-fs14 hidden self-start text-gray-700 sm:block"
-        />
+        <div className="flex items-center justify-between">
+          <p className="text-fs14 text-gray-700">
+            범위를 입력 후 <span className="font-medium text-gray-800">적용</span>해보세요!
+          </p>
+          <Button
+            text="적용하기"
+            shape="underline"
+            onClick={onApply}
+            disabled={isApplyDisabled}
+            className="text-fs14 hidden self-start text-gray-700 sm:block"
+          />
+        </div>
       )}
     </div>
   )
