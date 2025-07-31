@@ -83,7 +83,7 @@ const DataInput = () => {
           setValue('unit', newUnit)
           setValue('salesDataAmount', amount)
 
-          if (errors.salesDataAmount) clearErrors('salesDataAmount')
+          if (amount !== 0 && errors.salesDataAmount) clearErrors('salesDataAmount')
         }}
       />
     </div>
