@@ -34,6 +34,7 @@ import AuthGuard from '../components/Guard/AuthGuard'
 import AdminGuard from '../components/Guard/AdminGuard'
 import GuestGuard from '../components/Guard/GuestGuard'
 import AdminGuestGuard from '../components/Guard/AdminGuestGuard'
+import PostEditPage from '../pages/PostEditPage'
 
 export const router = createBrowserRouter([
   {
@@ -131,6 +132,11 @@ export const router = createBrowserRouter([
         path: '/post-write',
         element: <PostWritePage />,
         handle: { title: '내 데이터 판매' },
+      },
+      {
+        path: '/post-edit/:postId',
+        element: <PostEditPage />,
+        handle: { title: '내 데이터 판매 수정' },
       },
       {
         path: '/change-data',
