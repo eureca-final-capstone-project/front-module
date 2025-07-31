@@ -11,6 +11,7 @@ import { useAdminAuthStore, useAuthStore } from '../../../store/authStore'
 import { LoginSchemaType } from '../../../types/auth'
 import { adminLogin } from '../../../apis/admin/auth'
 import { useToast } from '../../../hooks/useToast'
+import { reconnectNotificationStream } from '../../../utils/reconnectNotificationStream'
 
 interface LoginFormProps {
   isAdmin?: boolean
@@ -51,6 +52,11 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
 
           if (isAdmin) setIsAdminLogin(true)
           else setIsLogin(true)
+
+          // 사용자 알림 스트림 재연결
+          if (!isAdmin) {
+            reconnectNotificationStream()
+          }
 
           await queryClient.invalidateQueries({
             queryKey: [isAdmin ? 'adminProfile' : 'userProfile'],

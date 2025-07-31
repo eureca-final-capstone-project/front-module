@@ -7,6 +7,7 @@ import Badge from '../Badge/Badge'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import { logout } from '../../apis/auth'
 import { toast } from 'react-toastify'
+import { useNotificationStore } from '../../store/notificationStore'
 interface Props {
   nickname: string
   email: string
@@ -43,6 +44,14 @@ const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
   })
 
   const handleLogout = () => {
+    // SSE 연결 끊기 및 상태 초기화
+    const { disconnectFn, clearDisconnectFn, clearNotifications } = useNotificationStore.getState()
+
+    disconnectFn?.()
+    clearDisconnectFn()
+    clearNotifications()
+
+    // 서버 로그아웃 요청
     logoutMutate()
   }
 
