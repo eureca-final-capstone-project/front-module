@@ -50,6 +50,7 @@ const PostWritePage = () => {
   } = methods
   const watchedFields = watch()
   const watchedSalesTypeId = watch('salesTypeId') ?? 1
+  const watchedUnit = watch('unit') ?? 'MB'
 
   const allFieldsFilled = Object.values(watchedFields).every(value => value !== '')
   const noFieldErrors = Object.keys(errors).length === 0
@@ -115,16 +116,13 @@ const PostWritePage = () => {
               >
                 {label}
               </div>
-              {label === '이미지' ? (
-                <ImageSelect transactionType={watchedSalesTypeId} />
-              ) : (
-                <Component />
-              )}
+
+              <Component />
             </Card>
           ))}
           <Card>
             <div className="text-fs20 font-medium">이미지</div>
-            <ImageSelect transactionType={watchedSalesTypeId} />
+            <ImageSelect transactionType={watchedSalesTypeId} unit={watchedUnit} />
           </Card>
 
           <FloatActionButton

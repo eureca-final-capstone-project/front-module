@@ -4,17 +4,20 @@ import { imagePost } from '../../../constants/imageData'
 
 interface ImageSelectProps {
   transactionType: number
+  unit: 'MB' | 'GB'
 }
 
-const ImageSelect = ({ transactionType }: ImageSelectProps) => {
+const ImageSelect = ({ transactionType, unit }: ImageSelectProps) => {
   const {
     control,
     formState: { errors },
   } = useFormContext()
 
   const filteredImages = [
-    ...imagePost.filter(img => img.option === transactionType),
-    ...imagePost.filter(img => img.option === 0),
+    ...imagePost.filter(img => img.type === transactionType && img.unit === unit),
+    ...imagePost.filter(img => img.type === transactionType && img.unit === ''),
+    ...imagePost.filter(img => img.type === 0 && img.unit === unit),
+    ...imagePost.filter(img => img.type === 0 && img.unit === ''),
   ]
 
   return (
