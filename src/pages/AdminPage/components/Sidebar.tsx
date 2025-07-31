@@ -3,12 +3,29 @@ import AddminIcon from '@/assets/icons/admin.svg'
 import LogoutIcon from '@/assets/icons/logout.svg?react'
 import ActiveBarIcon from '@/assets/icons/active-bar.svg?react'
 import { adminSidebarMenu } from '../../../constants/admin'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { adminLogout } from '../../../apis/admin/auth'
+import { useToast } from '../../../hooks/useToast'
+import { getAdminProfile } from '../../../apis/admin/dashboard'
 
 const Sidebar = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const { showToast } = useToast()
+
+  const {
+    data: adminProfile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['adminProfile'],
+    queryFn: getAdminProfile,
+  })
 
   const [prevIndex, setPrevIndex] = useState(0)
 
@@ -20,7 +37,26 @@ const Sidebar = () => {
     setPrevIndex(currentIndex)
   }, [currentIndex])
 
-  const handleLogout = () => {}
+  const logoutMutation = useMutation({
+    mutationFn: adminLogout,
+    onSuccess: data => {
+      switch (data.statusCode) {
+        case 200:
+          queryClient.clear()
+          sessionStorage.removeItem('adminAccessToken')
+          showToast({ type: 'success', msg: '로그아웃 되었습니다.' })
+          navigate('/admin/login')
+          break
+        default:
+          showToast({ type: 'error', msg: '로그아웃에 실패했습니다.' })
+      }
+    },
+    onError: () => {},
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
 
   return (
     <aside className="bg-gray-10 flex min-h-screen w-full max-w-73 flex-col gap-5 p-5">
@@ -33,10 +69,16 @@ const Sidebar = () => {
           <div>
             <img src={AddminIcon} alt="관리자" />
           </div>
-          <span>admin@datcha.com</span>
+          <span className="text-gray-700">
+            {isLoading
+              ? '정보를 불러오는 중입니다.'
+              : isError
+                ? '정보를 불러오지 못했습니다.'
+                : adminProfile.data.email}
+          </span>
         </div>
         <button onClick={handleLogout}>
-          <LogoutIcon className="hover:text-pri-400 text-gray-600" />
+          <LogoutIcon className="hover:text-pri-400 cursor-pointer text-gray-600" />
         </button>
       </div>
       <nav className="flex flex-col gap-2">
