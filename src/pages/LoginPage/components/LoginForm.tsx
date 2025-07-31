@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login } from '../../../apis/auth'
 import { useDeviceType } from '../../../hooks/useDeviceType'
-import { useAuthStore } from '../../../store/authStore'
+import { useAdminAuthStore, useAuthStore } from '../../../store/authStore'
 import { LoginSchemaType } from '../../../types/auth'
 import { adminLogin } from '../../../apis/admin/auth'
+import { useToast } from '../../../hooks/useToast'
 
 interface LoginFormProps {
   isAdmin?: boolean
@@ -21,6 +22,8 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
   const deviceType = useDeviceType()
   const queryClient = useQueryClient()
   const setIsLogin = useAuthStore(state => state.setIsLogin)
+  const { setIsLogin: setIsAdminLogin } = useAdminAuthStore()
+  const { showToast } = useToast()
 
   const {
     control,
@@ -44,21 +47,28 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
       switch (data.statusCode) {
         case 200: {
           const accessToken = data.data.accessToken
-
           sessionStorage.setItem(isAdmin ? 'adminAccessToken' : 'userAccessToken', accessToken)
-          setIsLogin(true)
+
+          if (isAdmin) setIsAdminLogin(true)
+          else setIsLogin(true)
+
           await queryClient.invalidateQueries({
             queryKey: [isAdmin ? 'adminProfile' : 'userProfile'],
           })
+
+          showToast({ type: 'success', msg: '로그인 되었습니다.' })
           navigate(onSuccessNavigateTo)
           break
         }
+        case 10008:
+          showToast({ type: 'error', msg: '해당 계정은 차단되어 로그인이 불가능합니다.' })
+          break
         default:
-          alert('로그인 실패: ' + data.message)
+          showToast({ type: 'error', msg: '로그인 중 오류가 발생했습니다.' })
       }
     },
-    onError: error => {
-      alert('로그인 실패 ' + error.message)
+    onError: () => {
+      showToast({ type: 'error', msg: '로그인 중 오류가 발생했습니다.' })
     },
   })
 
