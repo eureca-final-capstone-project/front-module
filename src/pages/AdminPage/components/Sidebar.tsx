@@ -6,9 +6,10 @@ import { adminSidebarMenu } from '../../../constants/admin'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { adminLogout } from '../../../apis/admin/auth'
 import { useToast } from '../../../hooks/useToast'
+import { getAdminProfile } from '../../../apis/admin/dashboard'
 
 const Sidebar = () => {
   const location = useLocation()
@@ -16,6 +17,15 @@ const Sidebar = () => {
   const queryClient = useQueryClient()
 
   const { showToast } = useToast()
+
+  const {
+    data: adminProfile,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['adminProfile'],
+    queryFn: getAdminProfile,
+  })
 
   const [prevIndex, setPrevIndex] = useState(0)
 
@@ -59,7 +69,13 @@ const Sidebar = () => {
           <div>
             <img src={AddminIcon} alt="관리자" />
           </div>
-          <span>admin@datcha.com</span>
+          <span className="text-gray-700">
+            {isLoading
+              ? '정보를 불러오는 중입니다.'
+              : isError
+                ? '정보를 불러오지 못했습니다.'
+                : adminProfile.data.email}
+          </span>
         </div>
         <button onClick={handleLogout}>
           <LogoutIcon className="hover:text-pri-400 cursor-pointer text-gray-600" />
