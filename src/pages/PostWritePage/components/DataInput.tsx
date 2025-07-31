@@ -63,7 +63,11 @@ const DataInput = () => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
                 const numberValue = rawValue === '' ? NaN : Number(rawValue)
 
-                field.onChange(isNaN(numberValue) ? '' : numberValue)
+                const newUnit = numberValue >= 1000 ? 'GB' : 'MB'
+                const amount = newUnit === 'GB' ? Math.floor(numberValue / 1000) : numberValue
+
+                setValue('unit', newUnit)
+                field.onChange(isNaN(amount) ? '' : amount)
               }}
               error={!!errors.salesDataAmount}
               errorMsg={errors.salesDataAmount?.message?.toString() || ''}
