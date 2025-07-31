@@ -1,7 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import DropDown from '../../../components/DropDown/DropDown'
 import Input from '../../../components/Input/Input'
-import { formatNumberWithComma } from '../../../utils/format'
+import { convertAmountAndUnit, formatNumberWithComma } from '../../../utils/format'
 import Button from '../../../components/Button/Button'
 import { useUserStore } from '../../../store/userStore'
 import { validateSalesDataAmount } from '../../../utils/validation'
@@ -63,11 +63,10 @@ const DataInput = () => {
                 const rawValue = e.target.value.replace(/,/g, '').replace(/[^0-9]/g, '')
                 const numberValue = rawValue === '' ? NaN : Number(rawValue)
 
-                const newUnit = numberValue >= 1000 ? 'GB' : 'MB'
-                const amount = newUnit === 'GB' ? Math.floor(numberValue / 1000) : numberValue
-
+                const { amount, unit: newUnit } = convertAmountAndUnit(numberValue)
                 setValue('unit', newUnit)
-                field.onChange(isNaN(amount) ? '' : amount)
+
+                field.onChange(amount)
               }}
               error={!!errors.salesDataAmount}
               errorMsg={errors.salesDataAmount?.message?.toString() || ''}
@@ -80,9 +79,7 @@ const DataInput = () => {
         text="전체 판매"
         className="bg-pri-500 text-gray-10 max-h-13"
         onClick={() => {
-          const newUnit = sellableDataMb >= 1000 ? 'GB' : 'MB'
-          const amount = newUnit === 'GB' ? Math.floor(sellableDataMb / 1000) : sellableDataMb
-
+          const { amount, unit: newUnit } = convertAmountAndUnit(sellableDataMb)
           setValue('unit', newUnit)
           setValue('salesDataAmount', amount)
 
