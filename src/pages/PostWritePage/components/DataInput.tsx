@@ -76,7 +76,12 @@ const DataInput = () => {
         text="전체 판매"
         className="bg-pri-500 text-gray-10 max-h-13"
         onClick={() => {
-          setValue('salesDataAmount', sellableDataMb)
+          const newUnit = sellableDataMb >= 1000 ? 'GB' : 'MB'
+          const amount = newUnit === 'GB' ? Math.floor(sellableDataMb / 1000) : sellableDataMb
+
+          setValue('unit', newUnit)
+          setValue('salesDataAmount', amount)
+
           if (errors.salesDataAmount) clearErrors('salesDataAmount')
         }}
       />
