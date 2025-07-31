@@ -12,6 +12,7 @@ import { AnimatePresence } from 'framer-motion'
 import DropdownMotion from '../Animation/DropDownMotion'
 import { useScrollStore } from '../../store/scrollStore'
 import { useAuthStore } from '../../store/authStore'
+import AlertModal from '../AlertModal/AlertModal'
 
 interface HeaderNavProps {
   deviceType: string
@@ -24,6 +25,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
 
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const [isAlertOpen, setIsAlertOpen] = useState(false)
 
   const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
@@ -58,7 +60,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'notification',
       label: '알림',
-      action: () => alert('알림 모달 오픈'),
+      action: () => setIsAlertOpen(prev => !prev),
       badge: hasUnreadNotifications,
     },
     {
@@ -174,6 +176,13 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
                       telecomCompany={telecomCompany}
                       onClose={() => setIsProfileOpen(false)}
                     />
+                  </DropdownMotion>
+                </AnimatePresence>
+              )}
+              {key === 'notification' && isAlertOpen && (
+                <AnimatePresence>
+                  <DropdownMotion className="absolute top-full right-[-178px] z-50 mt-3">
+                    <AlertModal />
                   </DropdownMotion>
                 </AnimatePresence>
               )}
