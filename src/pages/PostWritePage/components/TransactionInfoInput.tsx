@@ -5,8 +5,13 @@ import Button from '../../../components/Button/Button'
 import { formatNumberWithComma } from '../../../utils/format'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 
-const TransactionInfoInput = () => {
+interface TransactionInfoInputProps {
+  isEditMode?: boolean // 수정 모드 여부
+}
+
+const TransactionInfoInput = ({ isEditMode = false }: TransactionInfoInputProps) => {
   const {
+    watch,
     control,
     setError,
     clearErrors,
@@ -18,6 +23,8 @@ const TransactionInfoInput = () => {
     { label: '입찰 판매', value: 2 },
   ]
 
+  const salesTypeId = watch('salesTypeId')
+
   return (
     <div className="space-y-5">
       {/* 거래 방식 선택 */}
@@ -26,19 +33,25 @@ const TransactionInfoInput = () => {
         control={control}
         defaultValue={1}
         render={({ field }) => (
-          <div className="flex gap-2">
-            {options.map(option => (
-              <Button
-                text={option.label}
-                key={option.value}
-                onClick={() => field.onChange(option.value)}
-                className={`border px-2 py-1.5 ${
-                  field.value === option.value
-                    ? 'bg-pri-500 border-pri-500 text-gray-10'
-                    : 'bg-background border-gray-400 text-gray-400'
-                }`}
-              />
-            ))}
+          <div>
+            <div className="flex gap-2">
+              {options.map(option => (
+                <Button
+                  text={option.label}
+                  key={option.value}
+                  onClick={() => field.onChange(option.value)}
+                  className={`border px-2 py-1.5 ${
+                    field.value === option.value
+                      ? 'bg-pri-500 border-pri-500 text-gray-10'
+                      : 'bg-background border-gray-400 text-gray-400'
+                  }`}
+                  disabled={isEditMode}
+                />
+              ))}
+            </div>
+            <div className="text-fs14 text-error px-0.5 pt-2">
+              {salesTypeId === 2 ? '입찰 판매글은 추후 수정 및 삭제가 불가능합니다.' : ''}
+            </div>
           </div>
         )}
       />
