@@ -1,24 +1,24 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import AlertItem from './AlertItem'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getNotifications, markNotificationsAsRead, NotificationItem } from '../../apis/alert'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
+import LockedIcon from '@/assets/icons/locked.svg?react'
+import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../store/authStore'
+import Button from '../Button/Button'
 
 const AlertModal = () => {
   const queryClient = useQueryClient()
-
+  const navigate = useNavigate()
+  const isLoggedIn = useAuthStore(state => state.isLogin)
   const [hasReachedBottom, setHasReachedBottom] = useState(false)
-
-  const handleNotificationScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget
-    const isBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 44
-    setHasReachedBottom(isBottom)
-
-    if (isBottom && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage()
+  useEffect(() => {
+    if (isLoggedIn) {
+      queryClient.invalidateQueries({ queryKey: ['notifications'] })
     }
-  }
+  }, [isLoggedIn])
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['notifications'],
@@ -53,8 +53,42 @@ const AlertModal = () => {
     [markReadMutation]
   )
 
+  if (!isLoggedIn) {
+    return (
+      <div className="rounded-custom-m shadow-header-modal absolute right-0 z-50 flex h-114 w-89 flex-col overflow-hidden bg-white p-0">
+        <div className="flex flex-1 flex-col items-center justify-center gap-5 px-5 text-center">
+          <LockedIcon className="h-10 w-10 text-gray-400" />
+          <div>
+            <p className="text-fs16 font-semibold text-gray-900">로그인이 필요합니다.</p>
+            <p className="text-fs14 mt-1 text-gray-500">
+              로그인하고 다차 거래 상황과 소식을
+              <br />
+              알림으로 받아보세요.
+            </p>
+          </div>
+          <Button
+            text="로그인하기"
+            className="text-fs14 border-pri-500 text-pri-500 border-[1.7px] px-11 py-3 font-medium"
+            onClick={() => navigate('/login')}
+          />
+        </div>
+        <div className="bg-pri-500 h-5" />
+      </div>
+    )
+  }
+
   const flattenedNotifications: NotificationItem[] = data?.pages.flatMap(page => page.content) ?? []
   const shouldShowCompleteMessage = hasReachedBottom && !hasNextPage && !isFetchingNextPage
+
+  const handleNotificationScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget
+    const isBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 44
+    setHasReachedBottom(isBottom)
+
+    if (isBottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }
 
   return (
     <div className="rounded-custom-m shadow-header-modal absolute right-0 z-50 flex h-114 w-89 flex-col overflow-hidden bg-white p-0">

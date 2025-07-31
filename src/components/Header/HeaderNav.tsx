@@ -45,7 +45,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
 
   const handleAction = (key: string, callback: () => void) => () => {
     setActiveNav(key)
-    if (key === 'search') {
+    if (key === 'search' || key === 'notification') {
       callback()
       return
     }
@@ -181,7 +181,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
               )}
               {key === 'notification' && isAlertOpen && (
                 <AnimatePresence>
-                  <DropdownMotion className="absolute top-full right-[-178px] z-50 mt-3">
+                  <DropdownMotion className="absolute top-full right-[-116px] z-50 mt-3">
                     <AlertModal />
                   </DropdownMotion>
                 </AnimatePresence>
