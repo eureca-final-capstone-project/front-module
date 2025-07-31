@@ -74,3 +74,23 @@ export const formatAccountNumber = (value: string) => {
 
 /* 계좌 번호 하이픈 자동 제거 함수 */
 export const stripAccountNumber = (value: string) => value.replace(/\D/g, '').slice(0, 12)
+
+/* 입력 값에 따른 데이터 양, MB/GB 자동 변환 함수 */
+export const convertAmountAndUnit = (unit: 'MB' | 'GB', value: number) => {
+  if (isNaN(value)) return { amount: '', unit: unit }
+  if (unit === 'GB') return { amount: value, unit }
+
+  const newUnit = value >= 1000 ? 'GB' : 'MB'
+  const amount = newUnit === 'GB' ? Math.floor(value / 1000) : value
+
+  return { amount, unit: newUnit }
+}
+
+export const getUnit = (amount?: number): 'MB' | 'GB' => {
+  return amount && amount >= 1000 ? 'GB' : 'MB'
+}
+
+export const formatSalesDataAmount = (amount?: number) => {
+  if (typeof amount !== 'number') return undefined
+  return amount >= 1000 ? Math.floor(amount / 1000) : amount
+}

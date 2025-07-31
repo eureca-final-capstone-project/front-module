@@ -30,6 +30,11 @@ import RefundPage from '../pages/RefundPage'
 import ReportHistory from '../pages/AdminPage/ReportHistory'
 import RestrictionHistory from '../pages/AdminPage/RestrictionHistory'
 import ReportDetailPage from '../pages/AdminPage/ReportDetailPage'
+import AuthGuard from '../components/Guard/AuthGuard'
+import AdminGuard from '../components/Guard/AdminGuard'
+import GuestGuard from '../components/Guard/GuestGuard'
+import AdminGuestGuard from '../components/Guard/AdminGuestGuard'
+import PostEditPage from '../pages/PostEditPage'
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +42,11 @@ export const router = createBrowserRouter([
     element: <MainPage />,
   },
   {
-    element: <AuthLayout />,
+    element: (
+      <GuestGuard>
+        <AuthLayout />
+      </GuestGuard>
+    ),
     children: [
       {
         path: '/login',
@@ -56,6 +65,15 @@ export const router = createBrowserRouter([
         element: <OAuthCallbackPage />,
       },
       { path: '/reset-password', element: <PasswordResetPage /> },
+    ],
+  },
+  {
+    element: (
+      <AdminGuestGuard>
+        <AuthLayout />
+      </AdminGuestGuard>
+    ),
+    children: [
       {
         path: '/admin/login',
         element: <AdminLoginPage />,
@@ -79,25 +97,46 @@ export const router = createBrowserRouter([
       },
       {
         path: '/mypage/:tabId',
-        element: <MyPage />,
+        element: (
+          <AuthGuard>
+            <MyPage />
+          </AuthGuard>
+        ),
       },
       {
         path: '/charge-result',
-        element: <PayChargeResultPage />,
+        element: (
+          <AuthGuard>
+            <PayChargeResultPage />
+          </AuthGuard>
+        ),
       },
       {
         path: '/my-posts',
-        element: <MyPostPage />,
+        element: (
+          <AuthGuard>
+            <MyPostPage />
+          </AuthGuard>
+        ),
       },
     ],
   },
   {
-    element: <WebMobileLayout />,
+    element: (
+      <AuthGuard>
+        <WebMobileLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: '/post-write',
         element: <PostWritePage />,
         handle: { title: '내 데이터 판매' },
+      },
+      {
+        path: '/post-edit/:postId',
+        element: <PostEditPage />,
+        handle: { title: '내 데이터 판매 수정' },
       },
       {
         path: '/change-data',
@@ -132,7 +171,11 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    element: <AdminLayout />,
+    element: (
+      <AdminGuard>
+        <AdminLayout />
+      </AdminGuard>
+    ),
     children: [
       {
         path: '/admin/dashboard',

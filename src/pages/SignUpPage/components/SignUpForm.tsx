@@ -73,7 +73,7 @@ const SignUpForm = () => {
             type: 'success',
             msg: '이메일 인증 링크가 발송되었습니다. 메일함에서 인증을 완료한 후 로그인해 주세요.',
           })
-          navigate('/login')
+          navigate('/login', { replace: true })
           break
         default:
           showToast({
@@ -164,6 +164,7 @@ const SignUpForm = () => {
                   />
                 }
                 suffixAlwaysVisible={true}
+                variant="auth"
               />
             )}
           />
@@ -193,6 +194,7 @@ const SignUpForm = () => {
               error={!!errors.password}
               errorMsg={errors.password?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
+              variant="auth"
             />
           )}
         />
@@ -212,6 +214,7 @@ const SignUpForm = () => {
               error={!!errors.passwordConfirm}
               errorMsg={errors.passwordConfirm?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
+              variant="auth"
             />
           )}
         />
@@ -246,6 +249,7 @@ const SignUpForm = () => {
                 error={!!errors.phoneNumber}
                 errorMsg={errors.phoneNumber?.message}
                 shape={deviceType === 'mobile' ? 'square' : 'floating'}
+                variant="auth"
               />
             )}
           />
