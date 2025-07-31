@@ -60,6 +60,13 @@ const MobileRangeSelectContent = ({
   const rangeErrorMessage = getRangeErrorMessage(tempMin, tempMax, isData ? '데이터' : '금액')
   const isRangeError = !!rangeErrorMessage
 
+  const areInputsFilled = useMemo(() => {
+    if (selectedRangeIndex !== null) {
+      return true
+    }
+    return tempMin.trim() !== '' && tempMax.trim() !== ''
+  }, [tempMin, tempMax, selectedRangeIndex])
+
   const handlePresetSelect = (index: number) => {
     const selected = options[index]
     const newRange = {
@@ -76,18 +83,19 @@ const MobileRangeSelectContent = ({
   }
 
   const handleCustomChange = (value: string, type: 'min' | 'max') => {
-    if (type === 'min') {
-      setTempMin(value)
-    } else {
-      setTempMax(value)
-    }
-    onFilterChange({ [isData ? 'selectedDataRange' : 'selectedPriceRange']: null })
+    const newMin = type === 'min' ? value : tempMin
+    const newMax = type === 'max' ? value : tempMax
+
+    setTempMin(newMin)
+    setTempMax(newMax)
+
+    onFilterChange({
+      [isData ? 'selectedDataRange' : 'selectedPriceRange']: null, // 사용자 직접 입력 시 프리셋 선택 해제
+      [isData ? 'appliedDataRange' : 'appliedPriceRange']: { min: newMin, max: newMax },
+    })
   }
 
   const handleApplyClick = () => {
-    onFilterChange({
-      [isData ? 'appliedDataRange' : 'appliedPriceRange']: { min: tempMin, max: tempMax },
-    })
     onApply()
   }
 
@@ -110,7 +118,7 @@ const MobileRangeSelectContent = ({
           return (
             <div
               key={option.label}
-              className="flex items-center gap-3"
+              className="flex cursor-pointer items-center gap-3"
               onClick={() => handlePresetSelect(index)}
             >
               <CheckBox checked={checked} onChange={() => {}} type="radio" />
@@ -129,9 +137,10 @@ const MobileRangeSelectContent = ({
             error={isRangeError}
             onChangeMin={val => handleCustomChange(val, 'min')}
             onChangeMax={val => handleCustomChange(val, 'max')}
+            onApply={handleApplyClick}
           />
         </div>
-        {isRangeError && <p className="text-error text-fs12 mt-1">{rangeErrorMessage}</p>}
+        {isRangeError && <p className="text-error text-fs12 px-2">{rangeErrorMessage}</p>}
       </div>
       <div className={`${isData ? 'mt-10' : 'mt-5'} flex w-full gap-3`}>
         <Button
@@ -143,7 +152,7 @@ const MobileRangeSelectContent = ({
           text="적용하기"
           className="text-fs18 text-gray-10 bg-pri-500 w-full p-5 font-medium"
           onClick={handleApplyClick}
-          disabled={isRangeError}
+          disabled={isRangeError || !areInputsFilled}
         />
       </div>
     </div>

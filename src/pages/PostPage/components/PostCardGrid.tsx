@@ -11,12 +11,12 @@ const PostCardGrid = ({ posts }: PostCardGridProps) => {
 
   return (
     <div
-      className={`min-w-0 pb-10 ${
+      className={`min-w-0 ${
         deviceType === 'mobile'
           ? 'bg-gray-10 grid min-w-0 grid-cols-1 gap-4 p-4'
           : deviceType === 'tablet'
-            ? 'grid grid-cols-1 gap-x-6 gap-y-15.5 md:grid-cols-2'
-            : 'grid grid-cols-3 gap-x-6 gap-y-15.5 xl:grid-cols-4'
+            ? 'grid grid-cols-1 gap-x-6 gap-y-15.5 pb-10 md:grid-cols-2'
+            : 'grid grid-cols-3 gap-x-6 gap-y-15.5 pb-10 xl:grid-cols-4'
       }`}
     >
       {posts.map((post, idx) =>
