@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { toast, ToastOptions } from 'react-toastify'
 
 interface ToastProps {
@@ -14,6 +15,8 @@ interface ToastProps {
 }
 
 export const useToast = () => {
+  const isToastVisible = useRef(false)
+
   const showToast = ({
     msg,
     type = 'default',
@@ -21,8 +24,16 @@ export const useToast = () => {
     promiseMessages,
     promiseFn,
   }: ToastProps) => {
+    if (isToastVisible.current) return
+
     const options: ToastOptions = {
       ...customOptions,
+      onOpen: () => {
+        isToastVisible.current = true
+      },
+      onClose: () => {
+        isToastVisible.current = false
+      },
     }
 
     switch (type) {
@@ -50,7 +61,15 @@ export const useToast = () => {
               render: () => promiseMessages?.error || '에러가 발생했습니다.',
             },
           },
-          customOptions
+          {
+            ...customOptions,
+            onOpen: () => {
+              isToastVisible.current = true
+            },
+            onClose: () => {
+              isToastVisible.current = false
+            },
+          }
         )
         break
       default:
