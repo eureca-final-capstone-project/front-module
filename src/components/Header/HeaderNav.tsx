@@ -11,6 +11,7 @@ import UserInfoModal from './UserInfoModal'
 import { AnimatePresence } from 'framer-motion'
 import DropdownMotion from '../Animation/DropDownMotion'
 import { useScrollStore } from '../../store/scrollStore'
+import { useAuthStore } from '../../store/authStore'
 
 interface HeaderNavProps {
   deviceType: string
@@ -33,7 +34,8 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const email = userProfile?.email ?? ''
   const telecomCompany = userProfile?.telecomCompany?.name ?? ''
 
-  const isLoggedIn = !!userProfile && !!userProfile.nickname
+  const isLoggedIn = useAuthStore(state => state.isLogin)
+
   const notifications = [{ sample1: 'sample1' }]
   const hasUnreadNotifications = notifications.length > 0
 
@@ -66,7 +68,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     },
     {
       key: 'profile',
-      label: isLoggedIn ? userProfile.nickname : '로그인',
+      label: isLoggedIn ? userProfile?.nickname : '로그인',
       action: () => {
         if (isLoggedIn) {
           setIsProfileOpen(prev => !prev)

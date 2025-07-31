@@ -1,5 +1,5 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import FilterBar, { FilterState } from './components/FilterBar'
 import PostCardGrid from './components/PostCardGrid'
 import DropDown from '../../components/DropDown/DropDown'
@@ -17,8 +17,8 @@ import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopBut
 import MobileFilter from './components/MobileFilter'
 import { MobileFilterState, initialFilterState } from '../../types/filter'
 import Button from '../../components/Button/Button'
-import { getTokenParsed } from '../../apis/tokenParsed'
 import PlusIcon from '@/assets/icons/plus.svg?react'
+import { useAuthStore } from '../../store/authStore'
 
 const parseNumberArray = (param: string | null): number[] => {
   return param
@@ -117,15 +117,7 @@ const PostPage = () => {
     navigate(`/posts?${newParams.toString()}`, { replace: true })
   }
 
-  const { data: userInfo } = useQuery({
-    queryKey: ['tokenParsed'],
-    queryFn: getTokenParsed,
-    staleTime: 1000 * 60 * 5,
-    retry: false,
-    enabled: !!sessionStorage.getItem('userAccessToken'),
-  })
-
-  const isLoggedIn = !!userInfo
+  const isLoggedIn = useAuthStore(state => state.isLogin)
 
   const sortBy = useMemo(() => {
     const map: Record<SortLabel, 'LATEST' | 'PRICE_HIGH' | 'PRICE_LOW'> = {
