@@ -164,6 +164,7 @@ const SignUpForm = () => {
                   />
                 }
                 suffixAlwaysVisible={true}
+                variant="auth"
               />
             )}
           />
@@ -193,6 +194,7 @@ const SignUpForm = () => {
               error={!!errors.password}
               errorMsg={errors.password?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
+              variant="auth"
             />
           )}
         />
@@ -212,6 +214,7 @@ const SignUpForm = () => {
               error={!!errors.passwordConfirm}
               errorMsg={errors.passwordConfirm?.message}
               shape={deviceType === 'mobile' ? 'square' : 'floating'}
+              variant="auth"
             />
           )}
         />
@@ -246,6 +249,7 @@ const SignUpForm = () => {
                 error={!!errors.phoneNumber}
                 errorMsg={errors.phoneNumber?.message}
                 shape={deviceType === 'mobile' ? 'square' : 'floating'}
+                variant="auth"
               />
             )}
           />
