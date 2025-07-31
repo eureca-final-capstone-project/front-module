@@ -79,7 +79,7 @@ const DataInput = () => {
         text="전체 판매"
         className="bg-pri-500 text-gray-10 max-h-13"
         onClick={() => {
-          const { amount, unit: newUnit } = convertAmountAndUnit(unit, sellableDataMb)
+          const { amount, unit: newUnit } = convertAmountAndUnit('MB', sellableDataMb)
           setValue('unit', newUnit)
           setValue('salesDataAmount', amount)
 
