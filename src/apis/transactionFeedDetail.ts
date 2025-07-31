@@ -121,3 +121,7 @@ export const postBid = async (transactionFeedId: number, bidAmount: number): Pro
 
   return data
 }
+
+export const deleteTransactionFeed = async (transactionFeedId: number): Promise<void> => {
+  await client.delete(`/transaction-feed/${transactionFeedId}`)
+}

@@ -49,7 +49,8 @@ export const formatFullDate = (
 }
 export const formatCompactDateTime = (
   dateString: string,
-  style: 'dot' | 'dash' = 'dot'
+  style: 'dot' | 'dash' = 'dot',
+  lineBreak: boolean = false
 ): string => {
   const date = new Date(dateString)
 
@@ -59,11 +60,13 @@ export const formatCompactDateTime = (
   const hour = String(date.getHours()).padStart(2, '0')
   const minute = String(date.getMinutes()).padStart(2, '0')
 
+  const separator = lineBreak ? '\n' : ' | '
+
   if (style === 'dash') {
-    return `${year}-${month}-${day} | ${hour}:${minute}`
+    return `${year}-${month}-${day}${separator}${hour}:${minute}`
   }
 
-  return `${year}. ${month}. ${day} | ${hour}:${minute}`
+  return `${year}. ${month}. ${day}${separator}${hour}:${minute}`
 }
 export const formatCompactDate = (
   dateString: string,
