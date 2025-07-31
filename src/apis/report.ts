@@ -45,3 +45,24 @@ export const getMyReportHistory = async (
     totalPages: res.data.data.totalPages,
   }
 }
+
+export interface ReportPayload {
+  transactionFeedId: number
+  reportTypeId: number
+  reason: string
+}
+
+export interface ReportResponse {
+  statusCode: number
+  message: string
+  data?: {
+    statusCode: number
+    statusCodeName: string
+    detailMessage: string
+  }
+}
+
+export const postReport = async (body: ReportPayload): Promise<ReportResponse> => {
+  const res = await adminClient.post<ReportResponse>('/reports', body)
+  return res.data
+}

@@ -3,6 +3,7 @@
 @import 'swiper/css';
 @import 'swiper/css/pagination';
 @import 'swiper/css/navigation';
+@import 'swiper/css/mousewheel';
 
 @theme {
   /* Pri 색상 계열 */
@@ -275,4 +276,15 @@ input[type='number'] {
 
 #nprogress .spinner-icon {
   display: none !important;
+}
+
+@media (max-width: 640px) {
+  .Toastify__toast-container {
+    width: 320px;
+  }
+  .Toastify__toast-container--top-center {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+  }
 }

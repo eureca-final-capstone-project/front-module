@@ -29,6 +29,12 @@ export const modalTexts = {
     leftButtonText: '닫기',
     rightButtonText: '충전하기',
   },
+  'delete-feed': {
+    title: '게시글을 삭제하시겠습니까?',
+    description: '삭제하신 게시물은 복구가 불가능합니다.',
+    leftButtonText: '닫기',
+    rightButtonText: '삭제하기',
+  },
 } as const
 
 export const buttonOptions = {
