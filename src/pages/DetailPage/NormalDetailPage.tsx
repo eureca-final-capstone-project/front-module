@@ -31,6 +31,7 @@ import FeedReportModal from './components/FeedReportModal'
 import { AxiosError } from 'axios'
 import BasicModal from '../MyPage/components/Modal/BasicModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import { useToast } from '../../hooks/useToast'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -41,7 +42,7 @@ const NormalDetailPage = () => {
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const deviceType = useDeviceType()
-
+  const { showToast } = useToast()
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
     queryFn: () => getTransactionFeedDetail(Number(transactionFeedId)),
@@ -137,7 +138,7 @@ const NormalDetailPage = () => {
     deleteMutation.mutate()
   }
   return (
-    <main>
+    <main className="mb-5">
       {deviceType === 'mobile' ? (
         <Breadcrumb
           current="일반 판매"
@@ -342,6 +343,9 @@ const NormalDetailPage = () => {
                     if (deviceType === 'mobile') {
                       setIsSheetOpen(true)
                     }
+                    if (!data.liked) {
+                      showToast({ msg: '관심 거래로 등록되었습니다.', type: 'success' })
+                    }
                     handleWishClick()
                   }}
                 />
@@ -378,7 +382,7 @@ const NormalDetailPage = () => {
       {/* 관련 상품 */}
 
       {deviceType !== 'mobile' ? (
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-10 pb-5">
           <h2 className="text-fs28 font-medium">관련 상품</h2>
           {isRecommendedLoading ? (
             <p className="text-gray-500">관련 상품 로딩 중</p>
