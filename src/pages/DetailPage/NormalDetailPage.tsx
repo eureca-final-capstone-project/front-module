@@ -1,4 +1,4 @@
-import { imageData as PostImage } from '../../constants/imageData'
+import { imagePost } from '../../constants/imageData'
 import ProviderBadge from '../../components/PostCard/ProviderBadge'
 import DataBadge from '../../components/Badge/Badge'
 import { formatAmount, formatDataSize } from '../../utils/format'
@@ -112,6 +112,8 @@ const NormalDetailPage = () => {
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
   const isBuyDisabled = isMyPost || !hasTransactionPermission || isCompletedOrExpired
 
+  const image = imagePost.find(img => img.id === data.defaultImageNumber)
+
   const handleWishClick = () => {
     if (!isLoggedIn) {
       toast.info('로그인이 필요한 기능입니다.')
@@ -159,11 +161,7 @@ const NormalDetailPage = () => {
       <div className="bg-gray-10 mb-15 flex flex-col px-4 pb-10 sm:border-b-1 sm:border-b-gray-200 sm:bg-transparent sm:px-0 md:flex-row md:gap-4 lg:gap-7">
         {/* 이미지 */}
         <div className="relative h-full w-full overflow-hidden rounded-md md:max-w-75">
-          <img
-            src={PostImage[data.defaultImageNumber]}
-            alt={'이미지'}
-            className={`h-full w-full object-cover`}
-          />
+          <img src={image?.src} alt={'이미지'} className={`h-full w-full object-cover`} />
           {data.status.code !== 'ON_SALE' && (
             <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/70">
               <span className="text-fs16 text-gray-10 font-semibold transition-transform duration-200 group-hover:scale-105">

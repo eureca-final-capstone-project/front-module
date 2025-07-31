@@ -6,7 +6,7 @@ import DatchaCoinSecondaryIcon from '@/assets/icons/datcha-coin-secondary.svg?re
 import ProviderBadge from './ProviderBadge'
 import DataBadge from '../Badge/Badge'
 import { formatDataSize, formatAmount } from '../../utils/format'
-import { imageData as PostImage } from '../../constants/imageData'
+import { imagePost } from '../../constants/imageData'
 import { getSalesTypeLabel } from '../../utils/salesType'
 import { formatRelativeTime, formatFullDate } from '../../utils/time'
 
@@ -37,6 +37,8 @@ const PostCardRow = ({
   tradehistorytime,
   tradehistorypay,
 }: PostCardRowProps) => {
+  const image = imagePost.find(img => img.id === defaultImageNumber)
+
   const renderImageSection = () => (
     // 이미지 영역
     <div
@@ -44,7 +46,7 @@ const PostCardRow = ({
     >
       {/* 이미지 */}
       <img
-        src={PostImage[defaultImageNumber]}
+        src={image?.src}
         alt={title}
         className={`h-full w-full object-cover transition-transform duration-300 ${
           status === 'active' ? 'group-hover:scale-105' : ''

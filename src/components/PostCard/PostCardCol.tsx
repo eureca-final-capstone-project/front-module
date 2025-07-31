@@ -7,8 +7,9 @@ import ProviderBadge from './ProviderBadge'
 import DataBadge from '../Badge/Badge'
 import { formatDataSize, formatAmount } from '../../utils/format'
 import { useDeviceType } from '../../hooks/useDeviceType'
-import { imageData as PostImage } from '../../constants/imageData'
+
 import { formatRelativeTime } from '../../utils/time'
+import { imagePost } from '../../constants/imageData'
 
 const PostCardCol = ({
   telecomCompany,
@@ -27,6 +28,8 @@ const PostCardCol = ({
 }: PostCardProps) => {
   const deviceType = useDeviceType()
 
+  const image = imagePost.find(img => img.id === defaultImageNumber)
+
   return (
     <div
       onClick={onClick}
@@ -35,7 +38,7 @@ const PostCardCol = ({
       <div className="relative aspect-square w-full overflow-hidden rounded-md">
         {/* 이미지 */}
         <img
-          src={PostImage[defaultImageNumber]}
+          src={image?.src}
           alt={title}
           className={`h-full w-full object-cover transition-transform duration-300 ${
             status === 'active' ? 'group-hover:scale-105' : ''
