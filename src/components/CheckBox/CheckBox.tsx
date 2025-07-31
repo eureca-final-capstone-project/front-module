@@ -3,7 +3,7 @@ import CheckIcon from '@/assets/icons/check.svg?react'
 interface CheckBoxProps {
   checked: boolean
   onChange: () => void
-  type?: 'default' | 'check' | 'whiteCheckBox' | 'whiteCheck' | 'smallCheckBox'
+  type?: 'default' | 'check' | 'whiteCheckBox' | 'whiteCheck' | 'smallCheckBox' | 'radio'
 }
 
 const CheckBox = ({ checked, onChange, type = 'default' }: CheckBoxProps) => {
@@ -57,6 +57,22 @@ const CheckBox = ({ checked, onChange, type = 'default' }: CheckBoxProps) => {
           className={`border-pri-500 flex h-4 w-4 items-center justify-center rounded-xs border ${checked ? 'bg-pri-500' : 'bg-transparent'}`}
         >
           {checked && <CheckIcon className="text-gray-10 p-0.5" />}
+        </button>
+      </div>
+    )
+  }
+
+  if (type === 'radio') {
+    return (
+      <div className="hover:bg-pri-100 w-7 rounded-full p-1 transition-colors duration-200">
+        <button
+          type="button"
+          role="radio"
+          aria-checked={checked}
+          onClick={onChange}
+          className={`border-pri-500 flex h-5 w-5 items-center justify-center rounded-full border ${checked ? 'bg-pri-500' : 'bg-transparent'}`}
+        >
+          {checked && <div className="bg-gray-10 h-2 w-2 rounded-full" />}
         </button>
       </div>
     )

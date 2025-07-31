@@ -123,6 +123,7 @@ const MobileFilter = ({
         break
     }
     setTempFilterState(prev => ({ ...prev, ...resetPartialState }))
+    onApplyFilter({ ...tempFilterState, ...resetPartialState })
   }
 
   const getBottomSheetTitle = () => {
