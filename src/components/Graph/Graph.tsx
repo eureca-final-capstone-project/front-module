@@ -10,6 +10,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 interface DataPoint {
   [key: string]: string | number
@@ -42,13 +43,17 @@ const Graph = ({
   yKeys,
   name,
 }: GraphProps) => {
+  const deviceType = useDeviceType()
+
+  const isMobile = deviceType === 'mobile'
+
   if (!data || data.length === 0) return <p>데이터 없음</p>
 
   const renderKeys = yKeys ?? Object.keys(data[0]).filter(key => key !== xKey)
 
   const commonChart = {
     data,
-    // margin: { top: 10, right: 30, left: 20, bottom: 5 },
+    margin: { top: 4, right: 4, left: 0, bottom: 0 },
   }
 
   return (
@@ -56,10 +61,25 @@ const Graph = ({
       {type === 'line' ? (
         <LineChart {...commonChart}>
           <CartesianGrid strokeDasharray="2 2" />
-          <XAxis dataKey={xKey} />
-          <YAxis />
+          <XAxis
+            dataKey={xKey}
+            interval={0}
+            tick={{ fontSize: isMobile ? 12 : 14, fontWeight: 500 }}
+            tickFormatter={(_, index) => {
+              return index % 4 === 0 ? `${data[index][xKey]}시` : ''
+            }}
+          />
+          <YAxis
+            tick={{ fontSize: isMobile ? 12 : 14, fontWeight: 500 }}
+            tickFormatter={value => `${value}원`}
+          />
           <Tooltip formatter={value => `${value}원`} labelFormatter={label => `${label}시`} />
-          <Legend />
+          <Legend
+            wrapperStyle={{
+              paddingTop: isMobile ? 4 : 8,
+              fontSize: isMobile ? 12 : 14,
+            }}
+          />
           {renderKeys.map(key => (
             <Line
               key={key}

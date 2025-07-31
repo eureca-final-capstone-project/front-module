@@ -1,5 +1,5 @@
 import { useMemo, useState, useRef, useEffect, useCallback } from 'react'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import FilterBar, { FilterState } from './components/FilterBar'
 import PostCardGrid from './components/PostCardGrid'
 import DropDown from '../../components/DropDown/DropDown'
@@ -16,7 +16,9 @@ import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton'
 import MobileFilter from './components/MobileFilter'
 import { MobileFilterState, initialFilterState } from '../../types/filter'
-import SearchIcon from '@/assets/icons/search.svg?react'
+import Button from '../../components/Button/Button'
+import { getTokenParsed } from '../../apis/tokenParsed'
+import PlusIcon from '@/assets/icons/plus.svg?react'
 
 const parseNumberArray = (param: string | null): number[] => {
   return param
@@ -114,6 +116,16 @@ const PostPage = () => {
     newParams.set('sortBy', initialFilterState.sort)
     navigate(`/posts?${newParams.toString()}`, { replace: true })
   }
+
+  const { data: userInfo } = useQuery({
+    queryKey: ['tokenParsed'],
+    queryFn: getTokenParsed,
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    enabled: !!sessionStorage.getItem('userAccessToken'),
+  })
+
+  const isLoggedIn = !!userInfo
 
   const sortBy = useMemo(() => {
     const map: Record<SortLabel, 'LATEST' | 'PRICE_HIGH' | 'PRICE_LOW'> = {
@@ -297,8 +309,7 @@ const PostPage = () => {
               />
               {keyword && (
                 <div className="shadow-tile bg-pri-100 mx-4 mt-2 flex items-center rounded-xs py-3 text-center md:hidden">
-                  <SearchIcon className="ml-4 h-4 w-4 text-gray-900" />
-                  <p className="text-fs14 -ml-4 w-full text-center text-gray-800">
+                  <p className="text-fs14 w-full px-4 text-center text-gray-800">
                     <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색
                     결과입니다.
                   </p>
@@ -306,7 +317,7 @@ const PostPage = () => {
               )}
             </div>
           )}
-          <div className="hidden items-center justify-between sm:flex">
+          <div className="hidden items-center justify-between gap-4 sm:flex">
             {deviceType !== 'mobile' && (
               <div className="flex flex-col gap-2">
                 <h2 className="text-fs20 md:text-fs24 font-medium">데이터 거래</h2>
@@ -322,13 +333,22 @@ const PostPage = () => {
                 )}
               </div>
             )}
-            {/* 정렬 드롭다운 */}
-            <DropDown
-              className="z-25 w-35 lg:w-40"
-              options={sortLabels}
-              selected={selectedSort}
-              onSelect={option => setSelectedSort(option as SortLabel)}
-            />
+            <div className="flex items-center lg:gap-4">
+              {isLoggedIn && (
+                <Button
+                  text="판매글 작성"
+                  onClick={() => navigate('/post-write')}
+                  className="bg-pri-500 text-gray-10 hidden whitespace-nowrap lg:block"
+                />
+              )}
+              {/* 정렬 드롭다운 */}
+              <DropDown
+                className="z-25 w-35 lg:w-40"
+                options={sortLabels}
+                selected={selectedSort}
+                onSelect={option => setSelectedSort(option as SortLabel)}
+              />
+            </div>
           </div>
 
           {/* 게시글 목록 */}
@@ -365,6 +385,16 @@ const PostPage = () => {
           )}
         </div>
       </div>
+
+      {isLoggedIn && deviceType !== 'desktop' && (
+        <button
+          onClick={() => navigate('/post-write')}
+          className="bg-pri-400 shadow-button text-gray-10 fixed right-4 bottom-7 z-50 flex items-center rounded-full px-4 py-2.5 lg:hidden"
+        >
+          <PlusIcon className="h-4 w-4 pr-1" />
+          글쓰기
+        </button>
+      )}
       <ScrollToTopButton />
     </div>
   )

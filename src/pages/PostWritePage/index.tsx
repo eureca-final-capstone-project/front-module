@@ -24,7 +24,6 @@ const formSections = [
   { label: '거래 방식', Component: TransactionInfoInput },
   { label: '현재 데이터 정보', Component: CurrentDataInfoField },
   { label: '판매 데이터', Component: DataInput },
-  { label: '이미지', Component: ImageSelect },
 ]
 
 const typeMap = {
@@ -50,6 +49,8 @@ const PostWritePage = () => {
     reset,
   } = methods
   const watchedFields = watch()
+  const watchedSalesTypeId = watch('salesTypeId') ?? 1
+  const watchedUnit = watch('unit') ?? 'MB'
 
   const allFieldsFilled = Object.values(watchedFields).every(value => value !== '')
   const noFieldErrors = Object.keys(errors).length === 0
@@ -115,9 +116,15 @@ const PostWritePage = () => {
               >
                 {label}
               </div>
+
               <Component />
             </Card>
           ))}
+          <Card>
+            <div className="text-fs20 font-medium">이미지</div>
+            <ImageSelect transactionType={watchedSalesTypeId} unit={watchedUnit} />
+          </Card>
+
           <FloatActionButton
             show={isSubmitEnabled}
             text="작성 완료"
