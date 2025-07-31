@@ -276,3 +276,14 @@ input[type='number'] {
 #nprogress .spinner-icon {
   display: none !important;
 }
+
+@media (max-width: 640px) {
+  .Toastify__toast-container {
+    width: 320px;
+  }
+  .Toastify__toast-container--top-center {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+  }
+}
