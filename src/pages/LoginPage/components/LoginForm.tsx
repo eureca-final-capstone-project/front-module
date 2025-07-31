@@ -10,6 +10,7 @@ import { useDeviceType } from '../../../hooks/useDeviceType'
 import { useAdminAuthStore, useAuthStore } from '../../../store/authStore'
 import { LoginSchemaType } from '../../../types/auth'
 import { adminLogin } from '../../../apis/admin/auth'
+import { useToast } from '../../../hooks/useToast'
 
 interface LoginFormProps {
   isAdmin?: boolean
@@ -22,6 +23,7 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
   const queryClient = useQueryClient()
   const setIsLogin = useAuthStore(state => state.setIsLogin)
   const { setIsLogin: setIsAdminLogin } = useAdminAuthStore()
+  const { showToast } = useToast()
 
   const {
     control,
@@ -53,15 +55,20 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
           await queryClient.invalidateQueries({
             queryKey: [isAdmin ? 'adminProfile' : 'userProfile'],
           })
+
+          showToast({ type: 'success', msg: '로그인 되었습니다.' })
           navigate(onSuccessNavigateTo)
           break
         }
+        case 10008:
+          showToast({ type: 'error', msg: '해당 계정은 차단되어 로그인이 불가능합니다.' })
+          break
         default:
-          alert('로그인 실패: ' + data.message)
+          showToast({ type: 'error', msg: '로그인 중 오류가 발생했습니다.' })
       }
     },
-    onError: error => {
-      alert('로그인 실패 ' + error.message)
+    onError: () => {
+      showToast({ type: 'error', msg: '로그인 중 오류가 발생했습니다.' })
     },
   })
 
