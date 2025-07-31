@@ -121,7 +121,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'notification',
       icon: hasUnreadNotifications ? <NotificationActiveIcon /> : <NotificationIcon />,
-      action: () => alert('알림 모달 오픈'),
+      action: () => setIsAlertOpen(true),
     },
     {
       key: 'menu',
@@ -133,18 +133,23 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   // 모바일 nav
   if (deviceType === 'mobile') {
     return (
-      <nav className="flex items-center gap-4 sm:hidden">
-        {mobileNav.map(({ key, icon, action }) => (
-          <button
-            key={key}
-            type="button"
-            onClick={handleAction(key, action)}
-            className={`hover:text-pri-500 cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
-          >
-            {icon}
-          </button>
-        ))}
-      </nav>
+      <>
+        <nav className="flex items-center gap-4 sm:hidden">
+          {mobileNav.map(({ key, icon, action }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={handleAction(key, action)}
+              className={`hover:text-pri-500 cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
+            >
+              {icon}
+            </button>
+          ))}
+        </nav>
+        {deviceType === 'mobile' && (
+          <AlertModal isOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
+        )}
+      </>
     )
   }
 
@@ -190,7 +195,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
               {key === 'notification' && isAlertOpen && (
                 <AnimatePresence>
                   <DropdownMotion className="absolute top-full right-[-116px] z-50 mt-3">
-                    <AlertModal />
+                    <AlertModal isOpen={true} onClose={() => setIsAlertOpen(false)} />
                   </DropdownMotion>
                 </AnimatePresence>
               )}

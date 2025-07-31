@@ -5,7 +5,6 @@ import DatchaIcon from '@/assets/icons/datcha-square.svg?react'
 import CouponIcon from '@/assets/icons/coupon-fill.svg?react'
 import BidIcon from '@/assets/icons/bid.png'
 import BidGrayIcon from '@/assets/icons/bid-gray.png'
-
 interface Props {
   notification: NotificationItem
   onRead: (alarmId: number) => void
