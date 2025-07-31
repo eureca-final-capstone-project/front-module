@@ -95,7 +95,8 @@ const BidDetailPage = () => {
   const isLoggedIn = !!userInfo
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
-  const isBuyDisabled = isMyPost || !hasTransactionPermission
+  const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
+  const isBuyDisabled = isMyPost || !hasTransactionPermission || isCompletedOrExpired
 
   const actualType = mapSalesTypeFromServer(data.salesType.name)
 
