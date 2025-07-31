@@ -30,6 +30,10 @@ import RefundPage from '../pages/RefundPage'
 import ReportHistory from '../pages/AdminPage/ReportHistory'
 import RestrictionHistory from '../pages/AdminPage/RestrictionHistory'
 import ReportDetailPage from '../pages/AdminPage/ReportDetailPage'
+import AuthGuard from '../components/Guard/AuthGuard'
+import AdminGuard from '../components/Guard/AdminGuard'
+import GuestGuard from '../components/Guard/GuestGuard'
+import AdminGuestGuard from '../components/Guard/AdminGuestGuard'
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +41,11 @@ export const router = createBrowserRouter([
     element: <MainPage />,
   },
   {
-    element: <AuthLayout />,
+    element: (
+      <GuestGuard>
+        <AuthLayout />
+      </GuestGuard>
+    ),
     children: [
       {
         path: '/login',
@@ -56,6 +64,15 @@ export const router = createBrowserRouter([
         element: <OAuthCallbackPage />,
       },
       { path: '/reset-password', element: <PasswordResetPage /> },
+    ],
+  },
+  {
+    element: (
+      <AdminGuestGuard>
+        <AuthLayout />
+      </AdminGuestGuard>
+    ),
+    children: [
       {
         path: '/admin/login',
         element: <AdminLoginPage />,
@@ -79,15 +96,27 @@ export const router = createBrowserRouter([
       },
       {
         path: '/mypage/:tabId',
-        element: <MyPage />,
+        element: (
+          <AuthGuard>
+            <MyPage />
+          </AuthGuard>
+        ),
       },
       {
         path: '/charge-result',
-        element: <PayChargeResultPage />,
+        element: (
+          <AuthGuard>
+            <PayChargeResultPage />
+          </AuthGuard>
+        ),
       },
       {
         path: '/my-posts',
-        element: <MyPostPage />,
+        element: (
+          <AuthGuard>
+            <MyPostPage />
+          </AuthGuard>
+        ),
       },
     ],
   },
@@ -96,43 +125,75 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/post-write',
-        element: <PostWritePage />,
+        element: (
+          <AuthGuard>
+            <PostWritePage />
+          </AuthGuard>
+        ),
         handle: { title: '내 데이터 판매' },
       },
       {
         path: '/change-data',
-        element: <ChangeDataPage />,
+        element: (
+          <AuthGuard>
+            <ChangeDataPage />
+          </AuthGuard>
+        ),
         handle: { title: '데이터 전환하기' },
       },
       {
         path: '/payment',
-        element: <PaymentPage />,
+        element: (
+          <AuthGuard>
+            <PaymentPage />
+          </AuthGuard>
+        ),
         handle: { title: '페이 충전하기' },
       },
       {
         path: '/payment-success',
-        element: <PaymentSuccessPage />,
+        element: (
+          <AuthGuard>
+            <PaymentSuccessPage />
+          </AuthGuard>
+        ),
         handle: { title: '결제 완료' },
       },
       {
         path: '/payment-fail',
-        element: <PaymentFailPage />,
+        element: (
+          <AuthGuard>
+            <PaymentFailPage />
+          </AuthGuard>
+        ),
         handle: { title: '결제 실패' },
       },
       {
         path: '/refund',
-        element: <RefundPage />,
+        element: (
+          <AuthGuard>
+            <RefundPage />
+          </AuthGuard>
+        ),
         handle: { title: '페이 환전하기' },
       },
       {
         path: '/data-purchase/:transactionFeedId',
-        element: <DataPurchasePage />,
+        element: (
+          <AuthGuard>
+            <DataPurchasePage />
+          </AuthGuard>
+        ),
         handle: { title: '데이터 구매' },
       },
     ],
   },
   {
-    element: <AdminLayout />,
+    element: (
+      <AdminGuard>
+        <AdminLayout />
+      </AdminGuard>
+    ),
     children: [
       {
         path: '/admin/dashboard',
