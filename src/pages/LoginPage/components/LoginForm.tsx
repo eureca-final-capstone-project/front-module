@@ -22,8 +22,8 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
   const navigate = useNavigate()
   const deviceType = useDeviceType()
   const queryClient = useQueryClient()
-  const setIsLogin = useAuthStore(state => state.setIsLogin)
-  const { setIsLogin: setIsAdminLogin } = useAdminAuthStore()
+  const { setIsLogin, setUserId } = useAuthStore()
+  const { setIsLogin: setIsAdminLogin, setAdminId } = useAdminAuthStore()
   const { showToast } = useToast()
 
   const {
@@ -47,11 +47,17 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
     onSuccess: async data => {
       switch (data.statusCode) {
         case 200: {
-          const accessToken = data.data.accessToken
+          const { accessToken, userId } = data.data
           sessionStorage.setItem(isAdmin ? 'adminAccessToken' : 'userAccessToken', accessToken)
+          sessionStorage.setItem(isAdmin ? 'adminId' : 'userId', userId)
 
-          if (isAdmin) setIsAdminLogin(true)
-          else setIsLogin(true)
+          if (isAdmin) {
+            setIsAdminLogin(true)
+            setAdminId(userId)
+          } else {
+            setIsLogin(true)
+            setUserId(userId)
+          }
 
           // 사용자 알림 스트림 재연결
           if (!isAdmin) {
