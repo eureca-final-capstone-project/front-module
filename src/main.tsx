@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import PermissionInitialize from './components/Guard/PermissionInitialize.tsx'
 import RootProvider from './components/RootProvider/RootProvider'
+import RootProvider from './components/RootProvider/RootProvider'
 
 const queryClient = new QueryClient()
 
@@ -16,9 +17,11 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <RootProvider>
         <PermissionInitialize />
+        <RootProvider>
         <RouterProvider router={router} />
-        <Toast />
-        <ReactQueryDevtools initialIsOpen={false} />
+          <Toast />
+          <ReactQueryDevtools initialIsOpen={false} />
+      </RootProvider>
       </RootProvider>
     </QueryClientProvider>
   </StrictMode>
