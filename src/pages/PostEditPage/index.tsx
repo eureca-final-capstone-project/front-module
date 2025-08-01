@@ -142,7 +142,14 @@ const PostEditPage = () => {
               >
                 {label}
               </div>
-              {label === '거래 방식' ? <Component isEditMode={true} /> : <Component />}
+
+              {label === '현재 데이터 정보' ? (
+                <Component prevSellableDataMb={transactionFeedDetailData?.salesDataAmount} />
+              ) : label === '거래 방식' ? (
+                <Component isEditMode={true} />
+              ) : (
+                <Component />
+              )}
             </Card>
           ))}
           <Card>
