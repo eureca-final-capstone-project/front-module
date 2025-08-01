@@ -31,7 +31,7 @@ import { toast } from 'react-toastify'
 import FeedReportModal from './components/FeedReportModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useDeviceType } from '../../hooks/useDeviceType'
-import { useAuthStore } from '../../store/authStore'
+import { useAuthStore, usePermissionStore } from '../../store/authStore'
 
 const BidDetailPage = () => {
   const { showToast } = useToast()
@@ -39,6 +39,7 @@ const BidDetailPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const deviceType = useDeviceType()
+  const permissions = usePermissionStore(state => state.permissions)
 
   const isLoggedIn = useAuthStore(state => state.isLogin)
   const navigate = useNavigate()
@@ -95,7 +96,7 @@ const BidDetailPage = () => {
   }
 
   const isMyPost = userInfo?.userId === data.sellerId
-  const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
+  const hasTransactionPermission = permissions.includes('TRANSACTION')
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
   const isBuyDisabled = isMyPost || !hasTransactionPermission || isCompletedOrExpired
 
