@@ -97,6 +97,7 @@ export function connectNotificationStream<T>({
   }
 }
 
+// 조회 및 삭제 api
 interface SortItem {
   direction: string
   nullHandling: string
