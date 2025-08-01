@@ -8,11 +8,7 @@ export function useNotificationStream() {
   const setDisconnectFn = useNotificationStore(s => s.setDisconnectFn)
 
   useEffect(() => {
-    const token = sessionStorage.getItem('userAccessToken')
-    if (!token) return
-
     const disconnect = connectNotificationStream<NotificationItem>({
-      token,
       onMessage: data => {
         addNotification(data)
       },
