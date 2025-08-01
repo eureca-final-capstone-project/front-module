@@ -106,6 +106,14 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
       <SlideInMotion isOpen={isOpen} onClose={onClose}>
         {isLoggedIn ? (
           <>
+            <div className="relative">
+              <button
+                className="text-fs12 absolute top-7 left-0 px-5 text-gray-600 hover:text-gray-800"
+                onClick={handleMarkAllAsRead}
+              >
+                전체 읽음 처리
+              </button>
+            </div>
             <div
               className="mt-16 flex flex-1 flex-col overflow-y-auto"
               onScroll={handleNotificationScroll}
