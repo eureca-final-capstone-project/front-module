@@ -84,6 +84,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
             n => n.status.code === 'UNREAD' && n.alarmId !== alarmId
           )
           setHasUnread(remaining)
+          onClose?.()
         },
       })
     },

@@ -23,8 +23,14 @@ const AlertItem = ({ notification, onRead }: Props) => {
     }
 
     const feedId = notification.transactionFeedId
-    if (feedId) {
-      navigate(`/posts/normal/${feedId}`)
+    const salesType = notification.salesType
+
+    if (feedId && salesType) {
+      const path = salesType === '일반 판매' ? 'normal' : salesType === '입찰 판매' ? 'bid' : null
+
+      if (path) {
+        navigate(`/posts/${path}/${feedId}`)
+      }
     }
 
     onRead(notification.alarmId)
@@ -66,7 +72,7 @@ const getTitleByTypeId = (id: number): string => {
     case 5:
       return '게시글 판매 기간이 만료되었어요!'
     case 6:
-      return '내가 입찰한 상품에 새로운 입찰자가 등장했어요!'
+      return '입찰하신 상품에 새 입찰자가 등장했어요!'
     default:
       return '알림이 도착했어요!'
   }

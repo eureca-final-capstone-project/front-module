@@ -36,7 +36,7 @@ const SlideInMotion = ({ isOpen, onClose, children, className = '' }: SlideInMot
           className={`bg-gray-10 fixed top-0 left-0 z-50 flex h-full w-full flex-col overflow-hidden ${className}`}
         >
           <button onClick={onClose} className="absolute top-6 right-4 z-10 text-gray-500">
-            <XIcon className="h-4 w-4" />
+            <XIcon className="h-4 w-4 text-gray-900" />
           </button>
           {children}
         </motion.div>

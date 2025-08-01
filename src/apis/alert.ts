@@ -114,6 +114,7 @@ export interface NotificationItem {
     alarmTypeId: number
     type: string
   }
+  salesType: string
   status: {
     statusId: number
     code: string // 'READ' | 'UNREAD'
