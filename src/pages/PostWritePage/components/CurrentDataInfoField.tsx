@@ -4,7 +4,11 @@ import { formatDataSize } from '../../../utils/format'
 import { useUserStore } from '../../../store/userStore'
 import { useEffect } from 'react'
 
-const CurrentDataInfoField = () => {
+interface CurrentDataInfoFieldProps {
+  prevSellableDataMb?: number
+}
+
+const CurrentDataInfoField = ({ prevSellableDataMb = 0 }: CurrentDataInfoFieldProps) => {
   const setData = useUserStore(state => state.setData)
 
   const { data, isLoading, isError } = useQuery({
@@ -20,11 +24,11 @@ const CurrentDataInfoField = () => {
     ) {
       setData({
         totalDataMb: data.totalDataMb,
-        sellableDataMb: data.sellableDataMb,
+        sellableDataMb: data.sellableDataMb + prevSellableDataMb,
         buyerDataMb: data.buyerDataMb,
       })
     }
-  }, [data, setData])
+  }, [data, setData, prevSellableDataMb])
 
   if (isLoading) {
     return <div className="text-fs14 text-gray-400">데이터 정보를 불러오는 중...</div>
@@ -42,7 +46,7 @@ const CurrentDataInfoField = () => {
       </div>
       <div className="flex justify-between">
         <div>판매 가능 데이터</div>
-        <div>{formatDataSize(data.sellableDataMb)}</div>
+        <div>{formatDataSize(data.sellableDataMb + prevSellableDataMb)}</div>
       </div>
     </div>
   )
