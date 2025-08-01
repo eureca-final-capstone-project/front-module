@@ -1,11 +1,11 @@
 import { Navigate } from 'react-router-dom'
-import { usePermissionStroe } from '../../store/authStore'
+import { usePermissionStore } from '../../store/authStore'
 import { useToast } from '../../hooks/useToast'
 
 const PermissionGuard = ({ children, role }: { children: React.ReactNode; role: string }) => {
   const { showToast } = useToast()
-  const permissionInitialized = usePermissionStroe(state => state.permissionInitialized)
-  const permissions = usePermissionStroe(state => state.permissions)
+  const permissionInitialized = usePermissionStore(state => state.permissionInitialized)
+  const permissions = usePermissionStore(state => state.permissions)
 
   if (!permissionInitialized) {
     return <div>접근 권한 확인 중...</div>
