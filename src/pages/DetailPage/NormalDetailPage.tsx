@@ -383,7 +383,7 @@ const NormalDetailPage = () => {
       {/* 관련 상품 */}
 
       {deviceType !== 'mobile' ? (
-        <div className="flex flex-col gap-10 pb-5">
+        <div className="flex flex-col gap-10 pb-20">
           <h2 className="text-fs28 font-medium">관련 상품</h2>
           {isRecommendedLoading ? (
             <p className="text-gray-500">관련 상품 로딩 중</p>
