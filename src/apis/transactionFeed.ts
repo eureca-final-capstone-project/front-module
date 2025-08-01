@@ -122,31 +122,3 @@ export const getMyFeeds = async ({
 
   return response.data.data
 }
-
-export const getMyFeeds = async ({
-  filter = 'ALL',
-  status = 'ALL',
-  pageable,
-}: MyFeedParams): Promise<TransactionFeedResponse> => {
-  const { page, size, sort } = pageable
-
-  const params: Record<string, string | number | string[]> = {
-    filter,
-    status,
-    page,
-    size,
-  }
-
-  if (sort) {
-    params.sort = sort
-  }
-
-  const response = await client.get('/transaction-feed/my-feeds', {
-    params,
-    paramsSerializer: {
-      indexes: null, // 배열 파라미터 [] 제거
-    },
-  })
-
-  return response.data.data
-}
