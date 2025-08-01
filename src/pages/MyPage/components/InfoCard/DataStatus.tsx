@@ -4,6 +4,8 @@ import { formatDataSize } from '../../../../utils/format'
 import { useQuery } from '@tanstack/react-query'
 import { getUserDataStatus, UserDataStatus } from '../../../../apis/userInfo'
 import { useNavigate } from 'react-router-dom'
+import { usePermissionStore } from '../../../../store/authStore'
+import { useToast } from '../../../../hooks/useToast'
 
 const DataStatus = () => {
   const { data, isLoading, isError } = useQuery<UserDataStatus>({
@@ -11,8 +13,15 @@ const DataStatus = () => {
     queryFn: getUserDataStatus,
   })
   const navigate = useNavigate()
+  const permissions = usePermissionStore(state => state.permissions)
+  const isDisabeldButton = !permissions.includes('DATA_TRANSFER')
+  const { showToast } = useToast()
 
   const handleClick = () => {
+    if ((data?.totalDataMb ?? 0) === 0) {
+      showToast({ type: 'error', msg: '보유 중인 데이터가 없어 전환할 수 없습니다.' })
+      return
+    }
     navigate('/change-data')
   }
 
@@ -40,9 +49,9 @@ const DataStatus = () => {
         </div>
         <Button
           text="데이터 전환하기"
-          className="text-fs14 lg:text-fs18 border-pri-500 text-pri-500 mt-4 border-[1.7px] font-medium"
+          className={`${isDisabeldButton ? 'button-disabled border-none' : 'button-active'} text-fs14 lg:text-fs18 border-pri-500 text-pri-500 mt-4 border-[1.7px] font-medium`}
           onClick={handleClick}
-          disabled={(data?.totalDataMb ?? 0) === 0}
+          disabled={isDisabeldButton}
         />
       </>
     </InfoCard>
