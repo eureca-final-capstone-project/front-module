@@ -4,7 +4,7 @@ import SearchIcon from '@/assets/icons/search.svg?react'
 import NotificationIcon from '@/assets/icons/notification.svg?react'
 import NotificationActiveIcon from '@/assets/icons/notification-active.svg?react'
 import MenuIcon from '@/assets/icons/menu.svg?react'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUserProfile } from '../../apis/userInfo'
 import TriangleIcon from '@/assets/icons/triangle.svg?react'
 import UserInfoModal from './UserInfoModal'
@@ -26,6 +26,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { showToast } = useToast()
+  const queryClient = useQueryClient()
 
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
@@ -68,7 +69,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     setActiveNav(key)
 
     if (key === 'notification') {
-      callback() // 로그인 여부 관계없이 알림 모달 열기
+      callback()
       return
     }
 
@@ -147,7 +148,10 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'notification',
       icon: hasUnread ? <NotificationActiveIcon /> : <NotificationIcon />, // ✅ 수정!
-      action: () => setIsAlertOpen(true),
+      action: () => {
+        queryClient.invalidateQueries({ queryKey: ['notifications'] })
+        setIsAlertOpen(true)
+      },
     },
     {
       key: 'menu',
