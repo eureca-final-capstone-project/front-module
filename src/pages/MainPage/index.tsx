@@ -12,6 +12,7 @@ import FadeInUpMotion from '../../components/Animation/FadeInUpMotion'
 import { useQuery } from '@tanstack/react-query'
 import { transformToGraphData } from '../../utils/graph'
 import { getHourlyStatistics } from '../../apis/graph'
+import Footer from '../../components/Footer/Footer'
 
 const MainPage = () => {
   const { data: statistics, isLoading } = useQuery({
@@ -30,13 +31,13 @@ const MainPage = () => {
     : []
 
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center">
+    <div className="bg-background flex h-screen flex-col items-center">
       <Header />
 
       <main className="mt-16 w-full flex-1 sm:mt-21.5">
         {/* 이벤트 배너 */}
         <EventBanner />
-        <Container className="my-6 max-w-[1312px] overflow-x-hidden overflow-y-hidden sm:my-10 sm:px-4">
+        <Container className="mt-6 max-w-[1312px] overflow-x-hidden overflow-y-hidden sm:mt-10 sm:mb-30 sm:px-4">
           <div className="grid grid-cols-1 gap-6 sm:gap-y-10 lg:grid-cols-2 lg:gap-x-7">
             {/* 시세 그래프 섹션 */}
             <FadeInUpMotion custom={1}>
@@ -57,8 +58,8 @@ const MainPage = () => {
                         height={310}
                       />
                       <p className="bg-pri-100 rounded-xs py-1 text-center text-gray-800">
-                        통신사의 <span className="text-pri-500 font-semibold">100MB</span> 당 평균
-                        시세 정보입니다.
+                        통신사의 <span className="text-pri-500 font-semibold">시간 당 100MB </span>
+                        평균 시세 정보입니다.
                       </p>
                     </>
                   )}
@@ -111,6 +112,7 @@ const MainPage = () => {
           </div>
         </Container>
       </main>
+      <Footer type="primary" />
     </div>
   )
 }
