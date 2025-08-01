@@ -163,7 +163,7 @@ const FilterBar = ({ filterState, onFilterChange, onReset }: FilterBarProps) => 
                 className="flex cursor-pointer items-center gap-2 p-2"
                 onClick={handleClick}
               >
-                <CheckBox checked={checked} onChange={() => {}} />
+                <CheckBox checked={checked} type="radio" onChange={() => {}} />
                 <span className={getClass(option.label)}>{option.label}</span>
               </div>
             )

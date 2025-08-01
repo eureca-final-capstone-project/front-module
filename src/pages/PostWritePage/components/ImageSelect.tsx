@@ -1,6 +1,7 @@
 import { Controller, useFormContext } from 'react-hook-form'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { imagePost } from '../../../constants/imageData'
+import { Mousewheel } from 'swiper/modules'
 
 interface ImageSelectProps {
   transactionType: number
@@ -27,7 +28,13 @@ const ImageSelect = ({ transactionType, unit }: ImageSelectProps) => {
       defaultValue=""
       render={({ field }) => (
         <div>
-          <Swiper slidesPerView={4.5} spaceBetween={16} className="w-full">
+          <Swiper
+            slidesPerView={4.5}
+            spaceBetween={16}
+            className="w-full"
+            modules={[Mousewheel]}
+            mousewheel={true}
+          >
             {filteredImages.map(img => {
               const isSelected = img.id === field.value
               return (
