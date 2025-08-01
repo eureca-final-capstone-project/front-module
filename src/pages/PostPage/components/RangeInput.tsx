@@ -44,7 +44,7 @@ const RangeInput = ({
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-0 sm:gap-2">
       <div className="flex items-center gap-2.5">
         <Input
           id={`${idPrefix}-min`}
@@ -75,7 +75,7 @@ const RangeInput = ({
       {error && errorMessage && <span className="text-fs14 text-error">{errorMessage}</span>}
       {onApply && (
         <div className="flex items-center justify-between">
-          <p className="text-fs14 text-gray-700">
+          <p className="text-fs14 hidden text-gray-700 sm:block">
             범위를 입력 후 <span className="font-medium text-gray-800">적용</span>해보세요!
           </p>
           <Button

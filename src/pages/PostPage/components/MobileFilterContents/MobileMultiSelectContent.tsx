@@ -42,7 +42,7 @@ const MobileMultSelectContent = ({
           return (
             <div
               key={option.label}
-              className="flex items-center gap-3"
+              className="flex cursor-pointer items-center gap-3"
               onClick={() => handleCheckboxChange(value, checked)}
             >
               <CheckBox checked={checked} onChange={() => {}} type="default" />

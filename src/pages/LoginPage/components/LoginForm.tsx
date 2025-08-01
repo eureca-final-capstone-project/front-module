@@ -103,6 +103,7 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
             error={!!errors.email}
             errorMsg={errors.email?.message}
             shape={deviceType === 'mobile' ? 'square' : 'floating'}
+            variant="auth"
           />
         )}
       />
@@ -123,6 +124,7 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
             error={!!errors.password}
             errorMsg={errors.password?.message}
             shape={deviceType === 'mobile' ? 'square' : 'floating'}
+            variant="auth"
           />
         )}
       />

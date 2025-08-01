@@ -85,3 +85,12 @@ export const convertAmountAndUnit = (unit: 'MB' | 'GB', value: number) => {
 
   return { amount, unit: newUnit }
 }
+
+export const getUnit = (amount?: number): 'MB' | 'GB' => {
+  return amount && amount >= 1000 ? 'GB' : 'MB'
+}
+
+export const formatSalesDataAmount = (amount?: number) => {
+  if (typeof amount !== 'number') return undefined
+  return amount >= 1000 ? Math.floor(amount / 1000) : amount
+}
