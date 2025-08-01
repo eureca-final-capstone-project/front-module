@@ -69,15 +69,20 @@ export const attachResponseInterceptor = (
 
           // 토큰 재발급 요청 Promise 생성 및 저장
           refreshPromise = axiosInstance
-            .get('/auth/re-generate-token')
+            .post('/auth/re-generate-token', {
+              userId: sessionStorage.getItem(isAdmin ? 'adminId' : 'userId'),
+            })
             .then(res => {
+              const { data, statusCode } = res.data
               // 갱신 성공 시 새 토큰 저장 및 반환
-              if (res.data.statusCode === 200) {
+              if (statusCode === 200) {
                 console.log('토큰 발급 성공!')
-                const newAccessToken = res.data.data.accessToken
+                const newAccessToken = data.accessToken
                 sessionStorage.setItem(tokenKey, newAccessToken)
 
                 return newAccessToken
+              } else if (statusCode === 10009) {
+                throw new Error('다른 탭 또는 기기에서 로그인되어 세션이 만료됐습니다')
               } else {
                 throw new Error('토큰 갱신에 실패했습니다.')
               }
@@ -103,7 +108,7 @@ export const attachResponseInterceptor = (
           return axiosInstance(originalRequest)
         } catch (error) {
           // 토큰 갱신 실패 시 로그인 페이지로 이동 유도
-          sessionStorage.removeItem(tokenKey)
+          sessionStorage.clear()
           window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(error)
         }

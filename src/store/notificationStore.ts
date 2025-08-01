@@ -10,13 +10,20 @@ interface NotificationStore {
   disconnectFn: (() => void) | null
   setDisconnectFn: (fn: () => void) => void
   clearDisconnectFn: () => void
+
+  hasUnread: boolean
+  setHasUnread: (val: boolean) => void
 }
 
 export const useNotificationStore = create<NotificationStore>(set => ({
   notifications: [],
+  hasUnread: false,
+  setHasUnread: val => set({ hasUnread: val }),
+
   addNotification: item =>
     set(state => ({
       notifications: [item, ...state.notifications],
+      hasUnread: true,
     })),
   markAsRead: id =>
     set(state => ({

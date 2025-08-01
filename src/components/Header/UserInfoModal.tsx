@@ -38,6 +38,8 @@ const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
       queryClient.clear()
       setIsLoggedin(false)
       sessionStorage.removeItem('userAccessToken')
+      sessionStorage.removeItem('userId')
+      sessionStorage.removeItem('permission_modal_shown')
 
       toast.success('로그아웃 되었습니다.')
       navigate('/login', { replace: true })
