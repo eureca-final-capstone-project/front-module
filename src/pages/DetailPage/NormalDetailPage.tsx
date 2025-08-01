@@ -212,12 +212,15 @@ const NormalDetailPage = () => {
                 >
                   {isMyPost ? (
                     <>
-                      <Button
-                        text="수정하기"
-                        className="text-gray-700"
-                        shape="underline"
-                        onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
-                      />
+                      {hasTransactionPermission && (
+                        <Button
+                          text="수정하기"
+                          className="text-gray-700"
+                          shape="underline"
+                          onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
+                        />
+                      )}
+
                       <Button
                         text="삭제하기"
                         className="text-gray-700"
