@@ -2,13 +2,16 @@ import { useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperClass } from 'swiper'
-import { Mousewheel, Pagination } from 'swiper/modules'
+import { Autoplay, Mousewheel, Pagination } from 'swiper/modules'
 import PostCard from '../../../components/PostCard/PostCard'
 import { getTransactionFeeds } from '../../../apis/transactionFeed'
 import { transformPostCard } from '../../../utils/postCardParse'
 import type { FeedSearchRequestDto, Pageable } from '../../../apis/transactionFeed'
+import { useDeviceType } from '../../../hooks/useDeviceType'
 
 const BidSection = () => {
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
   const swiperRef = useRef<SwiperClass | null>(null)
 
   const requestDto: FeedSearchRequestDto = {
@@ -56,9 +59,13 @@ const BidSection = () => {
   return (
     <section>
       <Swiper
-        modules={[Pagination, Mousewheel]}
-        mousewheel={true}
+        modules={[Pagination, Mousewheel, Autoplay]}
+        mousewheel={isMobile ? false : true}
         pagination={{ clickable: true }}
+        autoplay={{
+          delay: 2000,
+          disableOnInteraction: true,
+        }}
         direction="vertical"
         slidesPerView={2.5}
         slidesPerGroup={1}

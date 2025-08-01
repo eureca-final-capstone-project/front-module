@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperClass } from 'swiper'
-import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
+import { Mousewheel, Navigation, Pagination, Autoplay } from 'swiper/modules'
 import PostCard from '../../../components/PostCard/PostCard'
 import { getTransactionFeeds } from '../../../apis/transactionFeed'
 import { transformPostCard } from '../../../utils/postCardParse'
@@ -48,9 +48,13 @@ const LatestSection = () => {
   return (
     <section>
       <Swiper
-        modules={[Navigation, Pagination, Mousewheel]}
-        mousewheel={true}
+        modules={[Navigation, Pagination, Mousewheel, Autoplay]}
+        mousewheel={isMobile ? false : true}
         pagination={isMobile ? { clickable: true } : false}
+        autoplay={{
+          delay: 2000,
+          disableOnInteraction: true,
+        }}
         direction={isMobile ? 'vertical' : 'horizontal'}
         slidesPerView={isMobile ? 2.5 : 2.5}
         slidesPerGroup={1}

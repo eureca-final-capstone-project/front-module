@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import type { Swiper as SwiperClass } from 'swiper'
-import { Mousewheel, Navigation, Pagination } from 'swiper/modules'
+import { Autoplay, Mousewheel, Navigation, Pagination } from 'swiper/modules'
 import PostCard from '../../../components/PostCard/PostCard'
 import { getRecommendedPosts } from '../../../apis/recommend'
 import { transformPostCard } from '../../../utils/postCardParse'
@@ -44,8 +44,12 @@ const RecommendSection = () => {
   return (
     <section>
       <Swiper
-        modules={[Navigation, Pagination, Mousewheel]}
-        mousewheel={true}
+        modules={[Navigation, Pagination, Mousewheel, Autoplay]}
+        mousewheel={isMobile ? false : true}
+        autoplay={{
+          delay: 2000,
+          disableOnInteraction: true,
+        }}
         pagination={isMobile ? { clickable: true } : false}
         direction={isMobile ? 'vertical' : 'horizontal'}
         slidesPerView={isMobile ? 2.5 : 2.5}
