@@ -11,6 +11,7 @@ import Button from '../Button/Button'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import SlideInMotion from '../Animation/SlideInMotion'
 import { useNotificationStore } from '../../store/notificationStore'
+import NotificationIcon from '@/assets/icons/notification.svg?react'
 
 interface AlertModalProps {
   isOpen: boolean
@@ -107,8 +108,13 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
         {isLoggedIn ? (
           <>
             <div className="relative">
+              <div className="text-fs16 absolute top-6.5 left-0 flex gap-1 px-5 text-gray-900">
+                <NotificationIcon className="h-4.5 w-4.5" />
+                <h2>알림</h2>
+              </div>
+
               <button
-                className="text-fs12 absolute top-7 left-0 px-5 text-gray-600 hover:text-gray-800"
+                className="text-fs12 absolute top-6.5 right-10 px-5 text-gray-600 hover:text-gray-800"
                 onClick={handleMarkAllAsRead}
               >
                 전체 읽음 처리

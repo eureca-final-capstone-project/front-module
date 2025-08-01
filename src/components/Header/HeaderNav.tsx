@@ -147,7 +147,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     },
     {
       key: 'notification',
-      icon: hasUnread ? <NotificationActiveIcon /> : <NotificationIcon />, // ✅ 수정!
+      icon: hasUnread ? <NotificationActiveIcon /> : <NotificationIcon />,
       action: () => {
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
         setIsAlertOpen(true)
