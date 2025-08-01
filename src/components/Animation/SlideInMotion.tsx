@@ -26,7 +26,7 @@ const SlideInMotion = ({ isOpen, onClose, children, className = '' }: SlideInMot
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.2}
           dragMomentum={false}
-          onDragEnd={(e, info) => {
+          onDragEnd={(_, info) => {
             if (info.offset.x > 100) onClose?.()
           }}
           initial={{ x: '100%' }}
