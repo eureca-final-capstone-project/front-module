@@ -90,9 +90,38 @@ export const postTransactionFeed = async (data: PostTransactionPayloadType) => {
   return response.data
 }
 
+<<<<<<< HEAD
 export const updateTransactionFeed = async (data: UpdateTransactionPayloadType) => {
   const response = await client.put('/transaction-feed', data)
   return response.data
+=======
+export const getMyFeeds = async ({
+  filter = 'ALL',
+  status = 'ALL',
+  pageable,
+}: MyFeedParams): Promise<TransactionFeedResponse> => {
+  const { page, size, sort } = pageable
+
+  const params: Record<string, string | number | string[]> = {
+    filter,
+    status,
+    page,
+    size,
+  }
+
+  if (sort) {
+    params.sort = sort
+  }
+
+  const response = await client.get('/transaction-feed/my-feeds', {
+    params,
+    paramsSerializer: {
+      indexes: null, // 배열 파라미터 [] 제거
+    },
+  })
+
+  return response.data.data
+>>>>>>> 14f42ef ([VT2-456] feat: 내 판매글 조회 api 구현)
 }
 
 export const getMyFeeds = async ({

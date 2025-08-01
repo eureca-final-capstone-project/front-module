@@ -7,6 +7,7 @@ import Badge from '../Badge/Badge'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import { logout } from '../../apis/auth'
 import { toast } from 'react-toastify'
+import { useNotificationStore } from '../../store/notificationStore'
 import { useAuthStore } from '../../store/authStore'
 import { useNotificationStore } from '../../store/notificationStore'
 interface Props {
