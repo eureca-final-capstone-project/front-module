@@ -35,6 +35,7 @@ import AdminGuard from '../components/Guard/AdminGuard'
 import GuestGuard from '../components/Guard/GuestGuard'
 import AdminGuestGuard from '../components/Guard/AdminGuestGuard'
 import PostEditPage from '../pages/PostEditPage'
+import PermissionGuard from '../components/Guard/PermissionGuard'
 
 export const router = createBrowserRouter([
   {
@@ -130,22 +131,38 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/post-write',
-        element: <PostWritePage />,
+        element: (
+          <PermissionGuard role="WRITE">
+            <PostWritePage />
+          </PermissionGuard>
+        ),
         handle: { title: '내 데이터 판매' },
       },
       {
         path: '/post-edit/:postId',
-        element: <PostEditPage />,
+        element: (
+          <PermissionGuard role="WRITE">
+            <PostEditPage />
+          </PermissionGuard>
+        ),
         handle: { title: '내 데이터 판매 수정' },
       },
       {
         path: '/change-data',
-        element: <ChangeDataPage />,
+        element: (
+          <PermissionGuard role="DATA_TRANSFER">
+            <ChangeDataPage />
+          </PermissionGuard>
+        ),
         handle: { title: '데이터 전환하기' },
       },
       {
         path: '/payment',
-        element: <PaymentPage />,
+        element: (
+          <PermissionGuard role="PAY_CHARGE">
+            <PaymentPage />
+          </PermissionGuard>
+        ),
         handle: { title: '페이 충전하기' },
       },
       {
@@ -165,7 +182,11 @@ export const router = createBrowserRouter([
       },
       {
         path: '/data-purchase/:transactionFeedId',
-        element: <DataPurchasePage />,
+        element: (
+          <PermissionGuard role="TRANSACTION">
+            <DataPurchasePage />
+          </PermissionGuard>
+        ),
         handle: { title: '데이터 구매' },
       },
     ],
