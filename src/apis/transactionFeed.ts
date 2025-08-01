@@ -90,11 +90,11 @@ export const postTransactionFeed = async (data: PostTransactionPayloadType) => {
   return response.data
 }
 
-<<<<<<< HEAD
 export const updateTransactionFeed = async (data: UpdateTransactionPayloadType) => {
   const response = await client.put('/transaction-feed', data)
   return response.data
-=======
+}
+
 export const getMyFeeds = async ({
   filter = 'ALL',
   status = 'ALL',
@@ -121,7 +121,6 @@ export const getMyFeeds = async ({
   })
 
   return response.data.data
->>>>>>> 14f42ef ([VT2-456] feat: 내 판매글 조회 api 구현)
 }
 
 export const getMyFeeds = async ({
