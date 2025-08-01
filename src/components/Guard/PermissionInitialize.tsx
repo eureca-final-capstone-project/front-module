@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
-import { useAuthStore, usePermissionStroe } from '../../store/authStore'
+import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import { getTokenParsed } from '../../apis/tokenParsed'
 import { useEffect } from 'react'
 
 const PermissionInitialize = () => {
   const isLogin = useAuthStore(state => state.isLogin)
-  const setPermissions = usePermissionStroe(state => state.setPermissions)
+  const setPermissionInitailized = usePermissionStore(state => state.setPermissionInitialized)
+  const setPermissions = usePermissionStore(state => state.setPermissions)
 
   const { data, isError } = useQuery({
     queryKey: ['permission'],
@@ -15,9 +16,10 @@ const PermissionInitialize = () => {
 
   useEffect(() => {
     if (data) {
+      setPermissionInitailized(true)
       setPermissions(data.authorities)
     }
-  }, [data, setPermissions])
+  }, [data, setPermissionInitailized, setPermissions])
 
   useEffect(() => {
     if (isError) {

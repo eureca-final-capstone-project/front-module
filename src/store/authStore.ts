@@ -6,7 +6,9 @@ interface AuthState {
 }
 
 interface PermissionState {
+  permissionInitialized: boolean
   permissions: string[]
+  setPermissionInitialized: (value: boolean) => void
   setPermissions: (value: string[]) => void
 }
 
@@ -20,7 +22,9 @@ export const useAdminAuthStore = create<AuthState>(set => ({
   setIsLogin: value => set({ isLogin: value }),
 }))
 
-export const usePermissionStroe = create<PermissionState>(set => ({
+export const usePermissionStore = create<PermissionState>(set => ({
+  permissionInitialized: false,
   permissions: [],
+  setPermissionInitialized: value => set({ permissionInitialized: value }),
   setPermissions: value => set({ permissions: value }),
 }))
