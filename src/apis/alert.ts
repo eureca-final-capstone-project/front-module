@@ -20,6 +20,8 @@ export function connectNotificationStream<T>({
   let isAborted = false
 
   const connect = async () => {
+    console.log('✅ SSE 연결 시작됨:', new Date().toISOString())
+
     try {
       console.log('📡 SSE 연결 시도 중...')
       const res = await fetch(`${import.meta.env.VITE_CLIENT_BASE_URL}/notifications/subscribe`, {
