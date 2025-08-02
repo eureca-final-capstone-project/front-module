@@ -17,8 +17,7 @@ const PaymentPage = () => {
   const [selectedCouponName, setSelectedCouponName] = useState('적용 안 함')
   const [selectedCoupon, setSelectedCoupon] = useState<UserEventCoupon | null>(null)
 
-  const getCouponLabel = (coupon: UserEventCoupon) =>
-    `${coupon.eventCoupon.couponName} ${coupon.eventCoupon.discountRate}%`
+  const getCouponLabel = (coupon: UserEventCoupon) => `${coupon.eventCoupon.couponName}`
 
   const handleCouponSelect = (selectedName: string) => {
     setSelectedCouponName(selectedName)
