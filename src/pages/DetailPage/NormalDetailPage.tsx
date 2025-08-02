@@ -116,6 +116,9 @@ const NormalDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  if (data.status.code === 'BLURRED') {
+    return <Navigate to="/404" replace />
+  }
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = permissions.includes('TRANSACTION')
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'

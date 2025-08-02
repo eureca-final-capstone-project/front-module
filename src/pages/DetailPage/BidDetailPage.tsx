@@ -109,6 +109,9 @@ const BidDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  if (data.status.code === 'BLURRED') {
+    return <Navigate to="/404" replace />
+  }
   const image = imagePost.find(img => img.id === data.defaultImageNumber)
 
   const handleWishClick = () => {
