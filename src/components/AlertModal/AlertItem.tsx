@@ -6,7 +6,6 @@ import CouponIcon from '@/assets/icons/coupon-fill.svg?react'
 import BidIcon from '@/assets/icons/bid.png'
 import BidGrayIcon from '@/assets/icons/bid-gray.png'
 import StyledAlertContent from './StyledAlertContent'
-import { getDragging } from '../../utils/dragState'
 interface Props {
   notification: NotificationItem
   onRead: (alarmId: number) => void
@@ -17,8 +16,6 @@ const AlertItem = ({ notification, onRead }: Props) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    if (getDragging()) return
-
     const id = notification.alarmType.alarmTypeId
 
     if (id === 4) {
