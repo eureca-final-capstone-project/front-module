@@ -14,7 +14,8 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import ListIcon from '@/assets/icons/list.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import MobileWrapper from './components/MobileWrapper'
+
 const TransactionHistoryPage = () => {
   const deviceType = useDeviceType()
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
@@ -87,8 +88,7 @@ const TransactionHistoryPage = () => {
   }
 
   return (
-    <>
-      {deviceType === 'mobile' ? <Breadcrumb current="거래 내역" /> : ''}
+    <MobileWrapper deviceType={deviceType} breadcrumbLabel="거래 내역">
       <div className="flex flex-1 flex-col gap-4 sm:gap-5">
         {/* 상단 */}
         <TransactionHeader
@@ -137,7 +137,7 @@ const TransactionHistoryPage = () => {
           />
         </div>
       </div>
-    </>
+    </MobileWrapper>
   )
 }
 

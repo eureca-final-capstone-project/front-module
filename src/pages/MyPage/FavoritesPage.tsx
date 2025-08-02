@@ -14,7 +14,7 @@ import PostCard from '../../components/PostCard/PostCard'
 import { buttonOptions } from './components/config'
 import HeartIcon from '@/assets/icons/heart-bold.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import MobileWrapper from './components/MobileWrapper'
 
 const FavoritesPage = () => {
   const deviceType = useDeviceType()
@@ -117,8 +117,7 @@ const FavoritesPage = () => {
   }
 
   return (
-    <>
-      {deviceType === 'mobile' ? <Breadcrumb current="관심 거래" /> : ''}
+    <MobileWrapper deviceType={deviceType} breadcrumbLabel="관심 거래">
       <div className="flex flex-1 flex-col gap-4 sm:gap-5">
         {/* 상단 */}
         <FavoritesHeader
@@ -170,7 +169,7 @@ const FavoritesPage = () => {
           />
         </div>
       </div>
-    </>
+    </MobileWrapper>
   )
 }
 

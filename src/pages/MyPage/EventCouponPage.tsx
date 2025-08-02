@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import EventCouponIcon from '@/assets/icons/event-coupon.svg?react'
 import { useState } from 'react'
 import Pagination from '../../components/Pagination/Pagination'
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import MobileWrapper from './components/MobileWrapper'
 
 const EventCouponPage = () => {
   const deviceType = useDeviceType()
@@ -23,7 +23,7 @@ const EventCouponPage = () => {
   const eventCoupons = data?.data.coupons ?? []
   const pagedCoupons = eventCoupons.slice((page - 1) * 6, page * 6)
 
-  if (isLoading || isError || eventCoupons.length === 0) {
+  const renderStatusFallback = () => {
     let title = ''
     let subtitle: React.ReactNode = null
     let textColor = 'text-gray-500'
@@ -59,26 +59,30 @@ const EventCouponPage = () => {
   }
 
   return (
-    <div className="p-4 sm:p-0">
-      {deviceType === 'mobile' ? <Breadcrumb current="이벤트 쿠폰함" /> : ''}
-
-      <div className={`grid gap-4 ${gridColsClass}`}>
-        {pagedCoupons.map(eventCoupon => (
-          <EventCoupon
-            key={eventCoupon.userEventCouponId}
-            coupon={eventCoupon}
-            deviceType={deviceType}
-          />
-        ))}
-      </div>
-      <div className="mt-auto flex justify-center pb-6 sm:pb-0">
-        <Pagination
-          currentPage={page}
-          totalPages={Math.ceil(eventCoupons.length / 4)}
-          onPageChange={setPage}
-        />
-      </div>
-    </div>
+    <MobileWrapper deviceType={deviceType} breadcrumbLabel="이벤트 쿠폰함">
+      {isLoading || isError || eventCoupons.length === 0 ? (
+        renderStatusFallback()
+      ) : (
+        <>
+          <div className={`grid gap-4 px-4 sm:px-0 ${gridColsClass}`}>
+            {pagedCoupons.map(eventCoupon => (
+              <EventCoupon
+                key={eventCoupon.userEventCouponId}
+                coupon={eventCoupon}
+                deviceType={deviceType}
+              />
+            ))}
+          </div>
+          <div className="mt-auto flex justify-center pb-6 sm:pb-0">
+            <Pagination
+              currentPage={page}
+              totalPages={Math.ceil(eventCoupons.length / 4)}
+              onPageChange={setPage}
+            />
+          </div>
+        </>
+      )}
+    </MobileWrapper>
   )
 }
 
