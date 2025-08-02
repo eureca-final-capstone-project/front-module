@@ -1,9 +1,9 @@
-import SlideInMotion from '../Animation/SlideInMotion'
 import NotificationIcon from '@/assets/icons/notification.svg?react'
 import AlertItem from './AlertItem'
 import LockedIcon from '@/assets/icons/locked.svg?react'
 import Button from '../Button/Button'
 import { NotificationItem } from '../../apis/alert'
+import XIcon from '@/assets/icons/x.svg?react'
 
 interface MobileProps {
   notifications: NotificationItem[]
@@ -25,7 +25,10 @@ const NotificationView = ({
   onClose,
 }: MobileProps) => {
   return (
-    <SlideInMotion isOpen onClose={onClose}>
+    <div className="bg-gray-10 fixed top-0 left-0 z-50 flex h-full w-full flex-col overflow-hidden">
+      <button onClick={onClose} className="absolute top-6 right-4 z-10 text-gray-500">
+        <XIcon className="h-4 w-4 text-gray-900" />
+      </button>
       <div className="relative">
         <div className="text-fs16 absolute top-6.5 left-0 flex gap-1 px-5 text-gray-900">
           <NotificationIcon className="h-4.5 w-4.5" />
@@ -56,7 +59,7 @@ const NotificationView = ({
           </p>
         )}
       </div>
-    </SlideInMotion>
+    </div>
   )
 }
 
