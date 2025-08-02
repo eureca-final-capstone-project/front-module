@@ -1,26 +1,52 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import XIcon from '@/assets/icons/x.svg?react'
+import ArrowLeft from '@/assets/icons/arrow-left.svg?react'
 
 interface SlideInMotionProps {
   isOpen: boolean
   onClose?: () => void
   children: ReactNode
   className?: string
+  title?: string
 }
 
-const SlideInMotion = ({ isOpen, onClose, children, className = '' }: SlideInMotionProps) => {
+const SlideInMotion = ({
+  isOpen,
+  onClose,
+  children,
+  className = '',
+  title,
+}: SlideInMotionProps) => {
+  const [exitX, setExitX] = useState<'100%' | '-100%'>('100%')
+  const [shouldRender, setShouldRender] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      setShouldRender(true)
+      setExitX('100%')
+    }
+  }, [isOpen])
+
+  const handleBack = () => {
+    setExitX('-100%')
+    setShouldRender(false)
+  }
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose?.()
+      if (e.key === 'Escape') handleBack()
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+  }, [])
 
   return (
-    <AnimatePresence>
-      {isOpen && (
+    <AnimatePresence
+      onExitComplete={() => {
+        onClose?.()
+      }}
+    >
+      {shouldRender && (
         <motion.div
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
@@ -31,13 +57,14 @@ const SlideInMotion = ({ isOpen, onClose, children, className = '' }: SlideInMot
           }}
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
-          exit={{ x: '100%' }}
+          exit={{ x: exitX }}
           transition={{ type: 'tween', duration: 0.3 }}
           className={`bg-gray-10 fixed top-0 left-0 z-50 flex h-full w-full flex-col overflow-hidden ${className}`}
         >
-          <button onClick={onClose} className="absolute top-6 right-4 z-10 text-gray-500">
-            <XIcon className="h-4 w-4 text-gray-900" />
-          </button>
+          <div className="absolute top-6.5 z-10 flex items-center gap-2 pl-4 text-gray-900">
+            <ArrowLeft onClick={handleBack} className="cursor-pointer" />
+            <p className="text-fs16 sm:text-fs18">{title}</p>
+          </div>
           {children}
         </motion.div>
       )}
