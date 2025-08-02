@@ -133,7 +133,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               {isFetchingNextPage && <p className="text-fs14 py-4 text-center">불러오는 중</p>}
 
               {(shouldShowCompleteMessage || hasShownCompleteMessage) && (
-                <p className="text-pri-500 text-fs14 pt-6 pb-4 text-center">
+                <p className="text-gray-10 bg-pri-500 text-fs14 pt-4 pb-4 text-center">
                   최근 14일 동안 받은 알림을 모두 확인했습니다.
                 </p>
               )}
