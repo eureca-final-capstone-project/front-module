@@ -33,8 +33,11 @@ import BasicModal from '../MyPage/components/Modal/BasicModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useToast } from '../../hooks/useToast'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
+import useScrollToTop from '../../hooks/useScrollToTop'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 
 const NormalDetailPage = () => {
+  useScrollToTop()
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -96,7 +99,7 @@ const NormalDetailPage = () => {
 
   const { addWishMutation, deleteWishMutation } = useWishMutation(Number(transactionFeedId))
 
-  if (isLoading) return <p>로딩 중</p>
+  if (isLoading) return <LoadingSpinner className="min-h-screen" />
   if (isError || !data) return <p>에러</p>
 
   const validSalesTypes = ['일반 판매', '입찰 판매'] as const

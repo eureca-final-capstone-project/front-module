@@ -8,6 +8,8 @@ import { getTransactionFeeds } from '../../../apis/transactionFeed'
 import { transformPostCard } from '../../../utils/postCardParse'
 import type { FeedSearchRequestDto, Pageable } from '../../../apis/transactionFeed'
 import { useDeviceType } from '../../../hooks/useDeviceType'
+import EndOfFeedMessage from '../../PostPage/components/EndOfFeedMessage'
+import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner'
 
 const BidSection = () => {
   const deviceType = useDeviceType()
@@ -31,27 +33,15 @@ const BidSection = () => {
   })
 
   if (isLoading) {
-    return (
-      <section className="flex min-h-91 items-center justify-center">
-        진행 중인 경매 불러오는 중...
-      </section>
-    )
+    return <LoadingSpinner text="진행 중인 경매를 불러오는 중..." className="min-h-91" />
   }
 
   if (isError || !data?.content) {
-    return (
-      <section className="flex min-h-91 items-center justify-center">
-        진행 중인 경매를 불러올 수 없습니다.
-      </section>
-    )
+    return <EndOfFeedMessage type="No" text="진행 중인 경매를 불러올 수 없습니다." />
   }
 
   if (data.content.length === 0) {
-    return (
-      <section className="flex min-h-91 items-center justify-center">
-        진행 중인 경매가 없습니다.
-      </section>
-    )
+    return <EndOfFeedMessage type="No" text="진행 중인 경매가 없어요." />
   }
 
   const posts = data.content.map(post => transformPostCard(post, 'row'))

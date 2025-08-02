@@ -8,6 +8,8 @@ import { getRecommendedPosts } from '../../../apis/recommend'
 import { transformPostCard } from '../../../utils/postCardParse'
 import type { ServerPostCard } from '../../../utils/postCardParse'
 import { useDeviceType } from '../../../hooks/useDeviceType'
+import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner'
+import EndOfFeedMessage from '../../PostPage/components/EndOfFeedMessage'
 
 const RecommendSection = () => {
   const deviceType = useDeviceType()
@@ -26,15 +28,11 @@ const RecommendSection = () => {
   })
 
   if (isLoading) {
-    return <div className="flex min-h-91 items-center justify-center">추천 상품 불러오는 중...</div>
+    return <LoadingSpinner text="추천 상품을 불러오는 중..." className="min-h-91" />
   }
 
   if (isError || !serverPosts) {
-    return (
-      <div className="flex min-h-91 items-center justify-center">
-        추천 상품을 불러올 수 없습니다.
-      </div>
-    )
+    return <EndOfFeedMessage type="No" text="추천 상품을 불러올 수 없습니다." />
   }
 
   const posts = serverPosts.map(post =>

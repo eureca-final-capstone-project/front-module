@@ -8,6 +8,8 @@ import { getTransactionFeeds } from '../../../apis/transactionFeed'
 import { transformPostCard } from '../../../utils/postCardParse'
 import { useDeviceType } from '../../../hooks/useDeviceType'
 import type { FeedSearchRequestDto, Pageable } from '../../../apis/transactionFeed'
+import LoadingSpinner from '../../../components/LoadingSpinner/LoadingSpinner'
+import EndOfFeedMessage from '../../PostPage/components/EndOfFeedMessage'
 
 const LatestSection = () => {
   const deviceType = useDeviceType()
@@ -32,15 +34,11 @@ const LatestSection = () => {
   })
 
   if (isLoading) {
-    return <div className="flex min-h-91 items-center justify-center">최신 상품 불러오는 중...</div>
+    return <LoadingSpinner text="최신 상품을 불러오는 중..." className="min-h-91" />
   }
 
   if (isError || !data?.content) {
-    return (
-      <div className="flex min-h-91 items-center justify-center">
-        최신 상품을 불러올 수 없습니다.
-      </div>
-    )
+    return <EndOfFeedMessage type="No" text="최신 상품을 불러올 수 없습니다." />
   }
 
   const posts = data.content.map(post => transformPostCard(post, isMobile ? 'row' : 'col'))

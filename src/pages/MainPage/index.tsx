@@ -16,8 +16,11 @@ import { useShowPermissionModal } from '../../hooks/useShowPermissionModal'
 import Modal from '../../components/Modal/Modal'
 import PermissionInfo from './components/PermissionInfo'
 import Footer from '../../components/Footer/Footer'
+import useScrollToTop from '../../hooks/useScrollToTop'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 
 const MainPage = () => {
+  useScrollToTop()
   const { data: statistics, isLoading } = useQuery({
     queryKey: ['hourly-statistics'],
     queryFn: getHourlyStatistics,
@@ -51,9 +54,7 @@ const MainPage = () => {
                 <Card className="flex min-h-60 justify-start overflow-hidden rounded-none p-5 sm:h-110 sm:rounded-b-md">
                   <SectionHeader title="시세 그래프" iconType="priceGraph" />
                   {isLoading ? (
-                    <p className="flex min-h-75 items-center justify-center">
-                      시세 정보를 불러오는 중입니다...
-                    </p>
+                    <LoadingSpinner text="시세 정보를 불러오는 중..." className="min-h-60" />
                   ) : (
                     <>
                       <Graph
