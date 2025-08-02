@@ -43,11 +43,17 @@ const PaymentPage = () => {
     }
   }
 
+  const getPayMethod = (coupon: UserEventCoupon | null): string => {
+    const name = coupon?.eventCoupon.payType.name?.trim()
+    return !name || name === '전체' ? '카드' : name
+  }
+
   const handlePayment = () => {
     if (amount <= 0) {
       alert('충전할 금액을 입력하세요.')
       return
     }
+
     preparePaymentMutation.mutate({
       originalAmount: amount,
       finalAmount,
@@ -60,10 +66,12 @@ const PaymentPage = () => {
     onSuccess: data => {
       const { orderId, finalAmount } = data.data
 
+      // 쿠폰 선택 시 해당 결제수단, 없으면 '카드' 사용
+      const payMethod = getPayMethod(selectedCoupon)
       const tossPayments = window.TossPayments('test_ck_oEjb0gm23PJaEDEkepgvrpGwBJn5')
 
       tossPayments
-        .requestPayment('카드', {
+        .requestPayment(payMethod, {
           amount: finalAmount,
           orderId,
           orderName: `${finalAmount.toLocaleString()}원 충전`,
@@ -83,7 +91,8 @@ const PaymentPage = () => {
       console.error('결제 준비 API 호출 실패', error)
     },
   })
-  const isDisabled = preparePaymentMutation.isPending || finalAmount <= 0
+
+  const isDisabled = preparePaymentMutation.isPending || amount < 1000
 
   const calculateDiscountMutation = useMutation({
     mutationFn: postCalculateDiscount,
@@ -161,6 +170,8 @@ const PaymentPage = () => {
             className="text-fs16 appearance-none"
             required={true}
             inputMode="numeric"
+            error={amount > 0 && amount < 1000}
+            errorMsg="1,000원 이상 입력해주세요."
           />
         </Card>
         <Card type="label" labelTitle="쿠폰 적용" withMotion motionCustom={2}>
