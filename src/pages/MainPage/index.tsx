@@ -12,6 +12,9 @@ import FadeInUpMotion from '../../components/Animation/FadeInUpMotion'
 import { useQuery } from '@tanstack/react-query'
 import { transformToGraphData } from '../../utils/graph'
 import { getHourlyStatistics } from '../../apis/graph'
+import { useShowPermissionModal } from '../../hooks/useShowPermissionModal'
+import Modal from '../../components/Modal/Modal'
+import PermissionInfo from './components/PermissionInfo'
 import Footer from '../../components/Footer/Footer'
 
 const MainPage = () => {
@@ -29,6 +32,8 @@ const MainPage = () => {
         return newEntry
       })
     : []
+
+  const { isModalOpen, setIsModalOpen } = useShowPermissionModal()
 
   return (
     <div className="bg-background flex h-screen flex-col items-center">
@@ -111,6 +116,14 @@ const MainPage = () => {
             </FadeInUpMotion>
           </div>
         </Container>
+        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <PermissionInfo
+            onClose={() => {
+              sessionStorage.setItem('permission_modal_shown', 'true')
+              setIsModalOpen(false)
+            }}
+          />
+        </Modal>
       </main>
       <Footer type="primary" />
     </div>

@@ -22,6 +22,7 @@ import MobileFilter from './components/MobileFilter'
 import { MyMobileFilterState } from '../../types/filter'
 import Button from '../../components/Button/Button'
 import PlusIcon from '@/assets/icons/plus.svg?react'
+import { usePermissionStore } from '../../store/authStore'
 import EndOfFeedMessage from '../PostPage/components/EndOfFeedMessage'
 import PostCardColSkeleton from '../../components/PostCard/PostCardColSkeleton'
 import PostCardRowSkeleton from '../../components/PostCard/PostCardRowSkeleton'
@@ -42,6 +43,8 @@ const MyPostPage = () => {
   const [selectedSort, setSelectedSort] = useState<MyPageSortLabel>(initialSortLabel)
   const deviceType = useDeviceType()
   const observerRef = useRef<HTMLDivElement | null>(null)
+  const permissions = usePermissionStore(state => state.permissions)
+  const isDisabledWrite = !permissions.includes('WRITE')
   const [filterState, setFilterState] = useState<FilterState>(() => ({
     filter: parseFilter(searchParams.get('filter')),
     status: parseStatus(searchParams.get('status')),
@@ -201,7 +204,8 @@ const MyPostPage = () => {
               <Button
                 text="판매글 작성"
                 onClick={() => navigate('/post-write')}
-                className="bg-pri-500 text-gray-10 hidden whitespace-nowrap sm:block"
+                disabled={isDisabledWrite}
+                className={`bg-pri-500 text-gray-10 hidden whitespace-nowrap sm:block ${isDisabledWrite ? 'button-disabled' : 'button-active'}`}
               />
               {/* 정렬 드롭다운 */}
               <DropDown
@@ -255,8 +259,9 @@ const MyPostPage = () => {
       </div>
       {deviceType !== 'desktop' && (
         <button
+          disabled={isDisabledWrite}
           onClick={() => navigate('/post-write')}
-          className="bg-pri-400 shadow-button text-gray-10 fixed right-4 bottom-7 z-50 flex items-center rounded-full px-4 py-2.5 sm:hidden"
+          className={`bg-pri-400 shadow-button text-gray-10 fixed right-4 bottom-7 z-50 flex items-center rounded-full px-4 py-2.5 sm:hidden ${isDisabledWrite ? 'button-disabled' : 'button-active'}`}
         >
           <PlusIcon className="h-4 w-4 pr-1" />
           글쓰기

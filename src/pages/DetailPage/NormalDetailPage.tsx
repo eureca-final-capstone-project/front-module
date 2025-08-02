@@ -32,7 +32,7 @@ import { AxiosError } from 'axios'
 import BasicModal from '../MyPage/components/Modal/BasicModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useToast } from '../../hooks/useToast'
-import { useAuthStore } from '../../store/authStore'
+import { useAuthStore, usePermissionStore } from '../../store/authStore'
 
 const NormalDetailPage = () => {
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
@@ -44,6 +44,7 @@ const NormalDetailPage = () => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const deviceType = useDeviceType()
   const { showToast } = useToast()
+  const permissions = usePermissionStore(state => state.permissions)
 
   const isLoggedIn = useAuthStore(state => state.isLogin)
 
@@ -111,9 +112,9 @@ const NormalDetailPage = () => {
   }
 
   const isMyPost = userInfo?.userId === data.sellerId
-  const hasTransactionPermission = userInfo?.authorities.includes('TRANSACTION')
+  const hasTransactionPermission = permissions.includes('TRANSACTION')
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
-  const isBuyDisabled = isMyPost || !hasTransactionPermission || isCompletedOrExpired
+  const isBuyDisabled = !hasTransactionPermission || isCompletedOrExpired
 
   const image = imagePost.find(img => img.id === data.defaultImageNumber)
 
@@ -211,12 +212,15 @@ const NormalDetailPage = () => {
                 >
                   {isMyPost ? (
                     <>
-                      <Button
-                        text="수정하기"
-                        className="text-gray-700"
-                        shape="underline"
-                        onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
-                      />
+                      {hasTransactionPermission && (
+                        <Button
+                          text="수정하기"
+                          className="text-gray-700"
+                          shape="underline"
+                          onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
+                        />
+                      )}
+
                       <Button
                         text="삭제하기"
                         className="text-gray-700"
@@ -362,18 +366,22 @@ const NormalDetailPage = () => {
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
                   onClick={handleWishClick}
                 />
-                <Button
-                  onClick={handleBuyClick}
-                  text="구매하기"
-                  disabled={isBuyDisabled}
-                  className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
-                />
-                <Button
-                  onClick={handleBuyClick}
-                  text="구매하기"
-                  disabled={isBuyDisabled}
-                  className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
-                />
+                {!isMyPost && (
+                  <>
+                    <Button
+                      onClick={handleBuyClick}
+                      text="구매하기"
+                      disabled={isBuyDisabled}
+                      className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
+                    />
+                    <Button
+                      onClick={handleBuyClick}
+                      text="구매하기"
+                      disabled={isBuyDisabled}
+                      className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>

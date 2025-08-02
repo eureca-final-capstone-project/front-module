@@ -18,7 +18,7 @@ import MobileFilter from './components/MobileFilter'
 import { MobileFilterState, initialFilterState } from '../../types/filter'
 import Button from '../../components/Button/Button'
 import PlusIcon from '@/assets/icons/plus.svg?react'
-import { useAuthStore } from '../../store/authStore'
+import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import PostCardColSkeleton from '../../components/PostCard/PostCardColSkeleton'
 import EndOfFeedMessage from './components/EndOfFeedMessage'
 import PostCardRowSkeleton from '../../components/PostCard/PostCardRowSkeleton'
@@ -47,6 +47,8 @@ const PostPage = () => {
   const observerRef = useRef<HTMLDivElement | null>(null)
   const initialKeyword = searchParams.get('keyword') || ''
   const [keyword, setKeyword] = useState(initialKeyword)
+  const permissions = usePermissionStore(state => state.permissions)
+  const isDisabledWrite = !permissions.includes('WRITE')
 
   const [filterState, setFilterState] = useState<FilterState>(() => {
     const telecomCompanyIds = parseNumberArray(searchParams.get('telecomCompanyIds'))
@@ -334,7 +336,8 @@ const PostPage = () => {
                 <Button
                   text="판매글 작성"
                   onClick={() => navigate('/post-write')}
-                  className="bg-pri-500 text-gray-10 hidden whitespace-nowrap lg:block"
+                  disabled={isDisabledWrite}
+                  className={`bg-pri-500 text-gray-10 hidden whitespace-nowrap lg:block ${isDisabledWrite ? 'button-disabled' : 'button-active'}`}
                 />
               )}
               {/* 정렬 드롭다운 */}
@@ -404,8 +407,9 @@ const PostPage = () => {
 
       {isLoggedIn && deviceType !== 'desktop' && (
         <button
+          disabled={isDisabledWrite}
           onClick={() => navigate('/post-write')}
-          className="bg-pri-400 shadow-button text-gray-10 fixed right-4 bottom-7 z-50 flex items-center rounded-full px-4 py-2.5 lg:hidden"
+          className={`bg-pri-400 shadow-button text-gray-10 fixed right-4 bottom-7 z-50 flex items-center rounded-full px-4 py-2.5 lg:hidden ${isDisabledWrite ? 'button-disabled' : 'button-active'}`}
         >
           <PlusIcon className="h-4 w-4 pr-1" />
           글쓰기
