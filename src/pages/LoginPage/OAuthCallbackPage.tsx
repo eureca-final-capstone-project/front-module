@@ -9,15 +9,17 @@ const OAuthCallbackPage = () => {
   const calledRef = useRef(false)
 
   const [searchParams] = useSearchParams()
-  const setIsLogin = useAuthStore(state => state.setIsLogin)
+  const { setIsLogin, setUserId } = useAuthStore()
 
   const mutation = useMutation({
     mutationFn: requestTokenForOAuth,
     onSuccess: data => {
       if (data.statusCode === 200) {
-        const accessToken = data.data.accessToken
+        const { accessToken, userId } = data.data
         sessionStorage.setItem('userAccessToken', accessToken)
+        sessionStorage.setItem('userId', userId)
         setIsLogin(true)
+        setUserId(userId)
 
         if (data.data.newUser) {
           navigate('/additional-info')
