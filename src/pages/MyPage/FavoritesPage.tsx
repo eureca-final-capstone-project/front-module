@@ -119,7 +119,7 @@ const FavoritesPage = () => {
   return (
     <>
       {deviceType === 'mobile' ? <Breadcrumb current="관심 거래" /> : ''}
-      <div className="flex flex-col gap-4 sm:gap-5">
+      <div className="flex flex-1 flex-col gap-4 sm:gap-5">
         {/* 상단 */}
         <FavoritesHeader
           buttonOptions={buttonOptions.fav}
@@ -162,7 +162,7 @@ const FavoritesPage = () => {
             onClickRight={handleConfirmDelete}
           />
         )}
-        <div className="mt-3 flex justify-center pb-6">
+        <div className="mt-auto flex justify-center pb-6 sm:pb-0">
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 1}

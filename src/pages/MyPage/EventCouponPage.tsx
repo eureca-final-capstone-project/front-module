@@ -21,7 +21,7 @@ const EventCouponPage = () => {
   })
 
   const eventCoupons = data?.data.coupons ?? []
-  const pagedCoupons = eventCoupons.slice((page - 1) * 4, page * 4)
+  const pagedCoupons = eventCoupons.slice((page - 1) * 6, page * 6)
 
   if (isLoading || isError || eventCoupons.length === 0) {
     let title = ''
@@ -49,7 +49,7 @@ const EventCouponPage = () => {
     }
     return (
       <div
-        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+        className={`flex h-[20vh] flex-1 flex-col items-center justify-center text-center ${textColor}`}
       >
         <EventCouponIcon className="h-6 w-8 sm:h-8 sm:w-10" />
         <p className="sm:text-fs18 text-fs16 pt-3 font-medium">{title}</p>
@@ -71,7 +71,7 @@ const EventCouponPage = () => {
           />
         ))}
       </div>
-      <div className="mt-3 flex justify-center pb-6">
+      <div className="mt-auto flex justify-center pb-6 sm:pb-0">
         <Pagination
           currentPage={page}
           totalPages={Math.ceil(eventCoupons.length / 4)}

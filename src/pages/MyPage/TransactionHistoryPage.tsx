@@ -77,7 +77,7 @@ const TransactionHistoryPage = () => {
 
     return (
       <div
-        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+        className={`flex h-[20vh] flex-1 flex-col items-center justify-center text-center ${textColor}`}
       >
         <ListIcon className="h-6 w-8 sm:h-8 sm:w-10" />
         <p className="text-fs16 sm:text-fs18 pt-3 font-medium">{title}</p>
@@ -89,7 +89,7 @@ const TransactionHistoryPage = () => {
   return (
     <>
       {deviceType === 'mobile' ? <Breadcrumb current="거래 내역" /> : ''}
-      <div className="flex flex-col gap-4 sm:gap-5">
+      <div className="flex flex-1 flex-col gap-4 sm:gap-5">
         {/* 상단 */}
         <TransactionHeader
           buttonOptions={buttonOptions.trade}
@@ -119,13 +119,7 @@ const TransactionHistoryPage = () => {
             ))}
           </div>
         )}
-        <div className="mt-3 flex justify-center pb-6">
-          <Pagination
-            currentPage={page}
-            totalPages={data?.totalPages ?? 1}
-            onPageChange={setPage}
-          />
-        </div>
+
         {modalType && (
           <BasicModal
             isOpen={isModalOpen}
@@ -135,6 +129,13 @@ const TransactionHistoryPage = () => {
             onClickRight={() => {}}
           />
         )}
+        <div className="mt-auto flex justify-center pb-6 sm:pb-0">
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 1}
+            onPageChange={setPage}
+          />
+        </div>
       </div>
     </>
   )

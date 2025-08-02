@@ -94,7 +94,7 @@ const DataChargePage = () => {
           <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
         ))}
       </div>
-      <div className="mt-3 flex justify-center pb-6">
+      <div className="mt-auto flex justify-center pb-6 sm:pb-0">
         <Pagination
           currentPage={(data?.number ?? 0) + 1}
           totalPages={data?.totalPages ?? 1}

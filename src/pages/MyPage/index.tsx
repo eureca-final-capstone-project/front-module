@@ -61,7 +61,9 @@ const MyPage = () => {
         }}
       />
       {/* 콘텐츠 */}
-      <div className="px-5 py-8">{selected.content}</div>
+      <div className="relative flex min-h-[60vh] flex-col justify-between px-5 py-8">
+        {selected.content}
+      </div>
     </div>
   )
 }

@@ -71,7 +71,7 @@ const ReportHistoryPage = () => {
     <>
       {deviceType === 'mobile' ? <Breadcrumb current="신고 내역" /> : ''}
 
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-1 flex-col gap-5">
         <ListTile type="title">
           <div className="grid w-full grid-cols-2 items-center gap-2 sm:grid-cols-[1fr_2fr_1fr_1fr]">
             <p className="text-left">거래글 명</p>
@@ -114,14 +114,14 @@ const ReportHistoryPage = () => {
             )
           })}
         </div>
-        <div className="mt-3 flex justify-center pb-6">
+        <ReportModal isOpen={isModalOpen} onClose={handleCloseModal} report={selectedReport!} />
+        <div className="mt-auto flex justify-center pb-6 sm:pb-0">
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 1}
             onPageChange={setPage}
           />
         </div>
-        <ReportModal isOpen={isModalOpen} onClose={handleCloseModal} report={selectedReport!} />
       </div>
     </>
   )
