@@ -14,6 +14,7 @@ import EventCouponPage from './EventCouponPage'
 import TransactionHistoryPage from './TransactionHistoryPage'
 import PayHistoryPage from './PayHistoryPage'
 import ReportHistoryPage from './ReportHistoryPage'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 
 const tabData = [
   { id: 'data-charge', label: '데이터 충전권', content: <DataChargePage /> },
@@ -37,7 +38,7 @@ const MyPage = () => {
 
   const selected = tabData.find(tab => tab.id === tabId)
   if (!selected) {
-    return null // 로딩 스피너 or 404 UI 추가 예정
+    return <LoadingSpinner />
   }
 
   if (deviceType === 'mobile') {
@@ -61,7 +62,7 @@ const MyPage = () => {
         }}
       />
       {/* 콘텐츠 */}
-      <div className="relative flex min-h-[60vh] flex-col justify-between px-5 py-8">
+      <div className="relative flex min-h-[70vh] flex-col justify-between px-5 py-8">
         {selected.content}
       </div>
     </div>

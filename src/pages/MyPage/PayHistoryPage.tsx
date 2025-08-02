@@ -110,7 +110,7 @@ const PayHistoryPage = () => {
     }
     return (
       <div
-        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+        className={`mt-14 flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
       >
         <DatchaCoinIcon className="h-6 w-8 sm:h-8 sm:w-10" />
         <p className="text-fs16 sm:text-fs18 pt-3 font-medium">{title}</p>
