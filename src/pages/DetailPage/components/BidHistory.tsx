@@ -13,6 +13,7 @@ import { Mousewheel } from 'swiper/modules'
 
 const BidHistory = () => {
   const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
   const { transactionFeedId } = useParams()
 
   const {
@@ -91,12 +92,12 @@ const BidHistory = () => {
             <Swiper
               modules={[Mousewheel]}
               direction="vertical"
-              slidesPerView={deviceType == 'mobile' ? 4.6 : 4.5}
+              slidesPerView={isMobile ? 4.6 : 4.5}
               spaceBetween={4}
               slidesPerGroup={1}
               touchRatio={0.5}
               threshold={5}
-              mousewheel={true}
+              mousewheel={isMobile ? false : true}
               className="h-full"
               breakpoints={{
                 0: {

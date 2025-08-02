@@ -22,7 +22,7 @@ const Toast = () => {
           'shadow-toast',
           'rounded-full sm:rounded-sm',
           'py-4',
-          'pl-10',
+          context?.type === 'default' ? 'pl-4' : 'pl-10',
           'pr-4',
           'min-w-80',
           'h-auto',

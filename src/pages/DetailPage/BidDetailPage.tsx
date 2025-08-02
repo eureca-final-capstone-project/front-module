@@ -32,8 +32,11 @@ import FeedReportModal from './components/FeedReportModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
+import useScrollToTop from '../../hooks/useScrollToTop'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 
 const BidDetailPage = () => {
+  useScrollToTop()
   const { showToast } = useToast()
   const { transactionFeedId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -90,7 +93,7 @@ const BidDetailPage = () => {
     enabled: !!sessionStorage.getItem('userAccessToken'),
   })
 
-  if (isLoading) return <p>로딩 중</p>
+  if (isLoading) return <LoadingSpinner className="min-h-screen" />
   if (isError || !data) {
     return <Navigate to="/404" replace />
   }
