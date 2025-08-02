@@ -14,10 +14,12 @@ import DropDown from '../../../components/DropDown/DropDown'
 import { AdditionalInfoSchemaTye } from '../../../types/auth'
 import { additionalInfoSchema } from '../../../utils/validation'
 import { requestAdditionalInfo } from '../../../apis/auth'
+import { useAuthStore } from '../../../store/authStore'
 
 const AdditionalInfoForm = () => {
   const navigate = useNavigate()
   const deviceType = useDeviceType()
+  const setIsLogin = useAuthStore(state => state.setIsLogin)
 
   const {
     control,
@@ -48,6 +50,7 @@ const AdditionalInfoForm = () => {
     mutationFn: requestAdditionalInfo,
     onSuccess: data => {
       if (data.statusCode === 200) {
+        setIsLogin(true)
         navigate('/', { replace: true })
       } else {
         alert('회원가입 실패: ' + data.message)

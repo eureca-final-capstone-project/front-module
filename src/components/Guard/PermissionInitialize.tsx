@@ -16,8 +16,8 @@ const PermissionInitialize = () => {
 
   useEffect(() => {
     if (data) {
-      setPermissionInitailized(true)
       setPermissions(data.authorities)
+      setPermissionInitailized(true)
     }
   }, [data, setPermissionInitailized, setPermissions])
 

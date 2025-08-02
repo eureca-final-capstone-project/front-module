@@ -15,16 +15,16 @@ const OAuthCallbackPage = () => {
     mutationFn: requestTokenForOAuth,
     onSuccess: data => {
       if (data.statusCode === 200) {
-        const { accessToken, userId } = data.data
+        const { accessToken, userId, newUser } = data.data
         sessionStorage.setItem('userAccessToken', accessToken)
         sessionStorage.setItem('userId', userId)
-        setIsLogin(true)
         setUserId(userId)
 
-        if (data.data.newUser) {
+        if (newUser) {
           navigate('/additional-info')
           return
         }
+        setIsLogin(true)
         navigate('/')
       } else {
         alert('로그인 중 오류가 발생했습니다.')
