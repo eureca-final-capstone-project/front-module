@@ -69,6 +69,10 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['notifications'] })
           setHasUnread(false)
+
+          setTimeout(() => {
+            onClose?.()
+          }, 600)
         },
       })
     }
