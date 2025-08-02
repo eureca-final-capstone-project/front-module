@@ -11,8 +11,6 @@ import Button from '../Button/Button'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import SlideInMotion from '../Animation/SlideInMotion'
 import { useNotificationStore } from '../../store/notificationStore'
-import NotificationIcon from '@/assets/icons/notification.svg?react'
-
 interface AlertModalProps {
   isOpen: boolean
   onClose?: () => void
@@ -69,6 +67,10 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ['notifications'] })
           setHasUnread(false)
+
+          setTimeout(() => {
+            onClose?.()
+          }, 600)
         },
       })
     }
@@ -105,17 +107,12 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
 
   if (isMobile) {
     return (
-      <SlideInMotion isOpen={isOpen} onClose={onClose}>
+      <SlideInMotion isOpen={isOpen} onClose={onClose} title="알림">
         {isLoggedIn ? (
           <>
             <div className="relative">
-              <div className="text-fs16 absolute top-6.5 left-0 flex gap-1 px-5 text-gray-900">
-                <NotificationIcon className="h-4.5 w-4.5" />
-                <h2>알림</h2>
-              </div>
-
               <button
-                className="text-fs12 absolute top-6.5 right-10 px-5 text-gray-600 hover:text-gray-800"
+                className="text-fs12 absolute top-6.5 right-4 text-gray-600 hover:text-gray-800"
                 onClick={handleMarkAllAsRead}
               >
                 전체 읽음 처리
@@ -136,7 +133,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               {isFetchingNextPage && <p className="text-fs14 py-4 text-center">불러오는 중</p>}
 
               {(shouldShowCompleteMessage || hasShownCompleteMessage) && (
-                <p className="text-pri-500 text-fs14 pt-6 pb-4 text-center">
+                <p className="text-gray-10 bg-pri-500 text-fs14 pt-4 pb-4 text-center">
                   최근 14일 동안 받은 알림을 모두 확인했습니다.
                 </p>
               )}

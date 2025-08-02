@@ -5,6 +5,9 @@ import DatchaIcon from '@/assets/icons/datcha-square.svg?react'
 import CouponIcon from '@/assets/icons/coupon-fill.svg?react'
 import BidIcon from '@/assets/icons/bid.png'
 import BidGrayIcon from '@/assets/icons/bid-gray.png'
+import StyledAlertContent from './StyledAlertContent'
+import { getDragging } from '../../utils/dragState'
+
 interface Props {
   notification: NotificationItem
   onRead: (alarmId: number) => void
@@ -15,6 +18,7 @@ const AlertItem = ({ notification, onRead }: Props) => {
   const navigate = useNavigate()
 
   const handleClick = () => {
+    if (getDragging()) return
     const id = notification.alarmType.alarmTypeId
 
     if (id === 4) {
@@ -52,7 +56,10 @@ const AlertItem = ({ notification, onRead }: Props) => {
         </div>
         <p className="text-fs12">{formatRelativeTime(notification.createdAt)}</p>
       </div>
-      <p className="text-fs14 font-normal whitespace-pre-wrap">{notification.content}</p>
+      <StyledAlertContent
+        content={notification.content}
+        isRead={notification.status.code === 'READ'}
+      />
     </div>
   )
 }
@@ -82,12 +89,12 @@ const getIcon = (id: number, isRead: boolean) => {
     case 1:
     case 2:
     default:
-      return <DatchaIcon className={`h-4 w-4 ${isRead ? 'text-gray-500' : ''}`} />
+      return <DatchaIcon className={`h-4 w-4 ${isRead ? 'text-gray-500' : 'text-pri-500'}`} />
     case 3:
     case 5:
     case 6:
       return <img src={isRead ? BidGrayIcon : BidIcon} alt="입찰 아이콘" className="h-4 w-4" />
     case 4:
-      return <CouponIcon className={`h-4 w-4 ${isRead ? 'text-gray-500' : ''}`} />
+      return <CouponIcon className={`h-4 w-4 ${isRead ? 'text-gray-500' : 'text-pri-500'}`} />
   }
 }
