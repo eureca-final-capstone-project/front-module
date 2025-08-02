@@ -18,8 +18,11 @@ import PermissionInfo from './components/PermissionInfo'
 import Footer from '../../components/Footer/Footer'
 import useScrollToTop from '../../hooks/useScrollToTop'
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
+import { useAuthStore } from '../../store/authStore'
 
 const MainPage = () => {
+  const userId = useAuthStore(state => state.userId)
+
   useScrollToTop()
   const { data: statistics, isLoading } = useQuery({
     queryKey: ['hourly-statistics'],
@@ -120,7 +123,7 @@ const MainPage = () => {
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <PermissionInfo
             onClose={() => {
-              sessionStorage.setItem('permission_modal_shown', 'true')
+              sessionStorage.setItem(`permission_modal_shown_${userId}`, 'true')
               setIsModalOpen(false)
             }}
           />

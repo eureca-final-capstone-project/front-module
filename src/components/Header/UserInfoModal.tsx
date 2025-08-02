@@ -7,7 +7,7 @@ import Badge from '../Badge/Badge'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import { logout } from '../../apis/auth'
 import { toast } from 'react-toastify'
-import { useAuthStore } from '../../store/authStore'
+import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import { useNotificationStore } from '../../store/notificationStore'
 interface Props {
   nickname: string
@@ -18,6 +18,8 @@ interface Props {
 
 const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
   const setIsLoggedin = useAuthStore(state => state.setIsLogin)
+  const userId = useAuthStore(state => state.userId)
+  const { setPermissionInitialized, setPermissions } = usePermissionStore()
 
   const { data: payStatus } = useQuery({
     queryKey: ['userPayStatus'],
@@ -37,9 +39,11 @@ const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
     onSuccess: () => {
       queryClient.clear()
       setIsLoggedin(false)
+      setPermissions([])
+      setPermissionInitialized(false)
       sessionStorage.removeItem('userAccessToken')
       sessionStorage.removeItem('userId')
-      sessionStorage.removeItem('permission_modal_shown')
+      sessionStorage.removeItem(`permission_modal_shown_${userId}`)
 
       toast.success('로그아웃 되었습니다.')
       navigate('/login', { replace: true })
