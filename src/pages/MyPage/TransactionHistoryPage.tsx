@@ -14,7 +14,8 @@ import { useNavigate } from 'react-router-dom'
 import Button from '../../components/Button/Button'
 import ListIcon from '@/assets/icons/list.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import MobileWrapper from './components/MobileWrapper'
+
 const TransactionHistoryPage = () => {
   const deviceType = useDeviceType()
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
@@ -87,9 +88,8 @@ const TransactionHistoryPage = () => {
   }
 
   return (
-    <>
-      {deviceType === 'mobile' ? <Breadcrumb current="거래 내역" /> : ''}
-      <div className="flex flex-col gap-4 sm:gap-5">
+    <MobileWrapper deviceType={deviceType} breadcrumbLabel="거래 내역">
+      <div className="flex flex-1 flex-col gap-4 sm:gap-5">
         {/* 상단 */}
         <TransactionHeader
           buttonOptions={buttonOptions.trade}
@@ -119,13 +119,7 @@ const TransactionHistoryPage = () => {
             ))}
           </div>
         )}
-        <div className="mt-3 flex justify-center pb-6">
-          <Pagination
-            currentPage={page}
-            totalPages={data?.totalPages ?? 1}
-            onPageChange={setPage}
-          />
-        </div>
+
         {modalType && (
           <BasicModal
             isOpen={isModalOpen}
@@ -135,8 +129,15 @@ const TransactionHistoryPage = () => {
             onClickRight={() => {}}
           />
         )}
+        <div className="mt-auto flex justify-center pb-6 sm:pb-0">
+          <Pagination
+            currentPage={page}
+            totalPages={data?.totalPages ?? 1}
+            onPageChange={setPage}
+          />
+        </div>
       </div>
-    </>
+    </MobileWrapper>
   )
 }
 

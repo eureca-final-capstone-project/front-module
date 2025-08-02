@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useDeviceType } from '../../hooks/useDeviceType'
@@ -14,8 +14,7 @@ import PostCard from '../../components/PostCard/PostCard'
 import { buttonOptions } from './components/config'
 import HeartIcon from '@/assets/icons/heart-bold.svg?react'
 import Pagination from '../../components/Pagination/Pagination'
-import { useSearchParams } from 'react-router-dom'
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
+import MobileWrapper from './components/MobileWrapper'
 
 const FavoritesPage = () => {
   const deviceType = useDeviceType()
@@ -24,14 +23,6 @@ const FavoritesPage = () => {
   const [page, setPage] = useState(1)
   const [selectedType, setSelectedType] = useState<'all' | 'normal' | 'bid'>('all')
   const { modalType, isOpen: isModalOpen, openModal, closeModal } = useModal()
-  const bottomRef = useRef<HTMLDivElement>(null)
-  const [searchParams] = useSearchParams()
-  useEffect(() => {
-    const scroll = searchParams.get('scroll')
-    if (scroll === 'bottom') {
-      bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [])
 
   useEffect(() => {
     setPage(1)
@@ -126,9 +117,8 @@ const FavoritesPage = () => {
   }
 
   return (
-    <>
-      {deviceType === 'mobile' ? <Breadcrumb current="관심 거래" /> : ''}
-      <div className="flex flex-col gap-4 sm:gap-5">
+    <MobileWrapper deviceType={deviceType} breadcrumbLabel="관심 거래">
+      <div className="flex flex-1 flex-col gap-4 sm:gap-5">
         {/* 상단 */}
         <FavoritesHeader
           buttonOptions={buttonOptions.fav}
@@ -171,16 +161,15 @@ const FavoritesPage = () => {
             onClickRight={handleConfirmDelete}
           />
         )}
-        <div className="mt-3 flex justify-center pb-6">
+        <div className="mt-auto flex justify-center pb-6 sm:pb-0">
           <Pagination
             currentPage={page}
             totalPages={data?.totalPages ?? 1}
             onPageChange={setPage}
           />
         </div>
-        <div ref={bottomRef} />
       </div>
-    </>
+    </MobileWrapper>
   )
 }
 

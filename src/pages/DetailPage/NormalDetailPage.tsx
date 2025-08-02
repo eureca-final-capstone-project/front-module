@@ -100,7 +100,9 @@ const NormalDetailPage = () => {
   const { addWishMutation, deleteWishMutation } = useWishMutation(Number(transactionFeedId))
 
   if (isLoading) return <LoadingSpinner className="min-h-screen" />
-  if (isError || !data) return <p>에러</p>
+  if (isError || !data) {
+    return <Navigate to="/404" replace />
+  }
 
   const validSalesTypes = ['일반 판매', '입찰 판매'] as const
 
@@ -114,6 +116,9 @@ const NormalDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  if (data.status.code === 'BLURRED') {
+    return <Navigate to="/404" replace />
+  }
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = permissions.includes('TRANSACTION')
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
@@ -215,7 +220,7 @@ const NormalDetailPage = () => {
                 >
                   {isMyPost ? (
                     <>
-                      {hasTransactionPermission && (
+                      {hasTransactionPermission && !isCompletedOrExpired && (
                         <Button
                           text="수정하기"
                           className="text-gray-700"
@@ -232,22 +237,24 @@ const NormalDetailPage = () => {
                       />
                     </>
                   ) : (
-                    <>
-                      <ReportStrokeIcon className="text-error" />
-                      <Button
-                        text="신고하기"
-                        className="text-gray-700"
-                        shape="underline"
-                        onClick={() => {
-                          if (!isLoggedIn) {
-                            toast.info('로그인이 필요한 기능입니다.')
-                            navigate('/login')
-                            return
-                          }
-                          setIsReportModalOpen(true)
-                        }}
-                      />
-                    </>
+                    !isCompletedOrExpired && (
+                      <>
+                        <ReportStrokeIcon className="text-error" />
+                        <Button
+                          text="신고하기"
+                          className="text-gray-700"
+                          shape="underline"
+                          onClick={() => {
+                            if (!isLoggedIn) {
+                              toast.info('로그인이 필요한 기능입니다.')
+                              navigate('/login')
+                              return
+                            }
+                            setIsReportModalOpen(true)
+                          }}
+                        />
+                      </>
+                    )
                   )}
                 </div>
               </div>
@@ -270,12 +277,14 @@ const NormalDetailPage = () => {
                   >
                     {isMyPost ? (
                       <>
-                        <Button
-                          text="수정하기"
-                          shape="underline"
-                          className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
-                        />
+                        {hasTransactionPermission && !isCompletedOrExpired && (
+                          <Button
+                            text="수정하기"
+                            shape="underline"
+                            className="text-fs14 sm:text-fs16 text-gray-700"
+                            onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
+                          />
+                        )}
                         <Button
                           text="삭제하기"
                           shape="underline"
@@ -284,22 +293,24 @@ const NormalDetailPage = () => {
                         />
                       </>
                     ) : (
-                      <>
-                        <ReportStrokeIcon className="text-error" />
-                        <Button
-                          text="신고하기"
-                          shape="underline"
-                          className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => {
-                            if (!isLoggedIn) {
-                              toast.info('로그인이 필요한 기능입니다.')
-                              navigate('/login')
-                              return
-                            }
-                            setIsReportModalOpen(true)
-                          }}
-                        />
-                      </>
+                      !isCompletedOrExpired && (
+                        <>
+                          <ReportStrokeIcon className="text-error" />
+                          <Button
+                            text="신고하기"
+                            shape="underline"
+                            className="text-fs14 sm:text-fs16 text-gray-700"
+                            onClick={() => {
+                              if (!isLoggedIn) {
+                                toast.info('로그인이 필요한 기능입니다.')
+                                navigate('/login')
+                                return
+                              }
+                              setIsReportModalOpen(true)
+                            }}
+                          />
+                        </>
+                      )
                     )}
                   </div>
                 </div>

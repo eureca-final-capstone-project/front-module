@@ -109,6 +109,9 @@ const BidDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  if (data.status.code === 'BLURRED') {
+    return <Navigate to="/404" replace />
+  }
   const image = imagePost.find(img => img.id === data.defaultImageNumber)
 
   const handleWishClick = () => {
@@ -203,7 +206,7 @@ const BidDetailPage = () => {
 
                 {/* 데스크탑 신고하기 */}
                 <div className="hidden items-end justify-end gap-1 lg:flex">
-                  {!isMyPost && (
+                  {!isMyPost && !isCompletedOrExpired && (
                     <>
                       <ReportStrokeIcon className="text-error" />
                       <Button
@@ -238,7 +241,7 @@ const BidDetailPage = () => {
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
                   <div className="flex items-end justify-end gap-1 lg:hidden">
-                    {!isMyPost && (
+                    {!isMyPost && !isCompletedOrExpired && (
                       <>
                         <ReportStrokeIcon className="text-error" />
                         <Button
