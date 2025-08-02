@@ -10,6 +10,7 @@ import DatchaIcon from '@/assets/icons/datcha-coin-color.svg?react'
 import { getUserPayStatus } from '../apis/userInfo'
 import { formatAmount } from '../utils/format'
 import { imagePayment as PaymentImage } from '../constants/imageData'
+import LoadingSpinner from '../components/LoadingSpinner/LoadingSpinner'
 
 const PaymentSuccessPage = () => {
   const [searchParams] = useSearchParams()
@@ -63,7 +64,7 @@ const PaymentSuccessPage = () => {
   }, [paymentKey, orderId, amount])
 
   if (status === 'loading') {
-    return <div>결제 승인 진행 중</div>
+    return <LoadingSpinner className="h-screen" text="결제 승인 진행 중..." />
   }
 
   if (status === 'error') {
@@ -163,7 +164,7 @@ const PaymentSuccessPage = () => {
     )
   }
 
-  return <div>결제 정보를 불러오는 중</div>
+  return <LoadingSpinner className="h-screen" text="결제 승인 진행 중..." />
 }
 
 export default PaymentSuccessPage
