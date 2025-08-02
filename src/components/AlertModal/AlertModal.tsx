@@ -150,7 +150,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               <div>
                 <p className="text-fs16 font-semibold text-gray-900">로그인이 필요합니다.</p>
                 <p className="text-fs14 mt-1 text-gray-500">
-                  로그인하고 다차 거래 상황과 소식을
+                  로그인하고 다챠 거래 상황과 소식을
                   <br />
                   알림으로 받아보세요.
                 </p>
@@ -223,7 +223,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               <div>
                 <p className="text-fs16 font-semibold text-gray-900">로그인이 필요합니다.</p>
                 <p className="text-fs14 mt-1 text-gray-500">
-                  로그인하고 다차 거래 상황과 소식을
+                  로그인하고 다챠 거래 상황과 소식을
                   <br />
                   알림으로 받아보세요.
                 </p>

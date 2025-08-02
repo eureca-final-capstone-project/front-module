@@ -11,8 +11,8 @@ import Button from '../../components/Button/Button'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin-bold.svg?react'
 import { useNavigate } from 'react-router-dom'
 import Pagination from '../../components/Pagination/Pagination'
-import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useDeviceType } from '../../hooks/useDeviceType'
+import MobileWrapper from './components/MobileWrapper'
 
 const getBadgeInfo = (type: '충전' | '환전' | '구매' | '판매') => {
   if (type === '구매' || type === '판매') {
@@ -110,7 +110,7 @@ const PayHistoryPage = () => {
     }
     return (
       <div
-        className={`flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
+        className={`mt-14 flex h-[20vh] flex-col items-center justify-center text-center ${textColor}`}
       >
         <DatchaCoinIcon className="h-6 w-8 sm:h-8 sm:w-10" />
         <p className="text-fs16 sm:text-fs18 pt-3 font-medium">{title}</p>
@@ -119,60 +119,73 @@ const PayHistoryPage = () => {
     )
   }
 
-  if (isLoading || isError || !data || data.posts.length === 0) return renderStatusFallback()
-
   return (
-    <>
-      {deviceType === 'mobile' ? <Breadcrumb current="페이 내역" /> : ''}
-      <div className="flex flex-col gap-4 sm:gap-5">
-        <ListTile type="title">
-          <p>사용 유형</p>
-          <p>페이 변동</p>
-        </ListTile>
-        <div className="flex flex-col gap-2 px-4 sm:px-0">
-          {data.posts.map((item, i) => {
-            const { sign, text, colorClass } = getFormattedAmount(item.changeType, item.changePay)
-            const labelText =
-              item.changeType === '구매'
-                ? '데이터 구매'
-                : item.changeType === '판매'
-                  ? '데이터 판매'
-                  : item.changeType === '충전'
-                    ? '다챠페이 충전'
-                    : '다챠페이 환전'
+    <MobileWrapper deviceType={deviceType} breadcrumbLabel="페이 내역">
+      {isLoading || isError || !data || data.posts.length === 0 ? (
+        renderStatusFallback()
+      ) : (
+        <>
+          <div className="flex flex-1 flex-col gap-4 sm:gap-5">
+            <ListTile type="title">
+              <p>사용 유형</p>
+              <p>페이 변동</p>
+            </ListTile>
+            <div className="flex flex-col gap-2 px-4 sm:px-0">
+              {data.posts.map((item, i) => {
+                const { sign, text, colorClass } = getFormattedAmount(
+                  item.changeType,
+                  item.changePay
+                )
+                const labelText =
+                  item.changeType === '구매'
+                    ? '데이터 구매'
+                    : item.changeType === '판매'
+                      ? '데이터 판매'
+                      : item.changeType === '충전'
+                        ? '다챠페이 충전'
+                        : '다챠페이 환전'
 
-            return (
-              <FadeInUpMotion key={item.payHistoryId} custom={i} delayUnit={0.07} duration={0.3}>
-                <ListTile onClick={() => setSelectedId(item.payHistoryId)}>
-                  <div className="flex gap-2">
-                    <Badge {...getBadgeInfo(item.changeType)} variant="default" size="medium" />
-                    <p>{labelText}</p>
-                  </div>
-                  <div className={`font-medium ${colorClass} flex items-center gap-1 lg:gap-1.5`}>
-                    <span className="font-medium">{sign}</span>
-                    <div className="flex items-center gap-0.5 lg:gap-1">
-                      <DatchaCoin className="h-4 w-4 stroke-[2.5] lg:h-5 lg:w-5" />
-                      <p>{text}</p>
-                    </div>
-                  </div>
-                </ListTile>
-              </FadeInUpMotion>
-            )
-          })}
+                return (
+                  <FadeInUpMotion
+                    key={item.payHistoryId}
+                    custom={i}
+                    delayUnit={0.07}
+                    duration={0.3}
+                  >
+                    <ListTile onClick={() => setSelectedId(item.payHistoryId)}>
+                      <div className="flex gap-2">
+                        <Badge {...getBadgeInfo(item.changeType)} variant="default" size="medium" />
+                        <p>{labelText}</p>
+                      </div>
+                      <div
+                        className={`font-medium ${colorClass} flex items-center gap-1 lg:gap-1.5`}
+                      >
+                        <span className="font-medium">{sign}</span>
+                        <div className="flex items-center gap-0.5 lg:gap-1">
+                          <DatchaCoin className="h-4 w-4 stroke-[2.5] lg:h-5 lg:w-5" />
+                          <p>{text}</p>
+                        </div>
+                      </div>
+                    </ListTile>
+                  </FadeInUpMotion>
+                )
+              })}
 
-          {selectedId && isDetailSuccess && detail && (
-            <ReceiptModal {...parseToReceipt(detail)!} onClose={() => setSelectedId(null)} />
-          )}
-        </div>
-        <div className="mt-3 flex justify-center pb-6">
-          <Pagination
-            currentPage={page}
-            totalPages={data?.totalPages ?? 1}
-            onPageChange={setPage}
-          />
-        </div>
-      </div>
-    </>
+              {selectedId && isDetailSuccess && detail && (
+                <ReceiptModal {...parseToReceipt(detail)!} onClose={() => setSelectedId(null)} />
+              )}
+            </div>
+            <div className="mt-auto flex justify-center pb-6 sm:pb-0">
+              <Pagination
+                currentPage={page}
+                totalPages={data?.totalPages ?? 1}
+                onPageChange={setPage}
+              />
+            </div>
+          </div>
+        </>
+      )}
+    </MobileWrapper>
   )
 }
 
