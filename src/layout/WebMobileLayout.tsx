@@ -14,7 +14,7 @@ const WebMobileLayout = () => {
       <header className="bg-gray-10 fixed z-50 flex h-16 w-full items-center p-4 shadow-xs sm:h-21.5">
         <Container className="relative flex max-w-[640px] items-center justify-center">
           <BackIcon
-            className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer text-black"
+            className="absolute top-1/2 left-0 -translate-y-1/2 cursor-pointer text-gray-900"
             onClick={() => navigate(-1)}
           />
           <h1 className="text-fs20 font-medium">{title}</h1>
