@@ -67,14 +67,14 @@ const BidDetailPage = () => {
     const isSameFeed = latest.transactionFeedId === Number(transactionFeedId)
 
     if (isBidUpdate && isSameFeed) {
-      console.log('🔄 입찰 알림 수신 → 현재 페이지와 일치 → refetch 실행')
-      queryClient.refetchQueries({ queryKey: ['transactionFeedDetail', Number(transactionFeedId)] })
-      queryClient.refetchQueries({ queryKey: ['bidHistory', Number(transactionFeedId)] })
+      console.log('입찰 알림 수신 → 현재 페이지와 일치 → refetch 실행')
+      queryClient.refetchQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+      queryClient.refetchQueries({ queryKey: ['bidHistory', transactionFeedId] })
     }
   }, [latestAlarmId, transactionFeedId])
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
-    queryKey: ['transactionFeedDetail', Number(transactionFeedId)],
+    queryKey: ['transactionFeedDetail', transactionFeedId],
     queryFn: () => getTransactionFeedDetail(Number(transactionFeedId)),
     enabled: !!transactionFeedId,
   })
@@ -86,9 +86,8 @@ const BidDetailPage = () => {
     onSuccess: (_, variables) => {
       showToast({ type: 'success', msg: `${formatAmount(variables.amount)}에 입찰되었습니다!` })
       closeModal()
-      queryClient.refetchQueries({ queryKey: ['bidHistory', Number(transactionFeedId)] })
-      queryClient.refetchQueries({ queryKey: ['transactionFeedDetail', Number(transactionFeedId)] })
-
+      queryClient.invalidateQueries({ queryKey: ['bidHistory', transactionFeedId] })
+      queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
       queryClient.invalidateQueries({ queryKey: ['userPayStatus'] })
     },
     onError: (error: unknown) => {
