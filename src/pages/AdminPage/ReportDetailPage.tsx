@@ -64,7 +64,7 @@ const ReportDetailPage = () => {
           date={reportDetailData.feedDate}
           price={reportDetailData.price}
           sellerEmail={reportDetailData.sellerEmail}
-          content={reportDetailData.reportContent}
+          content={reportDetailData.content}
         />
       </div>
 
