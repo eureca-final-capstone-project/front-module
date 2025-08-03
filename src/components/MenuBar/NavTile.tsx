@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useRipple } from '../../hooks/useRipple'
 import ArrowBottomIcon from '@/assets/icons/arrow-bottom.svg?react'
+import { getDragging } from '../../utils/dragState'
 
 interface NavTileProps {
   label: string
@@ -27,6 +28,8 @@ const NavTile = ({
   const { containerRef, createRipple } = useRipple()
 
   const handleClick = (e: React.MouseEvent) => {
+    if (getDragging()) return
+
     createRipple(e)
 
     if (to) {
