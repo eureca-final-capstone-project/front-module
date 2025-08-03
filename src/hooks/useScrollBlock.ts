@@ -2,30 +2,27 @@ import { useEffect } from 'react'
 
 export const useScrollBlock = (block: boolean) => {
   useEffect(() => {
-    const html = document.documentElement
     const body = document.body
 
-    const prevHtmlOverflow = html.style.overflow
-    const prevBodyOverflow = body.style.overflow
-    const prevHtmlPosition = html.style.position
-    const prevBodyPosition = body.style.position
-    const prevScrollY = window.scrollY
+    const prevOverflow = body.style.overflow
+    const prevPosition = body.style.position
+    const prevTop = body.style.top
+    const prevWidth = body.style.width
+    const scrollY = window.scrollY
 
     if (block) {
-      html.style.overflow = 'hidden'
       body.style.overflow = 'hidden'
-      html.style.position = 'fixed'
       body.style.position = 'fixed'
-      body.style.top = `-${prevScrollY}px`
+      body.style.top = `-${scrollY}px`
+      body.style.width = '100%'
     }
 
     return () => {
-      html.style.overflow = prevHtmlOverflow
-      body.style.overflow = prevBodyOverflow
-      html.style.position = prevHtmlPosition
-      body.style.position = prevBodyPosition
-      body.style.top = ''
-      window.scrollTo(0, prevScrollY)
+      body.style.overflow = prevOverflow
+      body.style.position = prevPosition
+      body.style.top = prevTop
+      body.style.width = prevWidth
+      window.scrollTo(0, scrollY)
     }
   }, [block])
 }
