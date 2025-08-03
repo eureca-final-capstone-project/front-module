@@ -56,6 +56,7 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
     try {
       setNicknameLoading(true)
       await putUserNickname({ nickname })
+      showToast({ type: 'success', msg: '닉네임이 변경되었습니다.' })
       onSuccess?.(nickname)
       onClose()
     } catch {
@@ -113,8 +114,8 @@ const EditModal = ({ isOpen, onClose, nickname, onSuccess }: EditModalProps) => 
   }, [isOpen, nickname, resetPasswordForm, resetNicknameForm])
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="flex flex-col gap-7">
-      <h2 className="text-fs20 font-semibold">프로필 수정하기</h2>
+    <Modal isOpen={isOpen} onClose={onClose} className="scrollbar-hide flex flex-col gap-7">
+      <h2 className="text-fs18 sm:text-fs20 font-semibold">프로필 수정하기</h2>
       <div className="flex flex-col gap-11">
         <div>
           <div className="mb-1 flex justify-between">

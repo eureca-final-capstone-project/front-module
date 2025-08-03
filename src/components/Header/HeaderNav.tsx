@@ -15,6 +15,7 @@ import AlertModal from '../AlertModal/AlertModal'
 import { useToast } from '../../hooks/useToast'
 import { getNotifications } from '../../apis/alert'
 import { useNotificationStore } from '../../store/notificationStore'
+import MenuBar from '../MenuBar/MenuBar'
 
 interface HeaderNavProps {
   deviceType: string
@@ -30,6 +31,8 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const isLoggedIn = useAuthStore(state => state.isLogin)
 
   const { data: userProfile } = useQuery({
@@ -77,7 +80,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       return
     }
 
-    if (isLoggedIn) {
+    if (isLoggedIn || key === 'menu') {
       callback()
     } else {
       if (key !== 'profile') {
@@ -150,7 +153,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'menu',
       icon: <MenuIcon />,
-      action: () => alert('모바일 메뉴 오픈'),
+      action: () => setIsMenuOpen(true),
     },
   ]
 
@@ -171,7 +174,10 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
           ))}
         </nav>
         {deviceType === 'mobile' && (
-          <AlertModal isOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
+          <>
+            <AlertModal isOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
+            <MenuBar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+          </>
         )}
       </>
     )
