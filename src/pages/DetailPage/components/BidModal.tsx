@@ -95,29 +95,31 @@ const BidModal = ({
               </span>
             </div>
           </div>
-          <div className="flex items-center pt-3">
-            <div className="flex w-full items-center justify-between border-b-1 border-gray-100 pb-1">
-              <h3 className="font-medium">현재 입찰가</h3>
-              <div className="text-pri-600 flex items-center gap-1 font-medium">
-                <DatchaCoinIcon />
-                <span>{formatAmount(currentHeightPrice)}</span>
+          <div className="mt-3 flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <h3 className="font-medium">입찰 정보</h3>
+              <div className="border border-gray-100" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <div className="flex w-full items-center justify-between">
+                <p>현재 입찰가</p>
+                <div className="text-pri-600 flex items-center gap-1 font-medium">
+                  <DatchaCoinIcon />
+                  <span>{formatAmount(currentHeightPrice)}</span>
+                </div>
+              </div>
+              <div className="flex w-full items-center justify-between">
+                <p>보유 다챠페이</p>
+                <div className="text-pri-600 flex items-center gap-1 font-medium">
+                  <DatchaCoinIcon />
+                  <span>{formatAmount(userBalance)}</span>
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="flex items-center pt-3">
-            <div className="flex w-full items-center justify-between border-b-1 border-gray-100 pb-1">
-              <h3 className="font-medium">보유 다챠페이</h3>
-              <div className="text-pri-600 flex items-center gap-1 font-medium">
-                <DatchaCoinIcon />
-                <span>{formatAmount(userBalance)}</span>
-              </div>
-            </div>
-          </div>
-
           <div className="flex flex-col pt-3">
             <div className="flex flex-col">
-              <h3 className="font-medium">입찰가</h3>
+              <h3 className="font-medium">입찰가 입력</h3>
               <div className="mb-3 border-b-1 border-gray-100 pt-1"></div>
             </div>
             <Input
