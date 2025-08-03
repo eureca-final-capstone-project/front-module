@@ -6,6 +6,8 @@ import { useDeviceType } from '../../hooks/useDeviceType'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import HeaderNav from './HeaderNav'
+import { useMutation } from '@tanstack/react-query'
+import { registerSearchKeyword } from '../../apis/common'
 
 const Header = () => {
   const navigate = useNavigate()
@@ -14,6 +16,10 @@ const Header = () => {
 
   const [showMobileSearch, setShowMobileSearch] = useState(false)
   const [currentKeyword, setCurrentKeyword] = useState('')
+
+  const { mutate: saveKeyword } = useMutation({
+    mutationFn: registerSearchKeyword,
+  })
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -31,6 +37,10 @@ const Header = () => {
 
     setShowMobileSearch(false)
     navigate(`/posts?${currentParams.toString()}`)
+
+    if (keyword.trim()) {
+      saveKeyword(keyword.trim())
+    }
   }
 
   return (
