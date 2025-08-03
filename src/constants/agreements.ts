@@ -73,7 +73,6 @@ export const agreementDetails: Record<string, { title: string; content: string }
       content: [
         '- 회원은 언제든지 개인정보 조회, 수정, 삭제 요청을 할 수 있습니다.',
         '- 다만, 회원 탈퇴 기능 미제공으로 일부 정보 삭제가 제한될 수 있습니다.',
-        '- 개인정보 관련 문의 및 권리 행사는 고객센터를 통해 가능합니다.',
       ].join('\n'),
     },
     {
