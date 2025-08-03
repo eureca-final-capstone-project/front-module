@@ -5,6 +5,7 @@ import ReportTransactionFeed from './components/ReportTransactionFeed'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getReportDetail, processReportByAdmin } from '../../apis/admin/reports'
 import { useToast } from '../../hooks/useToast'
+import ReportContent from './components/ReportContent'
 
 const ReportDetailPage = () => {
   const queryClient = useQueryClient()
@@ -55,6 +56,7 @@ const ReportDetailPage = () => {
           date={reportDetailData.reportDate}
           reportType={reportDetailData.reportType}
         />
+        <ReportContent reportContent={reportDetailData.reportContent} />
         <ReportTransactionFeed
           carrier={reportDetailData.telecomCompany}
           dataAmount={reportDetailData.dataAmount}
@@ -62,7 +64,7 @@ const ReportDetailPage = () => {
           date={reportDetailData.feedDate}
           price={reportDetailData.price}
           sellerEmail={reportDetailData.sellerEmail}
-          content={reportDetailData.reportContent}
+          content={reportDetailData.content}
         />
       </div>
 
