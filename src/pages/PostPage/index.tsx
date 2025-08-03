@@ -84,6 +84,10 @@ const PostPage = () => {
     sort: selectedSort,
   }
 
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   const handleFilterChange = useCallback((updated: Partial<FilterState>) => {
     setFilterState(prev => ({ ...prev, ...updated }))
   }, [])
@@ -415,7 +419,11 @@ const PostPage = () => {
           글쓰기
         </button>
       )}
-      <ScrollToTopButton />
+      <ScrollToTopButton
+        className={
+          isLoggedIn && deviceType !== 'desktop' ? 'right-4 bottom-20' : 'right-6 bottom-8'
+        }
+      />
     </div>
   )
 }
