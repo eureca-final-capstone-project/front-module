@@ -36,7 +36,13 @@ const PayStatus = () => {
         <Button
           text="충전하기"
           className={`text-truncate text-fs14 lg:text-fs18 border-pri-600 text-pri-600 flex-1 border-[1.7px] font-medium ${isDisabeldButton ? 'button-disabled border-none' : ''}`}
-          onClick={() => navigate('/payment')}
+          onClick={() =>
+            navigate('/payment', {
+              state: {
+                backTo: '/mypage/data-charge',
+              },
+            })
+          }
           disabled={isDisabeldButton}
         />
         <Button

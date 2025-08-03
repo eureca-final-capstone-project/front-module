@@ -1,6 +1,15 @@
 export interface NotificationItem {
-  id: number
-  message: string
+  alarmId: number
+  content: string
+  transactionFeedId: number
+  alarmType: {
+    alarmTypeId: number
+    type: string
+  }
+  salesType: string
+  status: {
+    statusId: number
+    code: string // 'READ' | 'UNREAD'
+  }
   createdAt: string
-  read: boolean
 }

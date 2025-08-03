@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useDragControls } from 'framer-motion'
 import BackIcon from '@/assets/icons/back.svg?react'
 import { setDragging } from '../../utils/dragState'
 
@@ -9,6 +9,8 @@ interface SlideInMotionProps {
   children: ReactNode
   className?: string
   title?: string
+  onContentPointerDown?: (e: React.PointerEvent) => void
+  controls: ReturnType<typeof useDragControls>
 }
 
 const SlideInMotion = ({
@@ -17,6 +19,8 @@ const SlideInMotion = ({
   children,
   className = '',
   title,
+  controls,
+  onContentPointerDown,
 }: SlideInMotionProps) => {
   const [exitX, setExitX] = useState<'100%' | '-100%'>('100%')
   const [shouldRender, setShouldRender] = useState(false)
@@ -52,6 +56,9 @@ const SlideInMotion = ({
       {shouldRender && (
         <motion.div
           drag="x"
+          dragControls={controls}
+          dragListener={false}
+          onPointerDown={onContentPointerDown}
           onDragStart={() => setDragging(true)}
           onDragEnd={(_, info) => {
             setTimeout(() => setDragging(false), 0)
