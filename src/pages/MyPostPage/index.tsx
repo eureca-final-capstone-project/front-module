@@ -112,6 +112,10 @@ const MyPostPage = () => {
   )
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       root: null,
       rootMargin: '0px 0px -100px 0px',
