@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+import { motion, useDragControls } from 'framer-motion'
 import AlertItem from './AlertItem'
 import { useCallback, useEffect, useState } from 'react'
 import { getNotifications, markNotificationsAsRead, NotificationItem } from '../../apis/alert'
@@ -11,6 +11,7 @@ import Button from '../Button/Button'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import SlideInMotion from '../Animation/SlideInMotion'
 import { useNotificationStore } from '../../store/notificationStore'
+
 interface AlertModalProps {
   isOpen: boolean
   onClose?: () => void
@@ -24,6 +25,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   const [hasShownCompleteMessage, setHasShownCompleteMessage] = useState(false)
   const deviceType = useDeviceType()
   const isMobile = deviceType === 'mobile'
+  const controls = useDragControls()
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -107,7 +109,13 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
 
   if (isMobile) {
     return (
-      <SlideInMotion isOpen={isOpen} onClose={onClose} title="알림">
+      <SlideInMotion
+        isOpen={isOpen}
+        onClose={onClose}
+        title="알림"
+        controls={controls}
+        onContentPointerDown={e => controls.start(e)}
+      >
         {isLoggedIn ? (
           <>
             <div className="relative">
@@ -121,6 +129,8 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
             <div
               className="mt-16 flex flex-1 flex-col overflow-y-auto"
               onScroll={handleNotificationScroll}
+              onPointerDown={e => controls.start(e)}
+              style={{ touchAction: 'pan-y' }}
             >
               {flattenedNotifications.map((notification, index) => (
                 <div key={notification.alarmId}>
