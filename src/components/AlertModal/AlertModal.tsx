@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getNotifications, markNotificationsAsRead, NotificationItem } from '../../apis/alert'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
 import LockedIcon from '@/assets/icons/locked.svg?react'
+import NotificationIcon from '@/assets/icons/notification.svg?react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import Button from '../Button/Button'
@@ -12,6 +13,7 @@ import { useDeviceType } from '../../hooks/useDeviceType'
 import SlideInMotion from '../Animation/SlideInMotion'
 import { useNotificationStore } from '../../store/notificationStore'
 import { useScrollBlock } from '../../hooks/useScrollBlock'
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 
 interface AlertModalProps {
   isOpen: boolean
@@ -111,6 +113,41 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
     }
   }
 
+  type QueryStatus = 'pending' | 'error' | 'success'
+
+  const renderStatusFallback = (status: QueryStatus, hasData: boolean) => {
+    let title = ''
+    let subtitle: React.ReactNode = null
+    let textColor = 'text-gray-500'
+
+    if (status === 'pending') {
+      title = '알림을 불러오는 중입니다'
+    } else if (status === 'error') {
+      title = '알림을 불러오지 못했습니다'
+      subtitle = (
+        <p className="text-fs12 sm:text-fs14 mt-2 text-gray-400">잠시 후 다시 시도해주세요</p>
+      )
+      textColor = 'text-error'
+    } else if (status === 'success' && !hasData) {
+      title = '최근 14일 이내 받은 알림이 없습니다'
+      subtitle = (
+        <div className="text-fs12 sm:text-fs14 mt-2 text-gray-400">
+          <span>거래를 진행하면 알림이 도착해요!</span>
+        </div>
+      )
+    }
+
+    return (
+      <div
+        className={`flex min-h-[20vh] flex-1 flex-col items-center justify-center px-4 text-center ${textColor}`}
+      >
+        <NotificationIcon className="h-6 w-8 sm:h-8 sm:w-10" />
+        <p className="text-fs16 pt-3 font-medium">{title}</p>
+        {subtitle}
+      </div>
+    )
+  }
+
   if (isMobile) {
     return (
       <SlideInMotion
@@ -136,15 +173,22 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               onPointerDown={e => controls.start(e)}
               style={{ touchAction: 'pan-y' }}
             >
-              {flattenedNotifications.map((notification, index) => (
-                <div key={notification.alarmId}>
-                  <AlertItem notification={notification} onRead={handleReadOne} />
-                  {index !== flattenedNotifications.length - 1 && (
-                    <div className="border-t border-gray-100" />
-                  )}
-                </div>
-              ))}
-              {isFetchingNextPage && <p className="text-fs14 py-4 text-center">불러오는 중</p>}
+              {status === 'pending' || status === 'error' || flattenedNotifications.length === 0
+                ? renderStatusFallback(status, flattenedNotifications.length > 0)
+                : flattenedNotifications.map((notification, index) => (
+                    <div key={notification.alarmId}>
+                      <AlertItem notification={notification} onRead={handleReadOne} />
+                      {index !== flattenedNotifications.length - 1 && (
+                        <div className="border-t border-gray-100" />
+                      )}
+                    </div>
+                  ))}
+
+              {isFetchingNextPage && (
+                <p className="text-fs14 py-4 text-center">
+                  <LoadingSpinner />
+                </p>
+              )}
 
               {(shouldShowCompleteMessage || hasShownCompleteMessage) && (
                 <p className="text-gray-10 bg-pri-500 text-fs14 pt-4 pb-4 text-center">
@@ -199,9 +243,16 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               className="scrollbar-hide flex flex-1 flex-col overflow-y-auto"
               onScroll={handleNotificationScroll}
             >
-              {status === 'pending' && (
-                <p className="text-fs14 py-4 text-center">알림을 불러오는 중입니다...</p>
-              )}
+              {status === 'pending' || status === 'error' || flattenedNotifications.length === 0
+                ? renderStatusFallback(status, flattenedNotifications.length > 0)
+                : flattenedNotifications.map((notification, index) => (
+                    <div key={notification.alarmId}>
+                      <AlertItem notification={notification} onRead={handleReadOne} />
+                      {index !== flattenedNotifications.length - 1 && (
+                        <div className="border-t border-gray-100" />
+                      )}
+                    </div>
+                  ))}
 
               {status === 'success' &&
                 flattenedNotifications.map((notification, index) => (
@@ -212,7 +263,11 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
                     )}
                   </div>
                 ))}
-              {isFetchingNextPage && <p className="text-fs14 py-4 text-center">불러오는 중</p>}
+              {isFetchingNextPage && (
+                <p className="text-fs14 py-4 text-center">
+                  <LoadingSpinner />
+                </p>
+              )}
             </div>
 
             <motion.div
