@@ -100,7 +100,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'mypage',
       label: '마이페이지',
-      action: () => navigate('/mypage/data-charge'),
+      action: () => navigate('/mypage/data-charge', { state: { fromHeader: true } }),
     },
     {
       key: 'profile',
@@ -124,7 +124,9 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     },
     {
       label: '관심 거래',
-      to: isLoggedIn ? '/mypage/favorites' : '/login',
+      to: isLoggedIn
+        ? { pathname: '/mypage/favorites', state: { fromHeader: true } }
+        : { pathname: '/login' },
       matchPath: '/mypage/favorites',
       requiresLogin: true,
     },

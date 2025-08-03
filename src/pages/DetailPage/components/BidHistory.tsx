@@ -21,7 +21,7 @@ const BidHistory = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ['bidHistory', transactionFeedId],
+    queryKey: ['bidHistory', Number(transactionFeedId)],
     queryFn: () => getBidHistory(Number(transactionFeedId)),
     enabled: !!transactionFeedId,
     select: (data): Bids[] => data ?? [],
