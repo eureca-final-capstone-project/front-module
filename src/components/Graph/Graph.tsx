@@ -14,7 +14,7 @@ import { useDeviceType } from '../../hooks/useDeviceType'
 import EndOfFeedMessage from '../../pages/PostPage/components/EndOfFeedMessage'
 
 interface DataPoint {
-  [key: string]: string | number
+  [key: string]: string | number | null
 }
 
 interface GraphProps {
