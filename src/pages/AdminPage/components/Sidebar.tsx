@@ -6,17 +6,18 @@ import { adminSidebarMenu } from '../../../constants/admin'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { adminLogout } from '../../../apis/admin/auth'
 import { useToast } from '../../../hooks/useToast'
 import { getAdminProfile } from '../../../apis/admin/dashboard'
+import { useAdminAuthStore } from '../../../store/authStore'
 
 const Sidebar = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const queryClient = useQueryClient()
 
   const { showToast } = useToast()
+  const { setIsLogin, setAdminId } = useAdminAuthStore()
 
   const {
     data: adminProfile,
@@ -42,8 +43,10 @@ const Sidebar = () => {
     onSuccess: data => {
       switch (data.statusCode) {
         case 200:
-          queryClient.clear()
           sessionStorage.removeItem('adminAccessToken')
+          sessionStorage.removeItem('adminId')
+          setIsLogin(false)
+          setAdminId(null)
           showToast({ type: 'success', msg: '로그아웃 되었습니다.' })
           navigate('/admin/login')
           break
