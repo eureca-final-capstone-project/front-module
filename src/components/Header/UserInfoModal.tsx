@@ -63,9 +63,13 @@ const UserInfoModal = ({ nickname, email, telecomCompany, onClose }: Props) => {
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    const timeout = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 0)
+
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      clearTimeout(timeout)
+      document.removeEventListener('click', handleClickOutside)
     }
   }, [onClose])
 

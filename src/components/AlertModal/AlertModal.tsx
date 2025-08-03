@@ -74,9 +74,14 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
         onClose?.()
       }
     }
+    const timeout = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 0)
 
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
+    return () => {
+      clearTimeout(timeout)
+      document.removeEventListener('click', handleClickOutside)
+    }
   }, [isOpen, isMobile, onClose])
 
   const handleMarkAllAsRead = () => {
