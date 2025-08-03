@@ -105,7 +105,14 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
     },
   })
 
-  const handleLogout = () => logoutMutate()
+  const handleLogout = () => {
+    const { disconnectFn, clearDisconnectFn, clearNotifications } = useNotificationStore.getState()
+    disconnectFn?.()
+    clearDisconnectFn()
+    clearNotifications()
+
+    logoutMutate()
+  }
 
   return (
     <SlideInMotion

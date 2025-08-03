@@ -35,6 +35,8 @@ import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import useScrollToTop from '../../hooks/useScrollToTop'
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 import { getUserPayStatus } from '../../apis/userInfo'
+import { useNotificationStore } from '../../store/notificationStore'
+import { useEffect } from 'react'
 
 const BidDetailPage = () => {
   useScrollToTop()
@@ -52,9 +54,27 @@ const BidDetailPage = () => {
   const closeModal = () => setIsModalOpen(false)
 
   const queryClient = useQueryClient()
+  const notifications = useNotificationStore(state => state.notifications)
+  const latest = notifications[0]
+  const latestAlarmId = latest?.alarmId
+
+  useEffect(() => {
+    if (!latest || !transactionFeedId) return
+
+    const isBidUpdate =
+      latest.alarmType?.type === '입찰 성공' || latest.alarmType?.type === '입찰 갱신'
+
+    const isSameFeed = latest.transactionFeedId === Number(transactionFeedId)
+
+    if (isBidUpdate && isSameFeed) {
+      console.log('🔄 입찰 알림 수신 → 현재 페이지와 일치 → refetch 실행')
+      queryClient.refetchQueries({ queryKey: ['transactionFeedDetail', Number(transactionFeedId)] })
+      queryClient.refetchQueries({ queryKey: ['bidHistory', Number(transactionFeedId)] })
+    }
+  }, [latestAlarmId, transactionFeedId])
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
-    queryKey: ['transactionFeedDetail', transactionFeedId],
+    queryKey: ['transactionFeedDetail', Number(transactionFeedId)],
     queryFn: () => getTransactionFeedDetail(Number(transactionFeedId)),
     enabled: !!transactionFeedId,
   })
@@ -66,8 +86,9 @@ const BidDetailPage = () => {
     onSuccess: (_, variables) => {
       showToast({ type: 'success', msg: `${formatAmount(variables.amount)}에 입찰되었습니다!` })
       closeModal()
-      queryClient.invalidateQueries({ queryKey: ['bidHistory', transactionFeedId] })
-      queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+      queryClient.refetchQueries({ queryKey: ['bidHistory', Number(transactionFeedId)] })
+      queryClient.refetchQueries({ queryKey: ['transactionFeedDetail', Number(transactionFeedId)] })
+
       queryClient.invalidateQueries({ queryKey: ['userPayStatus'] })
     },
     onError: (error: unknown) => {

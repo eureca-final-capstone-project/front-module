@@ -4,7 +4,7 @@ import { NotificationItem } from '../types/notification'
 interface NotificationStore {
   notifications: NotificationItem[]
   addNotification: (item: NotificationItem) => void
-  markAsRead: (id: number) => void
+  markAsRead: (alarmId: number) => void
   clearNotifications: () => void
 
   disconnectFn: (() => void) | null
@@ -25,9 +25,11 @@ export const useNotificationStore = create<NotificationStore>(set => ({
       notifications: [item, ...state.notifications],
       hasUnread: true,
     })),
-  markAsRead: id =>
+  markAsRead: alarmId =>
     set(state => ({
-      notifications: state.notifications.map(n => (n.id === id ? { ...n, read: true } : n)),
+      notifications: state.notifications.map(n =>
+        n.alarmId === alarmId ? { ...n, read: true } : n
+      ),
     })),
   clearNotifications: () => set({ notifications: [] }),
 
