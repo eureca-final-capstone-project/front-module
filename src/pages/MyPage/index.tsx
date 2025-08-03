@@ -29,13 +29,14 @@ const MyPage = () => {
   const { tabId } = useParams()
   const navigate = useNavigate()
   const deviceType = useDeviceType()
-  const { pathname } = useLocation()
+  const { pathname, state } = useLocation()
+  const fromHeader = state?.fromHeader
 
   useEffect(() => {
-    if (deviceType === 'mobile') {
+    if (deviceType === 'mobile' || fromHeader) {
       window.scrollTo(0, 0)
     }
-  }, [pathname, deviceType])
+  }, [pathname, deviceType, fromHeader])
 
   useEffect(() => {
     if (!tabData.some(tab => tab.id === tabId)) {
