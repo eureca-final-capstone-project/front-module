@@ -12,13 +12,14 @@ import LockedIcon from '@/assets/icons/locked.svg?react'
 import { logout } from '../../apis/auth'
 import { toast } from 'react-toastify'
 import Button from '../Button/Button'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EditModal from '../../pages/MyPage/components/Modal/EditModal'
 import NavTile from './NavTile'
 import SubNavTile from './SubNavTile'
 import DropdownToggleMotion from '../Animation/DropDownToggleMotion'
 import { useDragControls } from 'framer-motion'
 import { useScrollBlock } from '../../hooks/useScrollBlock'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 interface MenuBarProps {
   isOpen: boolean
@@ -26,7 +27,11 @@ interface MenuBarProps {
 }
 
 const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
-  useScrollBlock(isOpen)
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
+
+  const shouldBlockScroll = useMemo(() => isMobile && isOpen, [isMobile, isOpen])
+  useScrollBlock(shouldBlockScroll)
 
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -101,8 +106,6 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
   })
 
   const handleLogout = () => logoutMutate()
-
-  if (!isOpen) return null
 
   return (
     <SlideInMotion

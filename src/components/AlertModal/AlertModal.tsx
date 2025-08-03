@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, useDragControls } from 'framer-motion'
 import AlertItem from './AlertItem'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { getNotifications, markNotificationsAsRead, NotificationItem } from '../../apis/alert'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
 import LockedIcon from '@/assets/icons/locked.svg?react'
@@ -28,7 +28,8 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   const isMobile = deviceType === 'mobile'
   const controls = useDragControls()
 
-  useScrollBlock(isMobile && isOpen)
+  const shouldBlockScroll = useMemo(() => isMobile && isOpen, [isMobile, isOpen])
+  useScrollBlock(shouldBlockScroll)
 
   useEffect(() => {
     if (isLoggedIn) {
