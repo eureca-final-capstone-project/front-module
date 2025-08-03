@@ -5,12 +5,13 @@ import { formatAmount } from '../../../utils/format'
 import DatchaCoinIcon from '@/assets/icons/datcha-coin.svg?react'
 import DatchaCoin from '@/assets/icons/datcha-coin.svg?react'
 import Input from '../../../components/Input/Input'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface BidModalProps {
   isOpen: boolean
   onClose: () => void
   currentHeightPrice: number
+  userBalance: number
   onClickLeft: () => void
   onClickRight: (bidAmount: number) => void
 }
@@ -19,12 +20,21 @@ const BidModal = ({
   isOpen,
   onClose,
   currentHeightPrice,
+  userBalance,
   onClickLeft,
   onClickRight,
 }: BidModalProps) => {
   const [bidAmount, setBidAmount] = useState<string>('')
   const [error, setError] = useState<boolean>(false)
   const [errorMsg, setErrorMsg] = useState<string>('')
+
+  useEffect(() => {
+    if (isOpen) {
+      setBidAmount('')
+      setError(false)
+      setErrorMsg('')
+    }
+  }, [isOpen])
 
   const handleBidAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
@@ -91,6 +101,16 @@ const BidModal = ({
               <div className="text-pri-600 flex items-center gap-1 font-medium">
                 <DatchaCoinIcon />
                 <span>{formatAmount(currentHeightPrice)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center pt-3">
+            <div className="flex w-full items-center justify-between border-b-1 border-gray-100 pb-1">
+              <h3 className="font-medium">보유 다챠페이</h3>
+              <div className="text-pri-600 flex items-center gap-1 font-medium">
+                <DatchaCoinIcon />
+                <span>{formatAmount(userBalance)}</span>
               </div>
             </div>
           </div>
