@@ -4,7 +4,6 @@ import Card from '../../components/Card/Card'
 import SectionHeader from './components/SectionHeader'
 import RecommendSection from './components/RecommendSection'
 import BidSection from './components/BidSection'
-import EventBanner from './components/EventBanner'
 import Graph from '../../components/Graph/Graph'
 import LatestSection from './components/LatestSection'
 import SectionDescription from './components/SectionDescription'
@@ -19,6 +18,8 @@ import Footer from '../../components/Footer/Footer'
 import useScrollToTop from '../../hooks/useScrollToTop'
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 import { useAuthStore } from '../../store/authStore'
+import Banner from './components/Banner'
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton'
 
 const MainPage = () => {
   const userId = useAuthStore(state => state.userId)
@@ -29,15 +30,7 @@ const MainPage = () => {
     queryFn: getHourlyStatistics,
   })
 
-  const graphData = statistics
-    ? transformToGraphData(statistics).map(entry => {
-        const newEntry: Record<string, number> = {}
-        Object.entries(entry).forEach(([key, value]) => {
-          if (value !== null) newEntry[key] = value
-        })
-        return newEntry
-      })
-    : []
+  const graphData = statistics ? transformToGraphData(statistics) : []
 
   const { isModalOpen, setIsModalOpen } = useShowPermissionModal()
 
@@ -46,9 +39,9 @@ const MainPage = () => {
       <Header />
 
       <main className="mt-16 w-full flex-1 sm:mt-21.5">
-        {/* 이벤트 배너 */}
-        <EventBanner />
-        <Container className="mt-6 max-w-[1312px] overflow-x-hidden overflow-y-hidden sm:mt-10 sm:mb-30 sm:px-4">
+        <Container className="max-w-[1312px] overflow-x-hidden overflow-y-hidden sm:mt-6 sm:mb-30 sm:px-4">
+          {/* 이벤트 배너 */}
+          <Banner />
           <div className="grid grid-cols-1 gap-6 sm:gap-y-10 lg:grid-cols-2 lg:gap-x-7">
             {/* 시세 그래프 섹션 */}
             <FadeInUpMotion custom={1}>
@@ -128,6 +121,7 @@ const MainPage = () => {
             }}
           />
         </Modal>
+        <ScrollToTopButton className="right-6 bottom-8" />
       </main>
       <Footer type="primary" />
     </div>

@@ -9,15 +9,7 @@ const PriceGraph = () => {
     queryFn: getHourlyStatistics,
   })
 
-  const graphData = statistics
-    ? transformToGraphData(statistics).map(entry => {
-        const newEntry: Record<string, number> = {}
-        Object.entries(entry).forEach(([key, value]) => {
-          if (value !== null) newEntry[key] = value
-        })
-        return newEntry
-      })
-    : []
+  const graphData = statistics ? transformToGraphData(statistics) : []
 
   return (
     <section className="bg-gray-10 flex w-full flex-col gap-4 sm:bg-transparent md:gap-10">

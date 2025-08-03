@@ -11,9 +11,10 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import { useDeviceType } from '../../hooks/useDeviceType'
+import EndOfFeedMessage from '../../pages/PostPage/components/EndOfFeedMessage'
 
 interface DataPoint {
-  [key: string]: string | number
+  [key: string]: string | number | null
 }
 
 interface GraphProps {
@@ -30,8 +31,8 @@ interface GraphProps {
 const colors: Record<string, string> = {
   default: '#2F8C8E',
   'LG U+': '#E6007E',
-  KT: '#3617CE',
-  SKT: '#D71826',
+  KT: '#d71826',
+  SKT: '#3617ce',
 }
 
 const Graph = ({
@@ -47,7 +48,7 @@ const Graph = ({
 
   const isMobile = deviceType === 'mobile'
 
-  if (!data || data.length === 0) return <p>데이터 없음</p>
+  if (!data || data.length === 0) return <EndOfFeedMessage type="No" text="데이터가 없습니다." />
 
   const renderKeys = yKeys ?? Object.keys(data[0]).filter(key => key !== xKey)
 
@@ -73,7 +74,26 @@ const Graph = ({
             tick={{ fontSize: isMobile ? 12 : 14, fontWeight: 500 }}
             tickFormatter={value => `${value}원`}
           />
-          <Tooltip formatter={value => `${value}원`} labelFormatter={label => `${label}시`} />
+          <Tooltip
+            formatter={value => `${value}원`}
+            labelFormatter={(_, payload) => {
+              if (!payload || payload.length === 0) {
+                return ''
+              }
+              const date = payload[0].payload.date
+              const hour = payload[0].payload.hour
+              const month = date.split('-')[1]
+              const day = date.split('-')[2]
+              return `${month}/${day} ${hour}시`
+            }}
+            contentStyle={{
+              backgroundColor: '#fdfdfd',
+              border: '2px solid #154d50',
+              borderRadius: 6,
+              padding: 10,
+              fontSize: 14,
+            }}
+          />
           <Legend
             wrapperStyle={{
               paddingTop: isMobile ? 4 : 8,

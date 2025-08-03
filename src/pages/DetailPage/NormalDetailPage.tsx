@@ -354,10 +354,12 @@ const NormalDetailPage = () => {
                     <div className="flex items-center justify-center gap-1">
                       {data.liked ? <WishFillIcon /> : <WishIcon />}
                       <span>관심</span>
-                      <span className="text-gray-600">{data.likedCount}</span>
+                      <span className="text-pri-500">{data.likedCount}</span>
                     </div>
                   }
-                  className="text-fs18 lg:text-fs20 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
+                  className={`bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 border-2 p-3.5 font-medium md:hidden ${
+                    isMyPost ? 'w-full' : ''
+                  }`}
                   onClick={() => {
                     if (deviceType === 'mobile') {
                       setIsSheetOpen(true)
@@ -380,21 +382,24 @@ const NormalDetailPage = () => {
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
                   onClick={handleWishClick}
                 />
+                {/* 구매 버튼 - 모바일 */}
                 {!isMyPost && (
-                  <>
-                    <Button
-                      onClick={handleBuyClick}
-                      text="구매하기"
-                      disabled={isBuyDisabled}
-                      className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
-                    />
-                    <Button
-                      onClick={handleBuyClick}
-                      text="구매하기"
-                      disabled={isBuyDisabled}
-                      className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
-                    />
-                  </>
+                  <Button
+                    onClick={handleBuyClick}
+                    text="구매하기"
+                    disabled={isBuyDisabled}
+                    className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
+                  />
+                )}
+
+                {/* 구매 버튼 - 데스크탑 */}
+                {!isMyPost && (
+                  <Button
+                    onClick={handleBuyClick}
+                    text="구매하기"
+                    disabled={isBuyDisabled}
+                    className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
+                  />
                 )}
               </div>
             </div>
