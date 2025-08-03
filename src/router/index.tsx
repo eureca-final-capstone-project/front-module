@@ -183,12 +183,12 @@ export const router = createBrowserRouter([
       {
         path: '/payment-success',
         element: <PaymentSuccessPage />,
-        handle: { title: '결제 완료' },
+        handle: { title: '결제 완료', showBackIcon: false },
       },
       {
         path: '/payment-fail',
         element: <PaymentFailPage />,
-        handle: { title: '결제 실패' },
+        handle: { title: '결제 실패', showBackIcon: false },
       },
       {
         path: '/refund',
