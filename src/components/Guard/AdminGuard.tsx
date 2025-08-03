@@ -4,15 +4,12 @@ import { useAdminAuthStore } from '../../store/authStore'
 import { useToast } from '../../hooks/useToast'
 
 const AdminGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isLogin } = useAdminAuthStore()
+  const isLogin = useAdminAuthStore(state => state.isLogin)
   const { showToast } = useToast()
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (!isLogin) {
-      showToast({ type: 'error', msg: '관리자 로그인 후 이용해 주세요.' })
-      navigate('/admin/login')
-    }
+    if (!isLogin) navigate('/admin/login')
   }, [isLogin, navigate, showToast])
 
   if (!isLogin) return null
