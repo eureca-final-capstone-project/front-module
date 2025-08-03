@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import ArrowLeft from '@/assets/icons/arrow-left.svg?react'
+import BackIcon from '@/assets/icons/back.svg?react'
 import { setDragging } from '../../utils/dragState'
 
 interface SlideInMotionProps {
@@ -25,6 +25,8 @@ const SlideInMotion = ({
     if (isOpen) {
       setShouldRender(true)
       setExitX('100%')
+    } else {
+      handleBack()
     }
   }, [isOpen])
 
@@ -68,8 +70,8 @@ const SlideInMotion = ({
           style={{ touchAction: 'none' }}
         >
           <div className="absolute top-6.5 z-10 flex items-center gap-2 pl-4 text-gray-900">
-            <ArrowLeft onClick={handleBack} className="cursor-pointer" />
-            <p className="text-fs16 sm:text-fs18">{title}</p>
+            <BackIcon onClick={handleBack} className="h-4 w-4 cursor-pointer" />
+            <p className="text-fs18 font-medium">{title}</p>
           </div>
           {children}
         </motion.div>
