@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUserDataStatus, getUserPayStatus, getUserProfile } from '../../apis/userInfo'
 import { formatAmount, formatDataSize } from '../../utils/format'
@@ -14,6 +14,9 @@ import { toast } from 'react-toastify'
 import Button from '../Button/Button'
 import { useEffect, useState } from 'react'
 import EditModal from '../../pages/MyPage/components/Modal/EditModal'
+import NavTile from './NavTile'
+import SubNavTile from './SubNavTile'
+import DropdownToggleMotion from '../Animation/DropDownToggleMotion'
 
 interface MenuBarProps {
   isOpen: boolean
@@ -23,12 +26,18 @@ interface MenuBarProps {
 const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const location = useLocation()
+
   const isLoggedIn = useAuthStore(state => state.isLogin)
   const setIsLoggedin = useAuthStore(state => state.setIsLogin)
   const userId = useAuthStore(state => state.userId)
   const { setPermissionInitialized, setPermissions } = usePermissionStore()
 
+  const pathname = location.pathname
+  const isMyPagePath = pathname.startsWith('/mypage')
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isMyPageOpen, setIsMyPageOpen] = useState(isMyPagePath)
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -37,6 +46,12 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
       queryClient.invalidateQueries({ queryKey: ['userDataStatus'] })
     }
   }, [isLoggedIn])
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsMyPageOpen(pathname.startsWith('/mypage'))
+    }
+  }, [isOpen, pathname])
 
   const { data: userProfile } = useQuery({
     queryKey: ['userProfile'],
@@ -84,9 +99,9 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
 
   return (
     <SlideInMotion isOpen={isOpen} onClose={onClose} title="메뉴">
-      <div className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto p-4">
+      <div className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto pb-4">
         {isLoggedIn ? (
-          <div className="bg-gray-10 flex flex-col gap-4 rounded-md border-1 border-gray-200 p-5">
+          <div className="bg-gray-10 mx-4 flex flex-col gap-4 rounded-md border-1 border-gray-200 p-5">
             <div className="flex items-start justify-between">
               <div className="text-fs16 font-semibold">{userProfile?.nickname}님</div>
               <div className="flex gap-1">
@@ -141,7 +156,7 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
             </div>
           </div>
         ) : (
-          <div className="bg-gray-10 flex flex-col items-center gap-4 rounded-md border-1 border-gray-200 p-6 text-center">
+          <div className="bg-gray-10 mx-4 flex flex-col items-center gap-4 rounded-md border-1 border-gray-200 p-6 text-center">
             <LockedIcon className="h-10 w-10 text-gray-400" />
             <div className="space-y-2">
               <p className="text-fs16 font-semibold text-gray-900">로그인이 필요합니다.</p>
@@ -155,10 +170,94 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
                 navigate('/login')
                 onClose?.()
               }}
+              noShadow
               className="bg-pri-500 text-fs16 text-gray-10 mt-2 rounded-sm px-3 py-2.5"
             />
           </div>
         )}
+        <div className="mt-2 flex flex-col gap-0.5">
+          <NavTile
+            label="데이터 거래"
+            to="/posts"
+            onClose={onClose}
+            active={pathname.startsWith('/posts')}
+          />
+
+          <NavTile
+            label="마이페이지"
+            onClick={() => setIsMyPageOpen(prev => !prev)}
+            onClose={onClose}
+            withArrow
+            isOpen={isMyPageOpen}
+            active={pathname.startsWith('/mypage')}
+          >
+            <DropdownToggleMotion isOpen={isMyPageOpen}>
+              <div className="flex flex-col gap-0.5">
+                <SubNavTile
+                  label="관심 거래"
+                  to="/mypage/favorites"
+                  active={pathname === '/mypage/favorites'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="데이터 충전권"
+                  to="/mypage/data-charge"
+                  active={pathname === '/mypage/data-charge'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="이벤트 쿠폰함"
+                  to="/mypage/event-coupons"
+                  active={pathname === '/mypage/event-coupons'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="거래 내역"
+                  to="/mypage/transaction-history"
+                  active={pathname === '/mypage/transaction-history'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="페이 내역"
+                  to="/mypage/pay-history"
+                  active={pathname === '/mypage/pay-history'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="신고 내역"
+                  to="/mypage/report-history"
+                  active={pathname === '/mypage/report-history'}
+                  onClose={onClose}
+                />
+              </div>
+            </DropdownToggleMotion>
+          </NavTile>
+
+          <NavTile
+            label="데이터 전환"
+            to="/change-data"
+            onClose={onClose}
+            active={pathname === '/change-data'}
+          />
+          <NavTile
+            label="페이 충전"
+            to="/payment"
+            onClose={onClose}
+            active={pathname === '/payment'}
+          />
+          <NavTile
+            label="페이 환전"
+            to="/refund"
+            onClose={onClose}
+            active={pathname === '/refund'}
+          />
+          <NavTile
+            label="서비스 소개 (도우미)"
+            to="/onboarding"
+            onClose={onClose}
+            active={pathname === '/onboarding'}
+          />
+        </div>
       </div>
       {userProfile && (
         <EditModal
