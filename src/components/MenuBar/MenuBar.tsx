@@ -17,6 +17,8 @@ import EditModal from '../../pages/MyPage/components/Modal/EditModal'
 import NavTile from './NavTile'
 import SubNavTile from './SubNavTile'
 import DropdownToggleMotion from '../Animation/DropDownToggleMotion'
+import { useDragControls } from 'framer-motion'
+import { useScrollBlock } from '../../hooks/useScrollBlock'
 
 interface MenuBarProps {
   isOpen: boolean
@@ -24,9 +26,12 @@ interface MenuBarProps {
 }
 
 const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
+  useScrollBlock(isOpen)
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const location = useLocation()
+  const controls = useDragControls()
 
   const isLoggedIn = useAuthStore(state => state.isLogin)
   const setIsLoggedin = useAuthStore(state => state.setIsLogin)
@@ -97,9 +102,21 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
 
   const handleLogout = () => logoutMutate()
 
+  if (!isOpen) return null
+
   return (
-    <SlideInMotion isOpen={isOpen} onClose={onClose} title="메뉴">
-      <div className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto pb-4">
+    <SlideInMotion
+      isOpen={isOpen}
+      onClose={onClose}
+      title="메뉴"
+      controls={controls}
+      onContentPointerDown={e => controls.start(e)}
+    >
+      <div
+        className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto pb-4"
+        onPointerDown={e => controls.start(e)}
+        style={{ touchAction: 'none' }}
+      >
         {isLoggedIn ? (
           <div className="bg-gray-10 mx-4 flex flex-col gap-4 rounded-md border-1 border-gray-200 p-5">
             <div className="flex items-start justify-between">
