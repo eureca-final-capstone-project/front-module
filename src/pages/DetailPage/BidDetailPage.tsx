@@ -34,6 +34,7 @@ import { useDeviceType } from '../../hooks/useDeviceType'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import useScrollToTop from '../../hooks/useScrollToTop'
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
+import { getUserPayStatus } from '../../apis/userInfo'
 
 const BidDetailPage = () => {
   useScrollToTop()
@@ -67,6 +68,7 @@ const BidDetailPage = () => {
       closeModal()
       queryClient.invalidateQueries({ queryKey: ['bidHistory', transactionFeedId] })
       queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+      queryClient.invalidateQueries({ queryKey: ['userPayStatus'] })
     },
     onError: (error: unknown) => {
       let errorMessage = '입찰 처리 중 오류가 발생했습니다.'
@@ -91,6 +93,13 @@ const BidDetailPage = () => {
     staleTime: 1000 * 60 * 5,
     retry: false,
     enabled: !!sessionStorage.getItem('userAccessToken'),
+  })
+
+  const { data: userPayStatus } = useQuery({
+    queryKey: ['userPayStatus'],
+    queryFn: getUserPayStatus,
+    enabled: isLoggedIn, // 로그인된 경우에만 조회
+    staleTime: 1000 * 60 * 3,
   })
 
   if (isLoading) return <LoadingSpinner className="min-h-screen" />
@@ -392,6 +401,7 @@ const BidDetailPage = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         currentHeightPrice={data.currentHeightPrice || 0}
+        userBalance={userPayStatus?.balance ?? 0}
         onClickLeft={closeModal}
         onClickRight={handleBidSubmit}
       />

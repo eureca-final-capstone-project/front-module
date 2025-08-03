@@ -2,7 +2,7 @@ import { HourlyStatistic } from '../apis/graph'
 
 export const transformToGraphData = (data: HourlyStatistic[]) => {
   return data.map(item => {
-    const entry: Record<string, number | null> = { hour: item.hour }
+    const entry: Record<string, number | string | null> = { hour: item.hour, date: item.date }
     item.pricesByCarrier.forEach(carrier => {
       if (carrier.carrierName === 'SKT') entry['SKT'] = carrier.pricePerMb
       if (carrier.carrierName === 'KT') entry['KT'] = carrier.pricePerMb

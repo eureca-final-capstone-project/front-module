@@ -44,7 +44,7 @@ const BannerPage2 = () => {
       <div className="flex w-full max-w-160 flex-col">
         <BannerHeader title="[페이 충전] 토스페이 캐시백 이벤트" />
         <div className="sm:mt-6">
-          <img src="/public/images/banners/banner2-detail.png" alt="토스페이 이벤트 쿠폰" />
+          <img src="/images/banners/banner2-detail.png" alt="토스페이 이벤트 쿠폰" />
         </div>
         <div className="bg-toss -mt-0.5 flex items-center justify-center py-12 pt-6">
           <Button
