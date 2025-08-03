@@ -11,6 +11,7 @@ import Button from '../Button/Button'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import SlideInMotion from '../Animation/SlideInMotion'
 import { useNotificationStore } from '../../store/notificationStore'
+import { useScrollBlock } from '../../hooks/useScrollBlock'
 
 interface AlertModalProps {
   isOpen: boolean
@@ -26,6 +27,8 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   const deviceType = useDeviceType()
   const isMobile = deviceType === 'mobile'
   const controls = useDragControls()
+
+  useScrollBlock(isMobile && isOpen)
 
   useEffect(() => {
     if (isLoggedIn) {
