@@ -9,15 +9,7 @@ const PriceGraph = () => {
     queryFn: getHourlyStatistics,
   })
 
-  const graphData = statistics
-    ? transformToGraphData(statistics).map(entry => {
-        const newEntry: Record<string, number> = {}
-        Object.entries(entry).forEach(([key, value]) => {
-          if (value !== null) newEntry[key] = value
-        })
-        return newEntry
-      })
-    : []
+  const graphData = statistics ? transformToGraphData(statistics) : []
 
   return (
     <section className="bg-gray-10 flex w-full flex-col gap-4 sm:bg-transparent md:gap-10">
@@ -36,8 +28,8 @@ const PriceGraph = () => {
           <div className="flex flex-col gap-1.5 overflow-hidden">
             <Graph type="line" data={graphData} yKeys={['LG U+', 'KT', 'SKT']} height={330} />{' '}
             <p className="bg-pri-100 md:text-fs16 text-fs14 rounded-xs py-1 text-center text-gray-800">
-              통신사의 <span className="text-pri-500 font-semibold">100MB</span> 당 평균 시세
-              정보입니다.
+              통신사의 <span className="text-pri-500 font-semibold">시간 당 100MB </span>
+              평균 시세 정보입니다.
             </p>
           </div>
         )}

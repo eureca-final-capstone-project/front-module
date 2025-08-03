@@ -19,6 +19,10 @@ import { MobileFilterState, initialFilterState } from '../../types/filter'
 import Button from '../../components/Button/Button'
 import PlusIcon from '@/assets/icons/plus.svg?react'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
+import PostCardColSkeleton from '../../components/PostCard/PostCardColSkeleton'
+import EndOfFeedMessage from './components/EndOfFeedMessage'
+import PostCardRowSkeleton from '../../components/PostCard/PostCardRowSkeleton'
+import NoIcon from '@/assets/icons/delete.svg?react'
 
 const parseNumberArray = (param: string | null): number[] => {
   return param
@@ -79,6 +83,10 @@ const PostPage = () => {
     ...filterState,
     sort: selectedSort,
   }
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
 
   const handleFilterChange = useCallback((updated: Partial<FilterState>) => {
     setFilterState(prev => ({ ...prev, ...updated }))
@@ -195,7 +203,7 @@ const PostPage = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '0px 0px -100px 0px',
       threshold: 0.1,
     })
 
@@ -268,7 +276,7 @@ const PostPage = () => {
   const showNoResultsMessage = !isLoading && !isFetching && flattenedPosts.length === 0
 
   return (
-    <div className="flex gap-5 lg:gap-10">
+    <div className="flex min-h-screen gap-5 lg:gap-10">
       {/* 왼쪽 필터 바 (고정) */}
       <div className="sticky top-28 hidden h-[calc(100vh-10rem)] shrink-0 overflow-y-auto sm:block">
         <FilterBar
@@ -279,7 +287,7 @@ const PostPage = () => {
       </div>
 
       {/* 오른쪽 콘텐츠 영역 (스크롤) */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden sm:pb-20">
         <div className="flex h-full flex-col space-y-4 sm:space-y-10">
           {deviceType === 'mobile' && (
             <div className="flex flex-col">
@@ -301,7 +309,7 @@ const PostPage = () => {
                 onResetAllFilters={handleMobileResetAll}
                 isOpen={true}
               />
-              {keyword && (
+              {keyword && !showNoResultsMessage && (
                 <div className="shadow-tile bg-pri-100 mx-4 mt-2 flex items-center rounded-xs py-3 text-center md:hidden">
                   <p className="text-fs14 w-full px-4 text-center text-gray-800">
                     <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색
@@ -315,7 +323,7 @@ const PostPage = () => {
             {deviceType !== 'mobile' && (
               <div className="flex flex-col gap-2">
                 <h2 className="text-fs20 md:text-fs24 font-medium">데이터 거래</h2>
-                {keyword ? (
+                {keyword && !showNoResultsMessage ? (
                   <p className="text-fs14 lg:text-fs16 hidden text-gray-800 md:block">
                     <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색
                     결과입니다.
@@ -345,37 +353,57 @@ const PostPage = () => {
               />
             </div>
           </div>
-
           {/* 게시글 목록 */}
-          {isLoading ? ( // 초기 로딩
-            <div className="py-10 text-center">데이터를 불러오는 중입니다...</div>
-          ) : isError ? ( // 에러 발생
+          {isError ? (
             <div className="text-error py-10 text-center">
               데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.
             </div>
-          ) : showNoResultsMessage ? ( // 결과 없음 (필터)
-            <div className="py-10 text-center text-gray-600">
+          ) : showNoResultsMessage ? (
+            <div className="flex flex-col items-center justify-center py-10 text-center text-gray-600">
               {keyword ? (
                 <>
-                  <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색 결과가
-                  없습니다.
+                  <NoIcon className="text-error mb-4 h-8 w-8" />
+                  <p>
+                    <span className="text-pri-700 font-medium">"{keyword}"</span>에 대한 검색 결과가
+                    없습니다.
+                  </p>
                 </>
               ) : (
-                '조회된 게시글이 없습니다.'
+                <EndOfFeedMessage type="No" text="조회된 게시글이 없습니다." />
               )}
             </div>
           ) : (
             // 데이터가 있거나, 로딩/에러/결과 없음 메시지가 아닌 경우
             <>
-              <PostCardGrid posts={flattenedPosts} />
-
+              <PostCardGrid posts={flattenedPosts} isLoading={isLoading} />
               {isFetchingNextPage && (
-                <div className="py-4 text-center text-gray-700">다음 페이지를 불러오는 중...</div>
+                <div
+                  className={`grid ${
+                    deviceType === 'mobile'
+                      ? 'bg-gray-10 min-w-0 grid-cols-1 gap-4 p-4'
+                      : deviceType === 'tablet'
+                        ? 'grid-cols-1 gap-x-6 gap-y-15.5 pb-10 md:grid-cols-2'
+                        : 'grid-cols-3 gap-x-6 gap-y-15.5 pb-10 xl:grid-cols-4'
+                  }`}
+                >
+                  {Array.from({ length: 8 }).map((_, index) =>
+                    deviceType === 'mobile' ? (
+                      <div
+                        key={index}
+                        className={`pb-4 ${index !== 3 ? 'border-b-[0.5px] border-gray-200' : ''}`}
+                      >
+                        <PostCardRowSkeleton />
+                      </div>
+                    ) : (
+                      <PostCardColSkeleton key={index} />
+                    )
+                  )}
+                </div>
               )}
               {!hasNextPage && flattenedPosts.length > 0 && !isFetchingNextPage && (
-                <div className="py-4 text-center text-gray-700">모든 게시글을 불러왔습니다.</div>
+                <EndOfFeedMessage />
               )}
-              {hasNextPage && <div ref={observerRef} className="h-1" />}
+              {hasNextPage && <div ref={observerRef} className="relative -top-80 h-1" />}
             </>
           )}
         </div>
@@ -391,7 +419,11 @@ const PostPage = () => {
           글쓰기
         </button>
       )}
-      <ScrollToTopButton />
+      <ScrollToTopButton
+        className={
+          isLoggedIn && deviceType !== 'desktop' ? 'right-4 bottom-20' : 'right-6 bottom-8'
+        }
+      />
     </div>
   )
 }

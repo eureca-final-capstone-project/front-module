@@ -24,7 +24,13 @@ const DataChargeVoucher = ({ coupon }: Props) => {
     mutationFn: couponId => postUseDataCoupon(couponId),
     onSuccess: () => {
       showToast({ type: 'success', msg: '데이터 충전권이 구매 데이터로 전환되었습니다.' })
-      queryClient.invalidateQueries({ queryKey: ['dataCoupons'] })
+
+      queryClient.invalidateQueries({
+        predicate: query => {
+          const key = query.queryKey[0]
+          return key === 'dataCoupons' || key === 'userDataStatus'
+        },
+      })
     },
     onError: () => {
       showToast({ type: 'error', msg: '데이터 충전에 실패했습니다.' })

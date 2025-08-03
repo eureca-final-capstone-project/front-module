@@ -33,8 +33,11 @@ import BasicModal from '../MyPage/components/Modal/BasicModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useToast } from '../../hooks/useToast'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
+import useScrollToTop from '../../hooks/useScrollToTop'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
 
 const NormalDetailPage = () => {
+  useScrollToTop()
   const { transactionFeedId } = useParams<{ transactionFeedId: string }>()
   const navigate = useNavigate()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -96,8 +99,10 @@ const NormalDetailPage = () => {
 
   const { addWishMutation, deleteWishMutation } = useWishMutation(Number(transactionFeedId))
 
-  if (isLoading) return <p>로딩 중</p>
-  if (isError || !data) return <p>에러</p>
+  if (isLoading) return <LoadingSpinner className="min-h-screen" />
+  if (isError || !data) {
+    return <Navigate to="/404" replace />
+  }
 
   const validSalesTypes = ['일반 판매', '입찰 판매'] as const
 
@@ -111,6 +116,9 @@ const NormalDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  if (data.status.code === 'BLURRED') {
+    return <Navigate to="/404" replace />
+  }
   const isMyPost = userInfo?.userId === data.sellerId
   const hasTransactionPermission = permissions.includes('TRANSACTION')
   const isCompletedOrExpired = data.status.code === 'COMPLETED' || data.status.code === 'EXPIRED'
@@ -212,7 +220,7 @@ const NormalDetailPage = () => {
                 >
                   {isMyPost ? (
                     <>
-                      {hasTransactionPermission && (
+                      {hasTransactionPermission && !isCompletedOrExpired && (
                         <Button
                           text="수정하기"
                           className="text-gray-700"
@@ -229,22 +237,24 @@ const NormalDetailPage = () => {
                       />
                     </>
                   ) : (
-                    <>
-                      <ReportStrokeIcon className="text-error" />
-                      <Button
-                        text="신고하기"
-                        className="text-gray-700"
-                        shape="underline"
-                        onClick={() => {
-                          if (!isLoggedIn) {
-                            toast.info('로그인이 필요한 기능입니다.')
-                            navigate('/login')
-                            return
-                          }
-                          setIsReportModalOpen(true)
-                        }}
-                      />
-                    </>
+                    !isCompletedOrExpired && (
+                      <>
+                        <ReportStrokeIcon className="text-error" />
+                        <Button
+                          text="신고하기"
+                          className="text-gray-700"
+                          shape="underline"
+                          onClick={() => {
+                            if (!isLoggedIn) {
+                              toast.info('로그인이 필요한 기능입니다.')
+                              navigate('/login')
+                              return
+                            }
+                            setIsReportModalOpen(true)
+                          }}
+                        />
+                      </>
+                    )
                   )}
                 </div>
               </div>
@@ -267,12 +277,14 @@ const NormalDetailPage = () => {
                   >
                     {isMyPost ? (
                       <>
-                        <Button
-                          text="수정하기"
-                          shape="underline"
-                          className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
-                        />
+                        {hasTransactionPermission && !isCompletedOrExpired && (
+                          <Button
+                            text="수정하기"
+                            shape="underline"
+                            className="text-fs14 sm:text-fs16 text-gray-700"
+                            onClick={() => navigate(`/post-edit/${data.transactionFeedId}`)}
+                          />
+                        )}
                         <Button
                           text="삭제하기"
                           shape="underline"
@@ -281,22 +293,24 @@ const NormalDetailPage = () => {
                         />
                       </>
                     ) : (
-                      <>
-                        <ReportStrokeIcon className="text-error" />
-                        <Button
-                          text="신고하기"
-                          shape="underline"
-                          className="text-fs14 sm:text-fs16 text-gray-700"
-                          onClick={() => {
-                            if (!isLoggedIn) {
-                              toast.info('로그인이 필요한 기능입니다.')
-                              navigate('/login')
-                              return
-                            }
-                            setIsReportModalOpen(true)
-                          }}
-                        />
-                      </>
+                      !isCompletedOrExpired && (
+                        <>
+                          <ReportStrokeIcon className="text-error" />
+                          <Button
+                            text="신고하기"
+                            shape="underline"
+                            className="text-fs14 sm:text-fs16 text-gray-700"
+                            onClick={() => {
+                              if (!isLoggedIn) {
+                                toast.info('로그인이 필요한 기능입니다.')
+                                navigate('/login')
+                                return
+                              }
+                              setIsReportModalOpen(true)
+                            }}
+                          />
+                        </>
+                      )
                     )}
                   </div>
                 </div>
@@ -340,10 +354,12 @@ const NormalDetailPage = () => {
                     <div className="flex items-center justify-center gap-1">
                       {data.liked ? <WishFillIcon /> : <WishIcon />}
                       <span>관심</span>
-                      <span className="text-gray-600">{data.likedCount}</span>
+                      <span className="text-pri-500">{data.likedCount}</span>
                     </div>
                   }
-                  className="text-fs18 lg:text-fs20 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
+                  className={`bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 border-2 p-3.5 font-medium md:hidden ${
+                    isMyPost ? 'w-full' : ''
+                  }`}
                   onClick={() => {
                     if (deviceType === 'mobile') {
                       setIsSheetOpen(true)
@@ -366,21 +382,24 @@ const NormalDetailPage = () => {
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
                   onClick={handleWishClick}
                 />
+                {/* 구매 버튼 - 모바일 */}
                 {!isMyPost && (
-                  <>
-                    <Button
-                      onClick={handleBuyClick}
-                      text="구매하기"
-                      disabled={isBuyDisabled}
-                      className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
-                    />
-                    <Button
-                      onClick={handleBuyClick}
-                      text="구매하기"
-                      disabled={isBuyDisabled}
-                      className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
-                    />
-                  </>
+                  <Button
+                    onClick={handleBuyClick}
+                    text="구매하기"
+                    disabled={isBuyDisabled}
+                    className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
+                  />
+                )}
+
+                {/* 구매 버튼 - 데스크탑 */}
+                {!isMyPost && (
+                  <Button
+                    onClick={handleBuyClick}
+                    text="구매하기"
+                    disabled={isBuyDisabled}
+                    className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
+                  />
                 )}
               </div>
             </div>
@@ -391,7 +410,7 @@ const NormalDetailPage = () => {
       {/* 관련 상품 */}
 
       {deviceType !== 'mobile' ? (
-        <div className="flex flex-col gap-10 pb-5">
+        <div className="flex flex-col gap-10 pb-20">
           <h2 className="text-fs28 font-medium">관련 상품</h2>
           {isRecommendedLoading ? (
             <p className="text-gray-500">관련 상품 로딩 중</p>

@@ -10,12 +10,12 @@ import TriangleIcon from '@/assets/icons/triangle.svg?react'
 import UserInfoModal from './UserInfoModal'
 import { AnimatePresence } from 'framer-motion'
 import DropdownMotion from '../Animation/DropDownMotion'
-import { useScrollStore } from '../../store/scrollStore'
 import { useAuthStore } from '../../store/authStore'
 import AlertModal from '../AlertModal/AlertModal'
 import { useToast } from '../../hooks/useToast'
 import { getNotifications } from '../../apis/alert'
 import { useNotificationStore } from '../../store/notificationStore'
+import MenuBar from '../MenuBar/MenuBar'
 
 interface HeaderNavProps {
   deviceType: string
@@ -31,6 +31,8 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const [activeNav, setActiveNav] = useState<string | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
   const isLoggedIn = useAuthStore(state => state.isLogin)
 
   const { data: userProfile } = useQuery({
@@ -78,7 +80,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       return
     }
 
-    if (isLoggedIn) {
+    if (isLoggedIn || key === 'menu') {
       callback()
     } else {
       if (key !== 'profile') {
@@ -125,11 +127,6 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       to: isLoggedIn ? '/mypage/favorites' : '/login',
       matchPath: '/mypage/favorites',
       requiresLogin: true,
-      onClick: () => {
-        if (isLoggedIn) {
-          useScrollStore.getState().triggerScrollToBottom()
-        }
-      },
     },
     {
       label: '내 판매글',
@@ -156,7 +153,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'menu',
       icon: <MenuIcon />,
-      action: () => alert('모바일 메뉴 오픈'),
+      action: () => setIsMenuOpen(true),
     },
   ]
 
@@ -177,7 +174,10 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
           ))}
         </nav>
         {deviceType === 'mobile' && (
-          <AlertModal isOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
+          <>
+            <AlertModal isOpen={isAlertOpen} onClose={() => setIsAlertOpen(false)} />
+            <MenuBar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+          </>
         )}
       </>
     )
@@ -237,7 +237,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
       {/* 하단 nav */}
       <nav className="text-fs20">
         <ul className="flex gap-4">
-          {navLinks.map(({ label, to, matchPath, onClick, requiresLogin }) => (
+          {navLinks.map(({ label, to, matchPath, requiresLogin }) => (
             <li key={label}>
               <Link
                 to={to}
@@ -246,8 +246,6 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
                     e.preventDefault()
                     showToast({ msg: '로그인이 필요한 기능입니다.', type: 'default' })
                     navigate('/login')
-                  } else {
-                    onClick?.()
                   }
                 }}
                 className={`hover:text-pri-500 ${isActiveLink(matchPath) ? 'text-pri-500' : ''}`}

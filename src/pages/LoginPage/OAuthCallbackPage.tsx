@@ -9,20 +9,22 @@ const OAuthCallbackPage = () => {
   const calledRef = useRef(false)
 
   const [searchParams] = useSearchParams()
-  const setIsLogin = useAuthStore(state => state.setIsLogin)
+  const { setIsLogin, setUserId } = useAuthStore()
 
   const mutation = useMutation({
     mutationFn: requestTokenForOAuth,
     onSuccess: data => {
       if (data.statusCode === 200) {
-        const accessToken = data.data.accessToken
+        const { accessToken, userId, newUser } = data.data
         sessionStorage.setItem('userAccessToken', accessToken)
-        setIsLogin(true)
+        sessionStorage.setItem('userId', userId)
+        setUserId(userId)
 
-        if (data.data.newUser) {
+        if (newUser) {
           navigate('/additional-info')
           return
         }
+        setIsLogin(true)
         navigate('/')
       } else {
         alert('로그인 중 오류가 발생했습니다.')

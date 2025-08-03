@@ -32,8 +32,12 @@ import FeedReportModal from './components/FeedReportModal'
 import Breadcrumb from '../../components/BreadCrumb/BreadCrumb'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
+import useScrollToTop from '../../hooks/useScrollToTop'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
+import { getUserPayStatus } from '../../apis/userInfo'
 
 const BidDetailPage = () => {
+  useScrollToTop()
   const { showToast } = useToast()
   const { transactionFeedId } = useParams()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -64,6 +68,7 @@ const BidDetailPage = () => {
       closeModal()
       queryClient.invalidateQueries({ queryKey: ['bidHistory', transactionFeedId] })
       queryClient.invalidateQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
+      queryClient.invalidateQueries({ queryKey: ['userPayStatus'] })
     },
     onError: (error: unknown) => {
       let errorMessage = '입찰 처리 중 오류가 발생했습니다.'
@@ -90,7 +95,14 @@ const BidDetailPage = () => {
     enabled: !!sessionStorage.getItem('userAccessToken'),
   })
 
-  if (isLoading) return <p>로딩 중</p>
+  const { data: userPayStatus } = useQuery({
+    queryKey: ['userPayStatus'],
+    queryFn: getUserPayStatus,
+    enabled: isLoggedIn, // 로그인된 경우에만 조회
+    staleTime: 1000 * 60 * 3,
+  })
+
+  if (isLoading) return <LoadingSpinner className="min-h-screen" />
   if (isError || !data) {
     return <Navigate to="/404" replace />
   }
@@ -106,6 +118,9 @@ const BidDetailPage = () => {
     return <Navigate to="/404" replace />
   }
 
+  if (data.status.code === 'BLURRED') {
+    return <Navigate to="/404" replace />
+  }
   const image = imagePost.find(img => img.id === data.defaultImageNumber)
 
   const handleWishClick = () => {
@@ -200,7 +215,7 @@ const BidDetailPage = () => {
 
                 {/* 데스크탑 신고하기 */}
                 <div className="hidden items-end justify-end gap-1 lg:flex">
-                  {!isMyPost && (
+                  {!isMyPost && !isCompletedOrExpired && (
                     <>
                       <ReportStrokeIcon className="text-error" />
                       <Button
@@ -235,7 +250,7 @@ const BidDetailPage = () => {
                 {/* 태블릿 / 모바일 신고하기 */}
                 <div>
                   <div className="flex items-end justify-end gap-1 lg:hidden">
-                    {!isMyPost && (
+                    {!isMyPost && !isCompletedOrExpired && (
                       <>
                         <ReportStrokeIcon className="text-error" />
                         <Button
@@ -324,10 +339,12 @@ const BidDetailPage = () => {
                     <div className="flex items-center justify-center gap-1">
                       {data.liked ? <WishFillIcon /> : <WishIcon />}
                       <span>관심</span>
-                      <span className="text-gray-600">{data.likedCount}</span>
+                      <span className="text-pri-500">{data.likedCount}</span>
                     </div>
                   }
-                  className="text-fs18 lg:text-fs20 bg-gray-50 p-3.5 font-medium text-gray-800 md:hidden"
+                  className={`text-fs18 lg:text-fs20 bg-gray-10 text-pri-500 border-pri-500 border-2 p-3.5 font-medium md:hidden ${
+                    isMyPost ? 'w-full' : ''
+                  }`}
                   onClick={handleWishClick}
                 />
                 {/* Row 일때 관심 버튼 */}
@@ -342,18 +359,30 @@ const BidDetailPage = () => {
                   className="bg-gray-10 text-pri-500 border-pri-500 text-fs18 lg:text-fs20 hidden border-2 p-5 font-medium md:block"
                   onClick={handleWishClick}
                 />
-                <Button
-                  text="입찰하기"
-                  onClick={openModal}
-                  disabled={isBuyDisabled}
-                  className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
-                />
-                <Button
-                  text="입찰하기"
-                  onClick={openModal}
-                  disabled={isBuyDisabled}
-                  className={`${isBuyDisabled ? 'button-disabled' : 'button-active'} text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
-                />
+
+                {/* 입찰 버튼 - 모바일 */}
+                {!isMyPost && (
+                  <Button
+                    text="입찰하기"
+                    onClick={openModal}
+                    disabled={isBuyDisabled}
+                    className={`${
+                      isBuyDisabled ? 'button-disabled' : 'button-active'
+                    } text-fs18 lg:text-fs20 flex-1 p-3.5 font-medium md:hidden`}
+                  />
+                )}
+
+                {/* 입찰 버튼 - 데스크탑 */}
+                {!isMyPost && (
+                  <Button
+                    text="입찰하기"
+                    onClick={openModal}
+                    disabled={isBuyDisabled}
+                    className={`${
+                      isBuyDisabled ? 'button-disabled' : 'button-active'
+                    } text-fs18 lg:text-fs20 hidden w-auto p-5 font-medium md:block`}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -372,6 +401,7 @@ const BidDetailPage = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         currentHeightPrice={data.currentHeightPrice || 0}
+        userBalance={userPayStatus?.balance ?? 0}
         onClickLeft={closeModal}
         onClickRight={handleBidSubmit}
       />

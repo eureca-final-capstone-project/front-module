@@ -23,6 +23,9 @@ import { MyMobileFilterState } from '../../types/filter'
 import Button from '../../components/Button/Button'
 import PlusIcon from '@/assets/icons/plus.svg?react'
 import { usePermissionStore } from '../../store/authStore'
+import EndOfFeedMessage from '../PostPage/components/EndOfFeedMessage'
+import PostCardColSkeleton from '../../components/PostCard/PostCardColSkeleton'
+import PostCardRowSkeleton from '../../components/PostCard/PostCardRowSkeleton'
 
 const parseFilter = (param: string | null): FilterType => {
   return ['NORMAL', 'BID'].includes(param ?? '') ? (param as FilterType) : 'ALL'
@@ -109,9 +112,13 @@ const MyPostPage = () => {
   )
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '0px 0px -100px 0px',
       threshold: 0.1,
     })
 
@@ -160,7 +167,7 @@ const MyPostPage = () => {
   const showNoResultsMessage = !isLoading && !isFetching && flattenedPosts.length === 0
 
   return (
-    <div className="flex gap-5 lg:gap-10">
+    <div className="flex min-h-screen gap-5 lg:gap-10">
       {/* 왼쪽 필터 바 (고정) */}
       <div className="sticky top-28 hidden h-[calc(100vh-15rem)] shrink-0 sm:block">
         <FilterBar
@@ -213,28 +220,43 @@ const MyPostPage = () => {
               />
             </div>
           </div>
-
           {/* 게시글 목록 */}
-          {isLoading ? ( // 초기 로딩
-            <div className="py-10 text-center">데이터를 불러오는 중입니다...</div>
-          ) : isError ? ( // 에러 발생
-            <div className="text-error py-10 text-center">
-              데이터를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.
-            </div>
-          ) : showNoResultsMessage ? ( // 결과 없음 (필터)
-            <p className="py-10 text-center text-gray-600">조회된 게시글이 없습니다.</p>
+          {isError ? (
+            <EndOfFeedMessage type="No" text="게시글을 불러오는데 실패했습니다." />
+          ) : showNoResultsMessage ? (
+            <EndOfFeedMessage type="No" text="판매글이 없습니다." />
           ) : (
             // 데이터가 있거나, 로딩/에러/결과 없음 메시지가 아닌 경우
             <>
-              <PostCardGrid posts={flattenedPosts} />
-
+              <PostCardGrid posts={flattenedPosts} isLoading={isLoading} />
               {isFetchingNextPage && (
-                <div className="py-4 text-center text-gray-700">다음 페이지를 불러오는 중...</div>
+                <div
+                  className={`grid ${
+                    deviceType === 'mobile'
+                      ? 'bg-gray-10 min-w-0 grid-cols-1 gap-4 p-4'
+                      : deviceType === 'tablet'
+                        ? 'grid-cols-1 gap-x-6 gap-y-15.5 pb-10 md:grid-cols-2'
+                        : 'grid-cols-3 gap-x-6 gap-y-15.5 pb-10 xl:grid-cols-4'
+                  }`}
+                >
+                  {Array.from({ length: 4 }).map((_, index) =>
+                    deviceType === 'mobile' ? (
+                      <div
+                        key={index}
+                        className={`pb-4 ${index !== 3 ? 'border-b-[0.5px] border-gray-200' : ''}`}
+                      >
+                        <PostCardRowSkeleton />
+                      </div>
+                    ) : (
+                      <PostCardColSkeleton key={index} />
+                    )
+                  )}
+                </div>
               )}
               {!hasNextPage && flattenedPosts.length > 0 && !isFetchingNextPage && (
-                <div className="py-4 text-center text-gray-700">모든 게시글을 불러왔습니다.</div>
+                <EndOfFeedMessage text="작성하신 모든 판매글을 확인했어요!" />
               )}
-              {hasNextPage && <div ref={observerRef} className="h-1" />}
+              {hasNextPage && <div ref={observerRef} className="relative -top-80 h-1" />}
             </>
           )}
         </div>

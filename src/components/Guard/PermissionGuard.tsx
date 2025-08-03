@@ -2,6 +2,7 @@ import { Navigate } from 'react-router-dom'
 import { usePermissionStore } from '../../store/authStore'
 import { useToast } from '../../hooks/useToast'
 import { useEffect } from 'react'
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 
 const PermissionGuard = ({ children, role }: { children: React.ReactNode; role: string }) => {
   const { showToast } = useToast()
@@ -17,7 +18,7 @@ const PermissionGuard = ({ children, role }: { children: React.ReactNode; role: 
   }, [permissionInitialized, hasPermission, showToast])
 
   if (!permissionInitialized) {
-    return <div>접근 권한 확인 중...</div>
+    return <LoadingSpinner text="접근 권한 확인 중..." className="h-screen" />
   }
 
   if (!hasPermission) {

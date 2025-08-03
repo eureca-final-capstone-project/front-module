@@ -4,7 +4,6 @@ import Card from '../../components/Card/Card'
 import SectionHeader from './components/SectionHeader'
 import RecommendSection from './components/RecommendSection'
 import BidSection from './components/BidSection'
-import EventBanner from './components/EventBanner'
 import Graph from '../../components/Graph/Graph'
 import LatestSection from './components/LatestSection'
 import SectionDescription from './components/SectionDescription'
@@ -15,33 +14,34 @@ import { getHourlyStatistics } from '../../apis/graph'
 import { useShowPermissionModal } from '../../hooks/useShowPermissionModal'
 import Modal from '../../components/Modal/Modal'
 import PermissionInfo from './components/PermissionInfo'
+import Footer from '../../components/Footer/Footer'
+import useScrollToTop from '../../hooks/useScrollToTop'
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner'
+import { useAuthStore } from '../../store/authStore'
+import Banner from './components/Banner'
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton'
 
 const MainPage = () => {
+  const userId = useAuthStore(state => state.userId)
+
+  useScrollToTop()
   const { data: statistics, isLoading } = useQuery({
     queryKey: ['hourly-statistics'],
     queryFn: getHourlyStatistics,
   })
 
-  const graphData = statistics
-    ? transformToGraphData(statistics).map(entry => {
-        const newEntry: Record<string, number> = {}
-        Object.entries(entry).forEach(([key, value]) => {
-          if (value !== null) newEntry[key] = value
-        })
-        return newEntry
-      })
-    : []
+  const graphData = statistics ? transformToGraphData(statistics) : []
 
   const { isModalOpen, setIsModalOpen } = useShowPermissionModal()
 
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center">
+    <div className="bg-background flex h-screen flex-col items-center">
       <Header />
 
       <main className="mt-16 w-full flex-1 sm:mt-21.5">
-        {/* 이벤트 배너 */}
-        <EventBanner />
-        <Container className="my-6 max-w-[1312px] overflow-x-hidden overflow-y-hidden sm:my-10 sm:px-4">
+        <Container className="max-w-[1312px] overflow-x-hidden overflow-y-hidden sm:mt-6 sm:mb-30 sm:px-4">
+          {/* 이벤트 배너 */}
+          <Banner />
           <div className="grid grid-cols-1 gap-6 sm:gap-y-10 lg:grid-cols-2 lg:gap-x-7">
             {/* 시세 그래프 섹션 */}
             <FadeInUpMotion custom={1}>
@@ -50,9 +50,7 @@ const MainPage = () => {
                 <Card className="flex min-h-60 justify-start overflow-hidden rounded-none p-5 sm:h-110 sm:rounded-b-md">
                   <SectionHeader title="시세 그래프" iconType="priceGraph" />
                   {isLoading ? (
-                    <p className="flex min-h-75 items-center justify-center">
-                      시세 정보를 불러오는 중입니다...
-                    </p>
+                    <LoadingSpinner text="시세 정보를 불러오는 중..." className="min-h-60" />
                   ) : (
                     <>
                       <Graph
@@ -62,8 +60,8 @@ const MainPage = () => {
                         height={310}
                       />
                       <p className="bg-pri-100 rounded-xs py-1 text-center text-gray-800">
-                        통신사의 <span className="text-pri-500 font-semibold">100MB</span> 당 평균
-                        시세 정보입니다.
+                        통신사의 <span className="text-pri-500 font-semibold">시간 당 100MB </span>
+                        평균 시세 정보입니다.
                       </p>
                     </>
                   )}
@@ -118,12 +116,14 @@ const MainPage = () => {
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <PermissionInfo
             onClose={() => {
-              sessionStorage.setItem('permission_modal_shown', 'true')
+              sessionStorage.setItem(`permission_modal_shown_${userId}`, 'true')
               setIsModalOpen(false)
             }}
           />
         </Modal>
+        <ScrollToTopButton className="right-6 bottom-8" />
       </main>
+      <Footer type="primary" />
     </div>
   )
 }
