@@ -1,7 +1,7 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { motion, useDragControls } from 'framer-motion'
 import AlertItem from './AlertItem'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getNotifications, markNotificationsAsRead, NotificationItem } from '../../apis/alert'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
 import LockedIcon from '@/assets/icons/locked.svg?react'
@@ -29,6 +29,7 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   const deviceType = useDeviceType()
   const isMobile = deviceType === 'mobile'
   const controls = useDragControls()
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const shouldBlockScroll = useMemo(() => isMobile && isOpen, [isMobile, isOpen])
   useScrollBlock(shouldBlockScroll)
@@ -64,6 +65,19 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
       })
     },
   })
+
+  useEffect(() => {
+    if (!isOpen || isMobile) return
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose?.()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isOpen, isMobile, onClose])
 
   const handleMarkAllAsRead = () => {
     const allIds =
@@ -227,7 +241,10 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   }
   if (!isMobile && isOpen) {
     return (
-      <div className="rounded-custom-m shadow-header-modal absolute right-0 z-50 flex h-114 w-89 flex-col overflow-hidden bg-white p-0">
+      <div
+        ref={modalRef}
+        className="rounded-custom-m shadow-header-modal absolute right-0 z-50 flex h-114 w-89 flex-col overflow-hidden bg-white p-0"
+      >
         {isLoggedIn ? (
           <>
             <div className="px-5 py-4 text-right">

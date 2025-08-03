@@ -9,6 +9,7 @@ import { logout } from '../../apis/auth'
 import { toast } from 'react-toastify'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import { useNotificationStore } from '../../store/notificationStore'
+import { useEffect, useRef } from 'react'
 interface Props {
   nickname: string
   email: string
@@ -16,10 +17,11 @@ interface Props {
   onClose: () => void
 }
 
-const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
+const UserInfoModal = ({ nickname, email, telecomCompany, onClose }: Props) => {
   const setIsLoggedin = useAuthStore(state => state.setIsLogin)
   const userId = useAuthStore(state => state.userId)
   const { setPermissionInitialized, setPermissions } = usePermissionStore()
+  const modalRef = useRef<HTMLDivElement>(null)
 
   const { data: payStatus } = useQuery({
     queryKey: ['userPayStatus'],
@@ -54,6 +56,19 @@ const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
     },
   })
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose()
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [onClose])
+
   const handleLogout = () => {
     // SSE 연결 끊기 및 상태 초기화
     const { disconnectFn, clearDisconnectFn, clearNotifications } = useNotificationStore.getState()
@@ -67,7 +82,10 @@ const UserInfoModal = ({ nickname, email, telecomCompany }: Props) => {
   }
 
   return (
-    <div className="rounded-custom-m bg-gray-10 shadow-header-modal absolute right-0 z-50 flex w-[236px] flex-col gap-4.5 p-5">
+    <div
+      ref={modalRef}
+      className="rounded-custom-m bg-gray-10 shadow-header-modal absolute right-0 z-50 flex w-[236px] flex-col gap-4.5 p-5"
+    >
       <div className="flex w-full items-center justify-between">
         <div className="text-fs16">
           <span className="font-semibold">{nickname}</span>님
