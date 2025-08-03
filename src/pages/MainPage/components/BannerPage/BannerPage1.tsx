@@ -12,7 +12,7 @@ const BannerPage1 = () => {
         <BannerHeader title="[페이 충전] 신규 가입 이벤트" />
         <div className="relative sm:mt-6">
           <img
-            src="/public/images/banners/banner1-detail.png"
+            src="/images/banners/banner1-detail.png"
             alt="신규가입 이벤트 쿠폰"
             className="w-full object-cover"
           />
