@@ -56,7 +56,7 @@ const SlideInMotion = ({
             const absX = Math.abs(info.offset.x)
             const absY = Math.abs(info.offset.y)
             if (absX > absY && info.offset.x > 100) {
-              onClose?.()
+              handleBack()
             }
           }}
           dragConstraints={{ left: 0, right: 0 }}
