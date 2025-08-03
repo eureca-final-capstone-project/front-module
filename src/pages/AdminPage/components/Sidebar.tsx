@@ -11,6 +11,7 @@ import { adminLogout } from '../../../apis/admin/auth'
 import { useToast } from '../../../hooks/useToast'
 import { getAdminProfile } from '../../../apis/admin/dashboard'
 import { useAdminAuthStore } from '../../../store/authStore'
+import { toast } from 'react-toastify'
 
 const Sidebar = () => {
   const location = useLocation()
@@ -47,8 +48,8 @@ const Sidebar = () => {
           sessionStorage.removeItem('adminId')
           setIsLogin(false)
           setAdminId(null)
-          showToast({ type: 'success', msg: '로그아웃 되었습니다.' })
-          navigate('/admin/login')
+          toast.success('로그아웃 되었습니다.')
+          navigate('/admin/login', { replace: true })
           break
         default:
           showToast({ type: 'error', msg: '로그아웃에 실패했습니다.' })
