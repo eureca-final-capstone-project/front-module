@@ -58,7 +58,11 @@ const Header = () => {
         {deviceType !== 'mobile' && (
           <SearchBar onSubmit={handleSearch} defaultValue={currentKeyword} className="max-w-171" />
         )}
-        <HeaderNav deviceType={deviceType} setShowMobileSearch={setShowMobileSearch} />
+        <HeaderNav
+          deviceType={deviceType}
+          setShowMobileSearch={setShowMobileSearch}
+          showMobileSearch={showMobileSearch}
+        />
 
         {/* 모바일일 때, 아래로 내려오는 검색바 */}
         {deviceType === 'mobile' && (
