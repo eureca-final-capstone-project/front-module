@@ -6,6 +6,7 @@ import { useState } from 'react'
 import EditModal from '../Modal/EditModal'
 import { getTelecomBadgeColor } from '../../../../utils/telecom'
 import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner'
+import { formatPhoneNumber } from '../../../../utils/format'
 
 const Profile = () => {
   const queryClient = useQueryClient()
@@ -49,7 +50,7 @@ const Profile = () => {
                   className={`leading-none ${getTelecomBadgeColor(profileInfo.telecomCompany.name)}`}
                   label={profileInfo.telecomCompany.name}
                 />
-                <p>{profileInfo.phoneNumber}</p>
+                <p>{formatPhoneNumber(profileInfo.phoneNumber)}</p>
               </div>
             </div>
           </div>
