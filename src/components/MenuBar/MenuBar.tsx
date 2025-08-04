@@ -225,7 +225,7 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
             <DropdownToggleMotion isOpen={isMyPageOpen}>
               <div className="flex flex-col gap-0.5">
                 <SubNavTile
-                  label="내 게시글"
+                  label="내 판매글"
                   to="/my-posts"
                   active={pathname === '/my-posts'}
                   onClose={onClose}
