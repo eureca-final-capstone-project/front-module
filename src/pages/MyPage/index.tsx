@@ -33,6 +33,10 @@ const MyPage = () => {
   const fromHeader = state?.fromHeader
 
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     if (deviceType === 'mobile' || fromHeader) {
       window.scrollTo(0, 0)
     }
