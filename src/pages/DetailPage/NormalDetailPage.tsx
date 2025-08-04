@@ -17,7 +17,7 @@ import {
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { formatRelativeTime } from '../../utils/time'
 import { transformRecommendedPost } from '../../utils/postCardParse'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
 import WishIcon from '@/assets/icons/heart.svg?react'
@@ -50,6 +50,10 @@ const NormalDetailPage = () => {
   const permissions = usePermissionStore(state => state.permissions)
 
   const isLoggedIn = useAuthStore(state => state.isLogin)
+
+  useEffect(() => {
+    setIsSheetOpen(false)
+  }, [transactionFeedId])
 
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
