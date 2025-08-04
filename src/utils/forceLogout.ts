@@ -2,6 +2,7 @@ import { toast } from 'react-toastify'
 import { useAuthStore, usePermissionStore } from '../store/authStore'
 
 export const forceLogout = (message = '이용이 제한된 계정입니다. 다시 로그인해 주세요.') => {
+  console.log(message)
   sessionStorage.removeItem('userAccessToken')
   sessionStorage.removeItem('userId')
   useAuthStore.getState().setIsLogin(false)
@@ -10,5 +11,7 @@ export const forceLogout = (message = '이용이 제한된 계정입니다. 다�
   usePermissionStore.getState().setPermissionInitialized(false)
 
   toast.error(message)
-  window.location.href = '/login'
+  setTimeout(() => {
+    window.location.href = '/login'
+  }, 1500)
 }
