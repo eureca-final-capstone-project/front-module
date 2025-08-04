@@ -209,27 +209,37 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
             onClose={onClose}
             active={pathname.startsWith('/posts')}
           />
-
+          <NavTile
+            label="판매글 작성"
+            to="/post-write"
+            onClose={onClose}
+            active={pathname === '/post-write'}
+          />
           <NavTile
             label="마이페이지"
             onClick={() => setIsMyPageOpen(prev => !prev)}
             onClose={onClose}
             withArrow
             isOpen={isMyPageOpen}
-            active={pathname.startsWith('/mypage')}
           >
             <DropdownToggleMotion isOpen={isMyPageOpen}>
               <div className="flex flex-col gap-0.5">
                 <SubNavTile
-                  label="관심 거래"
-                  to="/mypage/favorites"
-                  active={pathname === '/mypage/favorites'}
+                  label="내 판매글"
+                  to="/my-posts"
+                  active={pathname === '/my-posts'}
                   onClose={onClose}
                 />
                 <SubNavTile
                   label="데이터 충전권"
                   to="/mypage/data-charge"
                   active={pathname === '/mypage/data-charge'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="관심 거래"
+                  to="/mypage/favorites"
+                  active={pathname === '/mypage/favorites'}
                   onClose={onClose}
                 />
                 <SubNavTile
@@ -279,7 +289,7 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
             active={pathname === '/refund'}
           />
           <NavTile
-            label="서비스 소개 (도우미)"
+            label="서비스 가이드"
             to="/onboarding"
             onClose={onClose}
             active={pathname === '/onboarding'}
