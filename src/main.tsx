@@ -16,11 +16,9 @@ createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
       <RootProvider>
         <PermissionInitialize />
-        <RootProvider>
-          <RouterProvider router={router} />
-          <Toast />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </RootProvider>
+        <RouterProvider router={router} />
+        <Toast />
+        <ReactQueryDevtools initialIsOpen={false} />
       </RootProvider>
     </QueryClientProvider>
   </StrictMode>
