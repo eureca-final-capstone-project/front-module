@@ -1,16 +1,20 @@
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { motion } from 'framer-motion'
+import { motion, useDragControls } from 'framer-motion'
 import AlertItem from './AlertItem'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { getNotifications, markNotificationsAsRead, NotificationItem } from '../../apis/alert'
 import FadeInUpMotion from '../Animation/FadeInUpMotion'
 import LockedIcon from '@/assets/icons/locked.svg?react'
+import NotificationIcon from '@/assets/icons/notification.svg?react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../store/authStore'
 import Button from '../Button/Button'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import SlideInMotion from '../Animation/SlideInMotion'
 import { useNotificationStore } from '../../store/notificationStore'
+import { useScrollBlock } from '../../hooks/useScrollBlock'
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
+
 interface AlertModalProps {
   isOpen: boolean
   onClose?: () => void
@@ -24,6 +28,11 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   const [hasShownCompleteMessage, setHasShownCompleteMessage] = useState(false)
   const deviceType = useDeviceType()
   const isMobile = deviceType === 'mobile'
+  const controls = useDragControls()
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  const shouldBlockScroll = useMemo(() => isMobile && isOpen, [isMobile, isOpen])
+  useScrollBlock(shouldBlockScroll)
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -56,6 +65,24 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
       })
     },
   })
+
+  useEffect(() => {
+    if (!isOpen || isMobile) return
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+        onClose?.()
+      }
+    }
+    const timeout = setTimeout(() => {
+      document.addEventListener('click', handleClickOutside)
+    }, 0)
+
+    return () => {
+      clearTimeout(timeout)
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isOpen, isMobile, onClose])
 
   const handleMarkAllAsRead = () => {
     const allIds =
@@ -105,9 +132,50 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
     }
   }
 
+  type QueryStatus = 'pending' | 'error' | 'success'
+
+  const renderStatusFallback = (status: QueryStatus, hasData: boolean) => {
+    let title = ''
+    let subtitle: React.ReactNode = null
+    let textColor = 'text-gray-500'
+
+    if (status === 'pending') {
+      title = '알림을 불러오는 중입니다'
+    } else if (status === 'error') {
+      title = '알림을 불러오지 못했습니다'
+      subtitle = (
+        <p className="text-fs12 sm:text-fs14 mt-2 text-gray-400">잠시 후 다시 시도해주세요</p>
+      )
+      textColor = 'text-error'
+    } else if (status === 'success' && !hasData) {
+      title = '최근 14일 이내 받은 알림이 없습니다'
+      subtitle = (
+        <div className="text-fs12 sm:text-fs14 mt-2 text-gray-400">
+          <span>거래를 진행하면 알림이 도착해요!</span>
+        </div>
+      )
+    }
+
+    return (
+      <div
+        className={`flex min-h-[20vh] flex-1 flex-col items-center justify-center px-4 text-center ${textColor}`}
+      >
+        <NotificationIcon className="h-6 w-8 sm:h-8 sm:w-10" />
+        <p className="text-fs16 pt-3 font-medium">{title}</p>
+        {subtitle}
+      </div>
+    )
+  }
+
   if (isMobile) {
     return (
-      <SlideInMotion isOpen={isOpen} onClose={onClose} title="알림">
+      <SlideInMotion
+        isOpen={isOpen}
+        onClose={onClose}
+        title="알림"
+        controls={controls}
+        onContentPointerDown={e => controls.start(e)}
+      >
         {isLoggedIn ? (
           <>
             <div className="relative">
@@ -121,16 +189,25 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
             <div
               className="mt-16 flex flex-1 flex-col overflow-y-auto"
               onScroll={handleNotificationScroll}
+              onPointerDown={e => controls.start(e)}
+              style={{ touchAction: 'pan-y' }}
             >
-              {flattenedNotifications.map((notification, index) => (
-                <div key={notification.alarmId}>
-                  <AlertItem notification={notification} onRead={handleReadOne} />
-                  {index !== flattenedNotifications.length - 1 && (
-                    <div className="border-t border-gray-100" />
-                  )}
-                </div>
-              ))}
-              {isFetchingNextPage && <p className="text-fs14 py-4 text-center">불러오는 중</p>}
+              {status === 'pending' || status === 'error' || flattenedNotifications.length === 0
+                ? renderStatusFallback(status, flattenedNotifications.length > 0)
+                : flattenedNotifications.map((notification, index) => (
+                    <div key={notification.alarmId}>
+                      <AlertItem notification={notification} onRead={handleReadOne} />
+                      {index !== flattenedNotifications.length - 1 && (
+                        <div className="border-t border-gray-100" />
+                      )}
+                    </div>
+                  ))}
+
+              {isFetchingNextPage && (
+                <p className="text-fs14 py-4 text-center">
+                  <LoadingSpinner />
+                </p>
+              )}
 
               {(shouldShowCompleteMessage || hasShownCompleteMessage) && (
                 <p className="text-gray-10 bg-pri-500 text-fs14 pt-4 pb-4 text-center">
@@ -169,7 +246,10 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
   }
   if (!isMobile && isOpen) {
     return (
-      <div className="rounded-custom-m shadow-header-modal absolute right-0 z-50 flex h-114 w-89 flex-col overflow-hidden bg-white p-0">
+      <div
+        ref={modalRef}
+        className="rounded-custom-m shadow-header-modal absolute right-0 z-50 flex h-114 w-89 flex-col overflow-hidden bg-white p-0"
+      >
         {isLoggedIn ? (
           <>
             <div className="px-5 py-4 text-right">
@@ -185,9 +265,16 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
               className="scrollbar-hide flex flex-1 flex-col overflow-y-auto"
               onScroll={handleNotificationScroll}
             >
-              {status === 'pending' && (
-                <p className="text-fs14 py-4 text-center">알림을 불러오는 중입니다...</p>
-              )}
+              {status === 'pending' || status === 'error' || flattenedNotifications.length === 0
+                ? renderStatusFallback(status, flattenedNotifications.length > 0)
+                : flattenedNotifications.map((notification, index) => (
+                    <div key={notification.alarmId}>
+                      <AlertItem notification={notification} onRead={handleReadOne} />
+                      {index !== flattenedNotifications.length - 1 && (
+                        <div className="border-t border-gray-100" />
+                      )}
+                    </div>
+                  ))}
 
               {status === 'success' &&
                 flattenedNotifications.map((notification, index) => (
@@ -198,7 +285,11 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
                     )}
                   </div>
                 ))}
-              {isFetchingNextPage && <p className="text-fs14 py-4 text-center">불러오는 중</p>}
+              {isFetchingNextPage && (
+                <p className="text-fs14 py-4 text-center">
+                  <LoadingSpinner />
+                </p>
+              )}
             </div>
 
             <motion.div
