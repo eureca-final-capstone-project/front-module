@@ -361,10 +361,12 @@ const NormalDetailPage = () => {
                     isMyPost ? 'w-full' : ''
                   }`}
                   onClick={() => {
-                    if (deviceType === 'mobile') {
-                      setIsSheetOpen(true)
+                    if (deviceType === 'mobile' && !data.liked) {
+                      setTimeout(() => {
+                        setIsSheetOpen(true)
+                      }, 300)
                     }
-                    if (!data.liked) {
+                    if (isLoggedIn && !data.liked) {
                       showToast({ msg: '관심 거래로 등록되었습니다.', type: 'success' })
                     }
                     handleWishClick()
