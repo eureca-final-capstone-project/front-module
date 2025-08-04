@@ -204,9 +204,9 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
                   ))}
 
               {isFetchingNextPage && (
-                <p className="text-fs14 py-4 text-center">
+                <div className="text-fs14 py-4 text-center">
                   <LoadingSpinner />
-                </p>
+                </div>
               )}
 
               {(shouldShowCompleteMessage || hasShownCompleteMessage) && (
