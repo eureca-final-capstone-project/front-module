@@ -5,6 +5,7 @@ import { getUserProfile } from '../../../../apis/userInfo'
 import { useState } from 'react'
 import EditModal from '../Modal/EditModal'
 import { getTelecomBadgeColor } from '../../../../utils/telecom'
+import LoadingSpinner from '../../../../components/LoadingSpinner/LoadingSpinner'
 
 const Profile = () => {
   const queryClient = useQueryClient()
@@ -30,8 +31,12 @@ const Profile = () => {
     <>
       <InfoCard title="프로필" showEditBtn={true} onEditClick={openModal}>
         {isLoading || isError || !profileInfo || !profileInfo.telecomCompany ? (
-          <div className="flex h-40 items-center justify-center text-sm text-gray-700">
-            {isLoading ? '로딩 중' : '프로필 정보를 불러오지 못했습니다.'}
+          <div className="flex h-40 items-center justify-center text-sm text-gray-500">
+            {isLoading ? (
+              <LoadingSpinner text="프로필 정보를 불러오는 중입니다" />
+            ) : (
+              '프로필 정보를 불러오지 못했습니다.'
+            )}
           </div>
         ) : (
           <div>
