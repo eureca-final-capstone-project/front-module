@@ -23,7 +23,7 @@ export const useScrollBlock = (block: boolean) => {
           body.style.overflow = ''
           window.scrollTo(0, parseInt(scrollY, 10))
           delete body.dataset.scrollY
-        }, 300)
+        }, 100)
       }
     }
   }, [block])
