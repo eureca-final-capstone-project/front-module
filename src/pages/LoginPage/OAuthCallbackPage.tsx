@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
 import { requestTokenForOAuth } from '../../apis/auth'
 import { useAuthStore } from '../../store/authStore'
+import { useToast } from '../../hooks/useToast'
 
 const OAuthCallbackPage = () => {
   const navigate = useNavigate()
@@ -10,6 +11,7 @@ const OAuthCallbackPage = () => {
 
   const [searchParams] = useSearchParams()
   const { setIsLogin, setUserId } = useAuthStore()
+  const { showToast } = useToast()
 
   const mutation = useMutation({
     mutationFn: requestTokenForOAuth,
@@ -17,21 +19,23 @@ const OAuthCallbackPage = () => {
       if (data.statusCode === 200) {
         const { accessToken, userId, newUser } = data.data
         sessionStorage.setItem('userAccessToken', accessToken)
-        sessionStorage.setItem('userId', userId)
-        setUserId(userId)
 
         if (newUser) {
-          navigate('/additional-info')
+          navigate('/additional-info', { replace: true })
           return
         }
+
+        sessionStorage.setItem('userId', userId)
         setIsLogin(true)
-        navigate('/')
+        setUserId(userId)
+
+        navigate('/', { replace: true })
       } else {
-        alert('로그인 중 오류가 발생했습니다.')
+        showToast({ type: 'error', msg: '로그인 중 오류가 발생했습니다.' })
       }
     },
     onError: () => {
-      alert('로그인 중 오류가 발생했습니다.')
+      showToast({ type: 'error', msg: '로그인 중 오류가 발생했습니다.' })
     },
   })
 
