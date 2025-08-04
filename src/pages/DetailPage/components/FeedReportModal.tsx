@@ -107,7 +107,7 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
       description={
         <div className="space-y-1">
           <p>신고 유형을 선택하고, 신고 사유를 작성해주세요.</p>
-          <p className="text-fs13 text-gray-500">
+          <p className="text-fs12 text-gray-500">
             ⚠ 이미 신고한 사용자의 다른 게시글은 신고할 수 없습니다.
           </p>
         </div>
@@ -124,9 +124,9 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
             />
           ))}
         </div>
-        <h4 className="text-fs14 sm:text-fs16">신고 사유 (필수)</h4>
+        <h4 className="text-fs16 mt-2">신고 사유 (필수)</h4>
         <textarea
-          className="text-fs12 sm:text-fs14 rounded-custom-s w-full border border-gray-200 p-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
+          className="text-fs16 rounded-custom-s w-full border border-gray-200 p-3 focus:ring-1 focus:ring-gray-500 focus:outline-none"
           rows={4}
           placeholder="신고 사유를 입력해주세요"
           value={reason}
