@@ -1,4 +1,5 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { forceLogout } from '../utils/forceLogout'
 
 /**
  * 클라이언트 인스턴스에 요청 인터셉터를 등록하여 accessToken 자동 주입
@@ -46,6 +47,11 @@ export const attachResponseInterceptor = (
     async response => {
       // 서버 응답 데이터에서 실제 데이터 부분 추출
       const data = response.data?.data
+
+      if (data?.statusCode === 10007) {
+        forceLogout()
+        return Promise.reject(new Error('접근 권한이 없습니다.'))
+      }
 
       // 토큰 만료 에러 감지: 상태 코드 10001, 상태 이름 TOKEN_EXPIRED 인 경우
       if (data?.statusCode === 10001 && data.statusCodeName === 'TOKEN_EXPIRED') {
