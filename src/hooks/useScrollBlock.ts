@@ -15,13 +15,15 @@ export const useScrollBlock = (block: boolean) => {
     } else {
       const scrollY = body.dataset.scrollY
       if (scrollY) {
-        body.style.position = ''
-        body.style.top = ''
-        body.style.left = ''
-        body.style.right = ''
-        body.style.overflow = ''
-        window.scrollTo(0, parseInt(scrollY, 10))
-        delete body.dataset.scrollY
+        setTimeout(() => {
+          body.style.position = ''
+          body.style.top = ''
+          body.style.left = ''
+          body.style.right = ''
+          body.style.overflow = ''
+          window.scrollTo(0, parseInt(scrollY, 10))
+          delete body.dataset.scrollY
+        }, 100)
       }
     }
   }, [block])
