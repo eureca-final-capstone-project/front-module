@@ -26,8 +26,8 @@ const PriceGraph = () => {
           </p>
         ) : (
           <div className="flex flex-col gap-1.5 overflow-hidden">
-            <Graph type="line" data={graphData} yKeys={['LG U+', 'KT', 'SKT']} height={330} />{' '}
-            <p className="bg-pri-100 md:text-fs16 text-fs14 rounded-xs py-1 text-center text-gray-800">
+            <Graph type="line" data={graphData} yKeys={['LG U+', 'KT', 'SKT']} height={330} />
+            <p className="bg-pri-200 md:text-fs16 text-fs14 rounded-xs py-1 text-center text-gray-900">
               통신사의 <span className="text-pri-500 font-semibold">시간 당 100MB </span>
               평균 시세 정보입니다.
             </p>
