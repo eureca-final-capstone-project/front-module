@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 
@@ -29,6 +29,18 @@ const MyPage = () => {
   const { tabId } = useParams()
   const navigate = useNavigate()
   const deviceType = useDeviceType()
+  const { pathname, state } = useLocation()
+  const fromHeader = state?.fromHeader
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
+    if (deviceType === 'mobile' || fromHeader) {
+      window.scrollTo(0, 0)
+    }
+  }, [pathname, deviceType, fromHeader])
 
   useEffect(() => {
     if (!tabData.some(tab => tab.id === tabId)) {

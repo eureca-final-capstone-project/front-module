@@ -20,15 +20,16 @@ import MenuBar from '../MenuBar/MenuBar'
 interface HeaderNavProps {
   deviceType: string
   setShowMobileSearch: Dispatch<SetStateAction<boolean>>
+  showMobileSearch: boolean
 }
 
-const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
+const HeaderNav = ({ deviceType, setShowMobileSearch, showMobileSearch }: HeaderNavProps) => {
   const navigate = useNavigate()
   const location = useLocation()
   const { showToast } = useToast()
   const queryClient = useQueryClient()
 
-  const [activeNav, setActiveNav] = useState<string | null>(null)
+  // const [activeNav, setActiveNav] = useState<string | null>(null)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isAlertOpen, setIsAlertOpen] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -68,7 +69,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
   const isActiveLink = (path: string) => location.pathname.startsWith(path)
 
   const handleAction = (key: string, callback: () => void) => () => {
-    setActiveNav(key)
+    // setActiveNav(key)
 
     if (key === 'notification') {
       callback()
@@ -100,7 +101,7 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     {
       key: 'mypage',
       label: '마이페이지',
-      action: () => navigate('/mypage/data-charge'),
+      action: () => navigate('/mypage/data-charge', { state: { fromHeader: true } }),
     },
     {
       key: 'profile',
@@ -124,7 +125,9 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
     },
     {
       label: '관심 거래',
-      to: isLoggedIn ? '/mypage/favorites' : '/login',
+      to: isLoggedIn
+        ? { pathname: '/mypage/favorites', state: { fromHeader: true } }
+        : { pathname: '/login' },
       matchPath: '/mypage/favorites',
       requiresLogin: true,
     },
@@ -167,7 +170,13 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
               key={key}
               type="button"
               onClick={handleAction(key, action)}
-              className={`hover:text-pri-500 cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
+              className={`hover:text-pri-500 cursor-pointer ${
+                (key === 'notification' && isAlertOpen) ||
+                (key === 'search' && showMobileSearch) ||
+                (key === 'menu' && isMenuOpen)
+                  ? 'text-pri-500'
+                  : ''
+              }`}
             >
               {icon}
             </button>
@@ -193,7 +202,13 @@ const HeaderNav = ({ deviceType, setShowMobileSearch }: HeaderNavProps) => {
               <button
                 type="button"
                 onClick={handleAction(key, action)}
-                className={`hover:text-pri-500 relative cursor-pointer ${activeNav === key ? 'text-pri-500' : ''}`}
+                className={`hover:text-pri-500 relative cursor-pointer ${
+                  (key === 'notification' && isAlertOpen) ||
+                  (key === 'profile' && isProfileOpen) ||
+                  (key === 'mypage' && location.pathname === '/mypage/data-charge')
+                    ? 'text-pri-500'
+                    : ''
+                }`}
               >
                 {key === 'profile' && isLoggedIn ? (
                   <div className="flex items-center gap-0.5">

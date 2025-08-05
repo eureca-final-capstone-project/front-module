@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import { useRipple } from '../../hooks/useRipple'
+import { getDragging } from '../../utils/dragState'
 
 interface SubNavTileProps {
   label: string
@@ -13,6 +14,7 @@ const SubNavTile = ({ label, to, active = false, onClose }: SubNavTileProps) => 
   const { containerRef, createRipple } = useRipple()
 
   const handleClick = (e: React.MouseEvent) => {
+    if (getDragging()) return
     createRipple(e)
     navigate(to)
     onClose?.()

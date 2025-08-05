@@ -8,7 +8,13 @@ export const loginSchema = z.object({
 export const signUpSchema = z
   .object({
     email: z.email('올바른 이메일 형식을 입력해 주세요.'),
-    password: z.string().nonempty('비밀번호를 입력해 주세요.'),
+    password: z
+      .string()
+      .nonempty('비밀번호를 입력해 주세요.')
+      .regex(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d])[A-Za-z\d\S]{8,16}$/,
+        '비밀번호는 영문, 숫자, 특수문자를 포함한 8~16자여야 합니다.'
+      ),
     passwordConfirm: z.string(),
     carrier: z.string().nonempty('통신사를 선택해 주세요.'),
     phoneNumber: z

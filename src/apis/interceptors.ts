@@ -1,4 +1,5 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { forceLogout } from '../utils/forceLogout'
 
 /**
  * 클라이언트 인스턴스에 요청 인터셉터를 등록하여 accessToken 자동 주입
@@ -47,6 +48,11 @@ export const attachResponseInterceptor = (
       // 서버 응답 데이터에서 실제 데이터 부분 추출
       const data = response.data?.data
 
+      if (data?.statusCode === 10007) {
+        forceLogout()
+        return Promise.reject(new Error('접근 권한이 없습니다.'))
+      }
+
       // 토큰 만료 에러 감지: 상태 코드 10001, 상태 이름 TOKEN_EXPIRED 인 경우
       if (data?.statusCode === 10001 && data.statusCodeName === 'TOKEN_EXPIRED') {
         // 원래 요청 객체를 가져옴, _retry 플래그 추가 가능하도록 확장 타입 지정
@@ -54,7 +60,6 @@ export const attachResponseInterceptor = (
 
         // 이미 재시도 했으면 무한 루프 방지 위해 로그인 페이지로 이동
         if (originalRequest._retry) {
-          console.log('이미 갱신 시도 했음!')
           sessionStorage.removeItem(tokenKey)
           window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(new Error('토큰 갱신에 실패했습니다.'))
@@ -76,7 +81,6 @@ export const attachResponseInterceptor = (
               const { data, statusCode } = res.data
               // 갱신 성공 시 새 토큰 저장 및 반환
               if (statusCode === 200) {
-                console.log('토큰 발급 성공!')
                 const newAccessToken = data.accessToken
                 sessionStorage.setItem(tokenKey, newAccessToken)
 
@@ -96,7 +100,6 @@ export const attachResponseInterceptor = (
         try {
           // 토큰 갱신 Promise 대기
           const newAccessToken = await refreshPromise
-          console.log('이전 요청 토큰 갱신 발급까지 대기 중...')
 
           // 원래 요청에 새로운 토큰 헤더 설정
           originalRequest.headers = {

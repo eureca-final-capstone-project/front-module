@@ -12,11 +12,14 @@ import LockedIcon from '@/assets/icons/locked.svg?react'
 import { logout } from '../../apis/auth'
 import { toast } from 'react-toastify'
 import Button from '../Button/Button'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EditModal from '../../pages/MyPage/components/Modal/EditModal'
 import NavTile from './NavTile'
 import SubNavTile from './SubNavTile'
 import DropdownToggleMotion from '../Animation/DropDownToggleMotion'
+import { useDragControls } from 'framer-motion'
+import { useScrollBlock } from '../../hooks/useScrollBlock'
+import { useDeviceType } from '../../hooks/useDeviceType'
 
 interface MenuBarProps {
   isOpen: boolean
@@ -24,9 +27,16 @@ interface MenuBarProps {
 }
 
 const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
+
+  const shouldBlockScroll = useMemo(() => isMobile && isOpen, [isMobile, isOpen])
+  useScrollBlock(shouldBlockScroll)
+
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const location = useLocation()
+  const controls = useDragControls()
 
   const isLoggedIn = useAuthStore(state => state.isLogin)
   const setIsLoggedin = useAuthStore(state => state.setIsLogin)
@@ -95,11 +105,28 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
     },
   })
 
-  const handleLogout = () => logoutMutate()
+  const handleLogout = () => {
+    const { disconnectFn, clearDisconnectFn, clearNotifications } = useNotificationStore.getState()
+    disconnectFn?.()
+    clearDisconnectFn()
+    clearNotifications()
+
+    logoutMutate()
+  }
 
   return (
-    <SlideInMotion isOpen={isOpen} onClose={onClose} title="메뉴">
-      <div className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto pb-4">
+    <SlideInMotion
+      isOpen={isOpen}
+      onClose={onClose}
+      title="메뉴"
+      controls={controls}
+      onContentPointerDown={e => controls.start(e)}
+    >
+      <div
+        className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto pb-4"
+        onPointerDown={e => controls.start(e)}
+        style={{ touchAction: 'pan-y' }}
+      >
         {isLoggedIn ? (
           <div className="bg-gray-10 mx-4 flex flex-col gap-4 rounded-md border-1 border-gray-200 p-5">
             <div className="flex items-start justify-between">
@@ -182,27 +209,37 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
             onClose={onClose}
             active={pathname.startsWith('/posts')}
           />
-
+          <NavTile
+            label="판매글 작성"
+            to="/post-write"
+            onClose={onClose}
+            active={pathname === '/post-write'}
+          />
           <NavTile
             label="마이페이지"
             onClick={() => setIsMyPageOpen(prev => !prev)}
             onClose={onClose}
             withArrow
             isOpen={isMyPageOpen}
-            active={pathname.startsWith('/mypage')}
           >
             <DropdownToggleMotion isOpen={isMyPageOpen}>
               <div className="flex flex-col gap-0.5">
                 <SubNavTile
-                  label="관심 거래"
-                  to="/mypage/favorites"
-                  active={pathname === '/mypage/favorites'}
+                  label="내 판매글"
+                  to="/my-posts"
+                  active={pathname === '/my-posts'}
                   onClose={onClose}
                 />
                 <SubNavTile
                   label="데이터 충전권"
                   to="/mypage/data-charge"
                   active={pathname === '/mypage/data-charge'}
+                  onClose={onClose}
+                />
+                <SubNavTile
+                  label="관심 거래"
+                  to="/mypage/favorites"
+                  active={pathname === '/mypage/favorites'}
                   onClose={onClose}
                 />
                 <SubNavTile
@@ -252,10 +289,10 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
             active={pathname === '/refund'}
           />
           <NavTile
-            label="서비스 소개 (도우미)"
-            to="/onboarding"
+            label="서비스 가이드"
+            to="/guide"
             onClose={onClose}
-            active={pathname === '/onboarding'}
+            active={pathname === '/guide'}
           />
         </div>
       </div>

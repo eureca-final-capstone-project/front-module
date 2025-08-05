@@ -15,11 +15,13 @@ import { AdditionalInfoSchemaTye } from '../../../types/auth'
 import { additionalInfoSchema } from '../../../utils/validation'
 import { requestAdditionalInfo } from '../../../apis/auth'
 import { useAuthStore } from '../../../store/authStore'
+import { useToast } from '../../../hooks/useToast'
 
 const AdditionalInfoForm = () => {
   const navigate = useNavigate()
   const deviceType = useDeviceType()
-  const setIsLogin = useAuthStore(state => state.setIsLogin)
+  const { setIsLogin, setUserId } = useAuthStore()
+  const { showToast } = useToast()
 
   const {
     control,
@@ -50,14 +52,19 @@ const AdditionalInfoForm = () => {
     mutationFn: requestAdditionalInfo,
     onSuccess: data => {
       if (data.statusCode === 200) {
+        const { userId } = data.data
+
+        sessionStorage.setItem('userId', userId)
         setIsLogin(true)
+        setUserId(userId)
+
         navigate('/', { replace: true })
       } else {
-        alert('회원가입 실패: ' + data.message)
+        showToast({ type: 'error', msg: '회원가입 중 오류가 발생했습니다.' })
       }
     },
-    onError: error => {
-      alert('회원가입 실패 ' + error.message)
+    onError: () => {
+      showToast({ type: 'error', msg: '회원가입 중 오류가 발생했습니다.' })
     },
   })
 

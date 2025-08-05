@@ -22,10 +22,13 @@ interface PermissionState {
 }
 
 export const useAuthStore = create<UserAuthState>(set => {
+  const storedToken = sessionStorage.getItem('userAccessToken')
   const storedId = sessionStorage.getItem('userId')
+  const isLogin = storedId !== null && storedToken !== null
+
   return {
     userId: storedId !== null ? Number(storedId) : null,
-    isLogin: !!sessionStorage.getItem('userAccessToken'),
+    isLogin,
     setIsLogin: value => set({ isLogin: value }),
     setUserId: value => set({ userId: value }),
   }
