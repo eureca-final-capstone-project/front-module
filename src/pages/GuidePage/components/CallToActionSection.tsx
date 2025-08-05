@@ -30,11 +30,9 @@ const CallToActionSection = () => {
           onClick={() => {
             navigate('/')
           }}
-          className={`transition-smooth cursor-pointer disabled:cursor-not-allowed`}
+          className={`transition-smooth text-pri-500 shadow-button text-fs18 bg-gray-10 inline-flex cursor-pointer items-center justify-center rounded-full px-8 py-3.5 font-semibold disabled:cursor-not-allowed`}
         >
-          <button className="text-pri-500 shadow-button text-fs18 bg-gray-10 inline-flex items-center justify-center rounded-full px-8 py-3.5 font-semibold">
-            홈으로 가기
-          </button>
+          홈으로 가기
         </motion.button>
         <motion.button
           variants={scaleDownVariants}
@@ -44,11 +42,9 @@ const CallToActionSection = () => {
           onClick={() => {
             navigate('/posts')
           }}
-          className={`transition-smooth cursor-pointer disabled:cursor-not-allowed`}
+          className={`transition-smooth border-gray-10 text-fs18 shadow-button text-gray-10 cursor-pointer rounded-full border-2 px-8 py-3 font-semibold disabled:cursor-not-allowed`}
         >
-          <button className="border-gray-10 text-fs18 shadow-button text-gray-10 rounded-full border-2 px-8 py-3 font-semibold">
-            판매글 둘러보기
-          </button>
+          판매글 둘러보기
         </motion.button>
       </div>
     </Card>

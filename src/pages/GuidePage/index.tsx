@@ -81,7 +81,7 @@ const GuidePage = () => {
   useScrollToTop()
 
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center">
+    <div className="bg-background flex min-h-screen w-full flex-col items-center">
       <Header />
       <main className="mt-16 w-full flex-1 sm:mt-21.5">
         <section className="bg-guide-gradation min-h-[calc(100vh-64px)] px-4 sm:min-h-[calc(100vh-86px)]">
@@ -242,12 +242,6 @@ const GuidePage = () => {
                       <Swiper
                         modules={[Autoplay]}
                         autoplay={{ delay: 2500, disableOnInteraction: false }}
-                        loop={true}
-                        onSwiper={swiper => {
-                          setTimeout(() => {
-                            swiper.autoplay?.start()
-                          }, 100)
-                        }}
                       >
                         {item.imgSrc.map((src, idx) => (
                           <SwiperSlide key={idx}>
@@ -274,9 +268,10 @@ const GuidePage = () => {
                           </h3>
                         </div>
 
-                        <div className={`flex flex-col gap-4`}>
+                        <div className={`flex flex-col gap-4 overflow-hidden`}>
                           {item.steps.map((step, idx) => (
                             <motion.div
+                              key={idx}
                               initial={{ opacity: 0, x: 50 }}
                               whileInView={{ opacity: 1, x: 0 }}
                               viewport={{ once: true }}
