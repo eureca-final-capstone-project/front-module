@@ -277,6 +277,7 @@ const GuidePage = () => {
                         <div className={`flex flex-col gap-4`}>
                           {item.steps.map((step, idx) => (
                             <motion.div
+                              key={idx}
                               initial={{ opacity: 0, x: 50 }}
                               whileInView={{ opacity: 1, x: 0 }}
                               viewport={{ once: true }}
