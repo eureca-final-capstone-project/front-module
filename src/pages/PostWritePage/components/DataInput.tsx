@@ -6,9 +6,12 @@ import Button from '../../../components/Button/Button'
 import { useUserStore } from '../../../store/userStore'
 import { validateSalesDataAmount } from '../../../utils/validation'
 import { useEffect } from 'react'
+import { useDeviceType } from '../../../hooks/useDeviceType'
 
 const DataInput = () => {
   const sellableDataMb = useUserStore(state => state.data?.sellableDataMb ?? 0)
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
 
   const {
     control,
@@ -56,7 +59,7 @@ const DataInput = () => {
           const formattedValue = formatNumberWithComma(field.value.toString())
           return (
             <Input
-              label="판매할 데이터 양을 입력해주세요."
+              label={isMobile ? '데이터 입력' : '판매할 데이터 양을 입력해주세요.'}
               id="salesDataAmount"
               value={formattedValue}
               onChange={e => {

@@ -6,10 +6,12 @@ import Button from '../../../components/Button/Button'
 import { useUserStore } from '../../../store/userStore'
 import { validateChangeDataAmount } from '../../../utils/validation'
 import { useEffect } from 'react'
+import { useDeviceType } from '../../../hooks/useDeviceType'
 
 const DataInput = () => {
   const totalDataMb = useUserStore(state => state.data?.totalDataMb ?? 0)
-
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
   const {
     control,
     setValue,
@@ -57,7 +59,7 @@ const DataInput = () => {
           const formattedValue = formatNumberWithComma(field.value.toString())
           return (
             <Input
-              label="전환할 데이터 양을 입력해주세요."
+              label={isMobile ? '데이터 입력' : '전환할 데이터 양을 입력해주세요.'}
               id="changeDataAmount"
               value={formattedValue}
               onChange={e => {
