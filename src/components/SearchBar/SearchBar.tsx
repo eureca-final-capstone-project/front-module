@@ -119,18 +119,18 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
                           )}
                           {item.trend === 'UP' && (
                             <div className="text-error flex items-center gap-1.5">
-                              <span className="inline-block w-3">
+                              <span>
                                 <TriangleIcon className="h-2 w-2" />
                               </span>
-                              <span>{item.rankGap}</span>
+                              <span className="inline-block w-3 text-end">{item.rankGap}</span>
                             </div>
                           )}
                           {item.trend === 'DOWN' && (
                             <div className="text-info flex items-center gap-1.5">
-                              <span className="inline-block w-3">
+                              <span>
                                 <TriangleIcon className="h-2 w-2 rotate-180" />
                               </span>
-                              <span>{item.rankGap}</span>
+                              <span className="inline-block w-3 text-end">{item.rankGap}</span>
                             </div>
                           )}
                           {item.trend === 'SAME' && <span className="font-black">−</span>}
@@ -162,18 +162,18 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
                           )}
                           {item.trend === 'UP' && (
                             <div className="text-error flex items-center gap-1.5">
-                              <span className="inline-block w-3">
+                              <span>
                                 <TriangleIcon className="h-2 w-2" />
                               </span>
-                              <span>{item.rankGap}</span>
+                              <span className="inline-block w-3 text-end">{item.rankGap}</span>
                             </div>
                           )}
                           {item.trend === 'DOWN' && (
                             <div className="text-info flex items-center gap-1.5">
-                              <span className="inline-block w-3">
+                              <span>
                                 <TriangleIcon className="h-2 w-2 rotate-180" />
                               </span>
-                              <span>{item.rankGap}</span>
+                              <span className="inline-block w-3 text-end">{item.rankGap}</span>
                             </div>
                           )}
                           {item.trend === 'SAME' && <span className="font-black">−</span>}
