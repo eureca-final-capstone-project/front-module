@@ -4,7 +4,7 @@ import DeleteIcon from '@/assets/icons/delete.svg?react'
 import { useEffect, useState } from 'react'
 import TriangleIcon from '@/assets/icons/small-triangle.svg?react'
 import { useQuery } from '@tanstack/react-query'
-import { getKeywordRanking, KeywordRanking } from '../../apis/common'
+import { getKeywordRanking } from '../../apis/common'
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner'
 
 interface SearchBarProps {
@@ -19,13 +19,18 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
   })
 
   const [isFocused, setIsFocused] = useState(false)
-
-  const { data: rankings = [], isLoading } = useQuery<KeywordRanking[]>({
+  const { data: keywordData, isLoading } = useQuery({
     queryKey: ['keywordRanking'],
     queryFn: getKeywordRanking,
     enabled: isFocused,
     staleTime: 1000 * 60,
   })
+
+  const rankings = keywordData?.top10 ?? []
+  const lastUpdatedAt = keywordData?.lastUpdatedAt ?? ''
+
+  const today = new Date()
+  const todayString = `${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}`
 
   const leftColumn = rankings.slice(0, 5)
   const rightColumn = rankings.slice(5, 10)
@@ -75,7 +80,14 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
         {/* 랭킹 드롭다운 */}
         {isFocused && (
           <div className="border-pri-500 shadow-modal bg-gray-10 absolute top-full right-0 left-0 mt-2 rounded-lg border p-4">
-            <p className="text-fs14 mb-4 font-medium text-gray-800">인기 검색어</p>
+            <div className="mb-4 flex items-center justify-between">
+              <p className="text-fs14 font-medium text-gray-800">인기 검색어</p>
+              {lastUpdatedAt && (
+                <p className="text-fs12 text-gray-400">
+                  {todayString} {lastUpdatedAt}, 기준
+                </p>
+              )}
+            </div>
 
             {isLoading ? (
               <LoadingSpinner text="로딩 중..." />
@@ -107,7 +119,7 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
                           )}
                           {item.trend === 'UP' && (
                             <div className="text-error flex items-center gap-1.5">
-                              <span>
+                              <span className="inline-block w-3">
                                 <TriangleIcon className="h-2 w-2" />
                               </span>
                               <span>{item.rankGap}</span>
@@ -115,7 +127,7 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
                           )}
                           {item.trend === 'DOWN' && (
                             <div className="text-info flex items-center gap-1.5">
-                              <span>
+                              <span className="inline-block w-3">
                                 <TriangleIcon className="h-2 w-2 rotate-180" />
                               </span>
                               <span>{item.rankGap}</span>
@@ -150,7 +162,7 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
                           )}
                           {item.trend === 'UP' && (
                             <div className="text-error flex items-center gap-1.5">
-                              <span>
+                              <span className="inline-block w-3">
                                 <TriangleIcon className="h-2 w-2" />
                               </span>
                               <span>{item.rankGap}</span>
@@ -158,7 +170,7 @@ const SearchBar = ({ onSubmit, defaultValue = '', className }: SearchBarProps) =
                           )}
                           {item.trend === 'DOWN' && (
                             <div className="text-info flex items-center gap-1.5">
-                              <span>
+                              <span className="inline-block w-3">
                                 <TriangleIcon className="h-2 w-2 rotate-180" />
                               </span>
                               <span>{item.rankGap}</span>
