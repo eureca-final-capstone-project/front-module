@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { getUserDataStatus, getUserPayStatus, getUserProfile } from '../../apis/userInfo'
-import { formatAmount, formatDataSize } from '../../utils/format'
+import { formatAmount, formatDataSize, formatPhoneNumber } from '../../utils/format'
 import { getTelecomBadgeColor, getTelecomBadgeText } from '../../utils/telecom'
 import { useAuthStore, usePermissionStore } from '../../store/authStore'
 import { useNotificationStore } from '../../store/notificationStore'
@@ -155,7 +155,9 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
                   size="extra-small"
                   className={getTelecomBadgeColor(userProfile?.telecomCompany?.name ?? '')}
                 />
-                <div className="text-fs14 text-gray-700">{userProfile?.phoneNumber}</div>
+                <div className="text-fs14 text-gray-700">
+                  {userProfile?.phoneNumber ? formatPhoneNumber(userProfile.phoneNumber) : ''}
+                </div>
               </div>
               <div className="text-fs14 text-gray-700">{userProfile?.email}</div>
             </div>
