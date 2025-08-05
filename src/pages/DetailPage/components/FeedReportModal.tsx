@@ -46,7 +46,6 @@ const FeedReportModal = ({ isOpen, onClose, transactionFeedId }: FeedReportModal
   const { mutate } = useMutation({
     mutationFn: (body: ReportPayload) => postReport(body),
     onSuccess: res => {
-      // console.log('---------신고 응답:', res)
       switch (res.statusCode) {
         case 200:
           showToast({ msg: '신고가 접수되었습니다.', type: 'success' })

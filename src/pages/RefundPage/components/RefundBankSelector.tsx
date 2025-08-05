@@ -38,7 +38,6 @@ const RefundBankSelector = () => {
             key={bank.bankId}
             onClick={() => {
               setValue('bankId', bank.bankId)
-              console.log('선택된 은행 ID:', bank.bankId)
             }}
             text={
               <div className="flex min-w-0 items-center gap-1">

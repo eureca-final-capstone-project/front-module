@@ -7,10 +7,20 @@ export interface KeywordRanking {
   rankGap: number
 }
 
+export interface KeywordRankingResponse {
+  lastUpdatedAt: string
+  top10: KeywordRanking[]
+}
+
 // 검색어 순위
-export const getKeywordRanking = async (): Promise<KeywordRanking[]> => {
+export const getKeywordRanking = async (): Promise<KeywordRankingResponse> => {
   const res = await client.get('/common/ranking')
-  return res.data.data
+  const data = res.data.data
+
+  return {
+    top10: data.top10 || [],
+    lastUpdatedAt: data.lastUpdatedAt || '',
+  }
 }
 
 // 사용자가 입력한 검색 키워드

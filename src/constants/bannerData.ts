@@ -17,4 +17,10 @@ export const bannerData = [
     link: '/banner/3',
     alt: '퀴즈 이벤트',
   },
+  {
+    id: 4,
+    imageUrl: '/images/banners/banner4.png',
+    link: '/guide',
+    alt: '서비스 가이드',
+  },
 ]

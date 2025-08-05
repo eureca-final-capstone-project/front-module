@@ -17,7 +17,7 @@ import {
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { formatRelativeTime } from '../../utils/time'
 import { transformRecommendedPost } from '../../utils/postCardParse'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDeviceType } from '../../hooks/useDeviceType'
 import BottomSheet from '../../components/BottomSheet/BottomSheet'
 import WishIcon from '@/assets/icons/heart.svg?react'
@@ -51,6 +51,10 @@ const NormalDetailPage = () => {
 
   const isLoggedIn = useAuthStore(state => state.isLogin)
 
+  useEffect(() => {
+    setIsSheetOpen(false)
+  }, [transactionFeedId])
+
   const { data, isLoading, isError } = useQuery<TransactionFeedDetailResponse>({
     queryKey: ['transactionFeedDetail', transactionFeedId],
     queryFn: () => getTransactionFeedDetail(Number(transactionFeedId)),
@@ -71,7 +75,7 @@ const NormalDetailPage = () => {
     },
     onError: (error: AxiosError<{ statusCode: number; message: string }>) => {
       const code = error.response?.data?.statusCode
-      console.error('삭제 실패:', error)
+      console.error('게시글 삭제 실패:', error)
 
       switch (code) {
         case 30003:

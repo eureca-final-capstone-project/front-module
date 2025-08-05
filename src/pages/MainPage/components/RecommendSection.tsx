@@ -39,6 +39,10 @@ const RecommendSection = () => {
     transformPostCard(post, deviceType === 'mobile' ? 'row' : 'col')
   )
 
+  const groupedPosts = isMobile
+    ? Array.from({ length: Math.ceil(posts.length / 2) }, (_, i) => posts.slice(i * 2, i * 2 + 2))
+    : []
+
   return (
     <section>
       <Swiper
@@ -49,31 +53,27 @@ const RecommendSection = () => {
           disableOnInteraction: true,
         }}
         pagination={isMobile ? { clickable: true } : false}
-        direction={isMobile ? 'vertical' : 'horizontal'}
-        slidesPerView={isMobile ? 2.5 : 2.5}
+        direction="horizontal"
+        slidesPerView={isMobile ? 1 : 2.5}
         slidesPerGroup={1}
         touchRatio={0.5}
         threshold={15}
         breakpoints={{
           0: {
-            slidesPerView: 2.5,
-            spaceBetween: 0,
-            direction: 'vertical',
+            slidesPerView: 1,
+            spaceBetween: 20,
           },
           641: {
             slidesPerView: 3.2,
             spaceBetween: 20,
-            direction: 'horizontal',
           },
           748: {
             slidesPerView: 4,
             spaceBetween: 20,
-            direction: 'horizontal',
           },
           1024: {
             slidesPerView: 2.5,
             spaceBetween: 20,
-            direction: 'horizontal',
           },
         }}
         onSwiper={swiper => {
@@ -100,24 +100,38 @@ const RecommendSection = () => {
             setIsEnd(swiper.isEnd)
           })
         }}
-        style={{ height: isMobile ? '364px' : 'auto' }}
+        style={{ height: isMobile ? '300px' : 'auto' }}
       >
-        {posts.map((post, index) => (
-          <SwiperSlide key={post.transactionFeedId} className={isMobile ? 'h-auto' : 'w-fit'}>
-            <div
-              className={`${isMobile ? 'h-full py-4' : ''} ${
-                isMobile && index !== posts.length - 1
-                  ? 'mr-8 border-b-[0.5px] border-gray-200'
-                  : isMobile && index === posts.length - 1
-                    ? 'mr-8'
-                    : ''
-              }`}
-            >
-              <PostCard {...post} />
-            </div>
-          </SwiperSlide>
-        ))}
+        {isMobile
+          ? // 모바일: 2개씩 묶어서 한 슬라이드에 렌더링
+            groupedPosts.map((pair, index) => (
+              <SwiperSlide key={index}>
+                <div className="flex h-full flex-col gap-6">
+                  {pair.map(post => (
+                    <div key={post.transactionFeedId}>
+                      <PostCard {...post} type="row" />
+                    </div>
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))
+          : posts.map((post, index) => (
+              <SwiperSlide key={post.transactionFeedId} className={isMobile ? 'h-auto' : 'w-fit'}>
+                <div
+                  className={`${isMobile ? 'h-full py-4' : ''} ${
+                    isMobile && index !== posts.length - 1
+                      ? 'mr-8 border-b-[0.5px] border-gray-200'
+                      : isMobile && index === posts.length - 1
+                        ? 'mr-8'
+                        : ''
+                  }`}
+                >
+                  <PostCard {...post} />
+                </div>
+              </SwiperSlide>
+            ))}
       </Swiper>
+
       {!isMobile && (
         <div className="mt-4 flex justify-end gap-2">
           <button

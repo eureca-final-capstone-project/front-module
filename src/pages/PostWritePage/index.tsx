@@ -109,7 +109,7 @@ const PostWritePage = () => {
           {formSections.map(({ label, Component }, index) => (
             <Card
               key={index}
-              className={label === '통신사' ? 'flex-row items-center justify-between' : ''}
+              className={`rounded-none sm:rounded-md ${label === '통신사' ? 'flex-row items-center justify-between' : ''}`}
             >
               <div
                 className={`text-fs20 ${label !== '통신사' && 'border-b border-gray-100 pb-2'} font-medium`}
@@ -120,7 +120,7 @@ const PostWritePage = () => {
               <Component />
             </Card>
           ))}
-          <Card>
+          <Card className="rounded-none sm:rounded-md">
             <div className="text-fs20 font-medium">이미지</div>
             <ImageSelect transactionType={watchedSalesTypeId} unit={watchedUnit} />
           </Card>
