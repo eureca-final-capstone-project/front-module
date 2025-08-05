@@ -96,14 +96,14 @@ const GuidePage = () => {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 className="text-gray-10 mb-20 flex flex-col gap-3 tracking-tight sm:mb-28"
               >
-                <div className="sm:text-fs20 flex items-end gap-1 px-1 text-lg font-bold">
+                <div className="sm:text-fs20 flex items-end justify-center gap-1 px-1 text-lg font-bold sm:justify-start">
                   <img src={LogoImg} alt="Datcha" className="w-15 sm:w-23" />
                   <div className="translate-y-1/4">{GUIDE_HEADER}</div>
                 </div>
                 <div>
                   <img src={GuideHeaderTitleImg} alt="당신의 DATA를, 가치로" className="w-141" />
                 </div>
-                <div className="text-pri-300 self-center text-lg sm:text-2xl">
+                <div className="text-pri-300 self-center text-lg whitespace-pre-wrap sm:text-2xl sm:whitespace-normal">
                   {GUIDE_SUB_TITLE}
                 </div>
               </motion.h1>
@@ -112,7 +112,7 @@ const GuidePage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.2 }}
                 transition={{ delay: 0.3 }}
-                className="text-gray-10 text-base leading-6 whitespace-pre-wrap"
+                className="text-gray-10 hidden text-base leading-6 whitespace-pre-wrap sm:block"
               >
                 {GUIDE_INTRO}
               </motion.p>
@@ -284,7 +284,7 @@ const GuidePage = () => {
                               className="flex flex-col gap-4"
                             >
                               <div className="bg-gray-10 shadow-card flex items-center gap-2.5 rounded-lg p-3">
-                                <div className="rounded-custom-m bg-pri-500 text-gray-10 flex h-9 w-9 items-center justify-center">
+                                <div className="rounded-custom-m bg-pri-500 text-gray-10 flex h-9 w-9 shrink-0 items-center justify-center">
                                   {idx + 1}
                                 </div>
                                 <p className="text-base sm:text-lg">{step}</p>
