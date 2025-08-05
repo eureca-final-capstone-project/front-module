@@ -39,6 +39,7 @@ import PermissionGuard from '../components/Guard/PermissionGuard'
 import BannerPage1 from '../pages/MainPage/components/BannerPage/BannerPage1'
 import BannerPage2 from '../pages/MainPage/components/BannerPage/BannerPage2'
 import BannerPage3 from '../pages/MainPage/components/BannerPage/BannerPage3'
+import GuidePage from '../pages/GuidePage'
 
 export const router = createBrowserRouter([
   {
@@ -235,7 +236,10 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: '/guide',
+    element: <GuidePage />,
+  },
   {
     path: '/404',
     element: <NotFoundPage />,
