@@ -1,8 +1,12 @@
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { bannerData } from '../../../constants/bannerData'
+import { useDeviceType } from '../../../hooks/useDeviceType'
 
 const Banner = () => {
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
+
   return (
     <div className="relative mx-auto mb-6 max-w-[1280px] sm:mb-10">
       <Swiper
@@ -12,7 +16,7 @@ const Banner = () => {
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
-        pagination={{ clickable: true }}
+        pagination={isMobile ? false : { clickable: true }}
         loop={true}
         slidesPerGroup={1}
         slidesPerView={1}
