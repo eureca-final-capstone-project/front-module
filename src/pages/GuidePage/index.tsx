@@ -47,7 +47,7 @@ const SectionTitle = ({ icon, title }: { icon: ReactNode; title: string }) => (
     className="mb-12 flex items-center gap-2 font-bold"
   >
     {icon}
-    <span className="text-2xl sm:text-4xl">{title}</span>
+    <span className="text-xl sm:text-4xl">{title}</span>
   </motion.h2>
 )
 
