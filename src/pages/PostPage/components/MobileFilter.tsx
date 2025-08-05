@@ -320,7 +320,7 @@ const MobileFilter = ({
   }
 
   return (
-    <div className="overflow-x-auto px-4 pb-2 whitespace-nowrap">
+    <div className="scrollbar-hide overflow-x-auto px-4 pb-2 whitespace-nowrap">
       <div className="inline-flex gap-2">
         {hasAnyFilterApplied() && (
           <div

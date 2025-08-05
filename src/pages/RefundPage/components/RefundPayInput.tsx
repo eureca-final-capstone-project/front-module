@@ -3,6 +3,7 @@ import { RefundSchemaType } from '../../../types/pay'
 import Input from '../../../components/Input/Input'
 import DatchaCoin from '@/assets/icons/datcha-coin-color.svg?react'
 import Button from '../../../components/Button/Button'
+import { useDeviceType } from '../../../hooks/useDeviceType'
 
 interface RefundPayInputProps {
   balance: number
@@ -27,6 +28,9 @@ const RefundPayInput = ({ balance }: RefundPayInputProps) => {
     (rawValue && isExceedingBalance ? '보유하신 페이보다 큰 금액입니다.' : '')
 
   const quickAmounts = [1000, 3000, 5000, 10000]
+
+  const deviceType = useDeviceType()
+  const isMobile = deviceType === 'mobile'
 
   return (
     <>
@@ -62,7 +66,9 @@ const RefundPayInput = ({ balance }: RefundPayInputProps) => {
         )}
       />
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div
+        className={`${isMobile ? 'scrollbar-hide flex gap-2 overflow-x-auto px-1 py-1 whitespace-nowrap sm:px-0' : 'mt-3 flex flex-wrap gap-2'}`}
+      >
         {quickAmounts.map(amount => (
           <Button
             key={amount}

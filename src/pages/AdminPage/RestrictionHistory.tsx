@@ -95,7 +95,7 @@ const RestrictionHistory = () => {
       }))
     } catch (error) {
       showToast({ type: 'error', msg: '데이터를 불러오지 못했습니다.' })
-      console.error(error)
+      console.error('데이터 불러오기 실패:', error)
     }
   }
 

@@ -50,7 +50,7 @@ const MainPage = () => {
                 <Card className="flex min-h-60 justify-start overflow-hidden rounded-none p-5 sm:h-110 sm:rounded-b-md">
                   <SectionHeader title="시세 그래프" iconType="priceGraph" />
                   {isLoading ? (
-                    <LoadingSpinner text="시세 정보를 불러오는 중..." className="min-h-60" />
+                    <LoadingSpinner text="시세 정보를 불러오는 중..." className="min-h-91" />
                   ) : (
                     <>
                       <Graph
@@ -59,8 +59,8 @@ const MainPage = () => {
                         yKeys={['LG U+', 'KT', 'SKT']}
                         height={310}
                       />
-                      <p className="bg-pri-100 rounded-xs py-1 text-center text-gray-800">
-                        통신사의 <span className="text-pri-500 font-semibold">시간 당 100MB </span>
+                      <p className="bg-pri-200 rounded-xs py-1 text-center text-gray-900">
+                        통신사의 <span className="text-pri-600 font-semibold">시간 당 100MB </span>
                         평균 시세 정보입니다.
                       </p>
                     </>
@@ -104,7 +104,10 @@ const MainPage = () => {
                   <SectionHeader
                     title="최신 상품"
                     iconType="latest"
-                    linkHref="/posts"
+                    linkHref={{
+                      pathname: '/posts',
+                      search: '?statuses=ON_SALE&salesTypeIds=1',
+                    }}
                     linkText="전체보기"
                   />
                   <LatestSection />

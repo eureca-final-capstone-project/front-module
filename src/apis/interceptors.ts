@@ -60,7 +60,6 @@ export const attachResponseInterceptor = (
 
         // 이미 재시도 했으면 무한 루프 방지 위해 로그인 페이지로 이동
         if (originalRequest._retry) {
-          console.log('이미 갱신 시도 했음!')
           sessionStorage.removeItem(tokenKey)
           window.location.href = isAdmin ? '/admin/login' : '/login'
           return Promise.reject(new Error('토큰 갱신에 실패했습니다.'))
@@ -82,7 +81,6 @@ export const attachResponseInterceptor = (
               const { data, statusCode } = res.data
               // 갱신 성공 시 새 토큰 저장 및 반환
               if (statusCode === 200) {
-                console.log('토큰 발급 성공!')
                 const newAccessToken = data.accessToken
                 sessionStorage.setItem(tokenKey, newAccessToken)
 
@@ -102,7 +100,6 @@ export const attachResponseInterceptor = (
         try {
           // 토큰 갱신 Promise 대기
           const newAccessToken = await refreshPromise
-          console.log('이전 요청 토큰 갱신 발급까지 대기 중...')
 
           // 원래 요청에 새로운 토큰 헤더 설정
           originalRequest.headers = {

@@ -23,6 +23,7 @@ const AlertItem = ({ notification, onRead }: Props) => {
 
     if (id === 4) {
       onRead(notification.alarmId)
+      navigate('/mypage/data-charge')
       return
     }
 

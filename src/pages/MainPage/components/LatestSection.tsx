@@ -21,6 +21,7 @@ const LatestSection = () => {
   const requestDto: FeedSearchRequestDto = {
     sortBy: 'LATEST',
     salesTypeIds: [1],
+    statuses: ['ON_SALE'],
   }
 
   const pageable: Pageable = {
@@ -43,6 +44,10 @@ const LatestSection = () => {
 
   const posts = data.content.map(post => transformPostCard(post, isMobile ? 'row' : 'col'))
 
+  const groupedPosts = isMobile
+    ? Array.from({ length: Math.ceil(posts.length / 2) }, (_, i) => posts.slice(i * 2, i * 2 + 2))
+    : []
+
   return (
     <section>
       <Swiper
@@ -53,31 +58,27 @@ const LatestSection = () => {
           delay: 2000,
           disableOnInteraction: true,
         }}
-        direction={isMobile ? 'vertical' : 'horizontal'}
-        slidesPerView={isMobile ? 2.5 : 2.5}
+        direction="horizontal"
+        slidesPerView={isMobile ? 1 : 2.5}
         slidesPerGroup={1}
         touchRatio={0.5}
         threshold={15}
         breakpoints={{
           0: {
-            slidesPerView: 2.5,
-            spaceBetween: 0,
-            direction: 'vertical',
+            slidesPerView: 1,
+            spaceBetween: 20,
           },
           641: {
             slidesPerView: 3.2,
             spaceBetween: 20,
-            direction: 'horizontal',
           },
           748: {
             slidesPerView: 4,
             spaceBetween: 20,
-            direction: 'horizontal',
           },
           1024: {
             slidesPerView: 2.5,
             spaceBetween: 20,
-            direction: 'horizontal',
           },
         }}
         onSwiper={swiper => {
@@ -104,37 +105,57 @@ const LatestSection = () => {
             setIsEnd(swiper.isEnd)
           })
         }}
-        style={{ height: isMobile ? '364px' : 'auto' }}
+        style={{ height: isMobile ? '300px' : 'auto' }}
       >
-        {posts.map((post, index) => (
-          <SwiperSlide key={post.transactionFeedId} className={isMobile ? 'h-auto' : 'w-fit'}>
-            <div
-              className={`${isMobile ? 'h-full py-4' : ''} ${
-                isMobile && index !== posts.length - 1
-                  ? 'mr-8 border-b-[0.5px] border-gray-200'
-                  : isMobile && index === posts.length - 1
-                    ? 'mr-8'
-                    : ''
-              }`}
-            >
-              <PostCard {...post} />
-            </div>
-          </SwiperSlide>
-        ))}
+        {isMobile
+          ? // 모바일: 2개씩 묶어서 한 슬라이드에 렌더링
+            groupedPosts.map((pair, index) => (
+              <SwiperSlide key={index}>
+                <div className="flex h-full flex-col gap-6">
+                  {pair.map(post => (
+                    <div key={post.transactionFeedId}>
+                      <PostCard {...post} type="row" />
+                    </div>
+                  ))}
+                </div>
+              </SwiperSlide>
+            ))
+          : // PC/태블릿: 원래대로 1개씩 슬라이드
+            posts.map((post, index) => (
+              <SwiperSlide key={post.transactionFeedId} className={isMobile ? 'h-auto' : 'w-fit'}>
+                <div
+                  className={`${isMobile ? 'h-full py-4' : ''} ${
+                    isMobile && index !== posts.length - 1
+                      ? 'mr-8 border-b-[0.5px] border-gray-200'
+                      : isMobile && index === posts.length - 1
+                        ? 'mr-8'
+                        : ''
+                  }`}
+                >
+                  <PostCard {...post} />
+                </div>
+              </SwiperSlide>
+            ))}
       </Swiper>
+
+      {/* ✅ 이동 버튼은 데스크톱에서만 표시 */}
       {!isMobile && (
         <div className="mt-4 flex justify-end gap-2">
           <button
             disabled={isBeginning}
             onClick={() => swiperRef.current?.slidePrev()}
-            className={`rounded px-3 py-0.5 text-sm text-gray-50 ${isBeginning ? 'bg-gray-300' : 'bg-pri-500 hover:bg-pri-400'}`}
+            className={`rounded px-3 py-0.5 text-sm text-gray-50 ${
+              isBeginning ? 'bg-gray-300' : 'bg-pri-500 hover:bg-pri-400'
+            }`}
           >
             ◀
           </button>
           <button
             disabled={isEnd}
             onClick={() => swiperRef.current?.slideNext()}
-            className={`rounded px-3 py-0.5 text-sm text-gray-50 ${isEnd ? 'bg-gray-300' : 'bg-pri-500 hover:bg-pri-400'}`}
+            className={`rounded px-3 py-0.5 text-sm text-gray-50 ${
+              isEnd ? 'bg-gray-300' : 'bg-pri-500 hover:bg-pri-400'
+            }`}
           >
             ▶
           </button>

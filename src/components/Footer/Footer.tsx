@@ -78,7 +78,7 @@ const Footer = ({ type = 'white', marginClassName = '' }: FooterProps) => {
             { name: '신고 내역', href: '/mypage/report-history' },
           ],
         },
-        { name: '이용 방법', href: '/' },
+        { name: '서비스 가이드', href: '/guide' },
       ],
     },
     {
@@ -151,7 +151,7 @@ const Footer = ({ type = 'white', marginClassName = '' }: FooterProps) => {
         </div>
 
         {/* 링크 섹션 */}
-        <div className="grid grid-cols-2 gap-x-14 text-center md:grid-cols-4 md:justify-items-center md:gap-4 md:text-left">
+        <div className="grid grid-cols-1 gap-x-14 px-2 text-center md:grid-cols-4 md:justify-items-center md:gap-4 md:px-0 md:text-left">
           {sections.map(section => (
             <div key={section.name} className="w-full">
               {/* 모바일 제목 */}

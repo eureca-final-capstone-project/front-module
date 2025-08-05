@@ -125,7 +125,7 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
       <div
         className="scrollbar-hide bg-gray-10 mt-16 flex flex-1 flex-col gap-2 overflow-y-auto pb-4"
         onPointerDown={e => controls.start(e)}
-        style={{ touchAction: 'none' }}
+        style={{ touchAction: 'pan-y' }}
       >
         {isLoggedIn ? (
           <div className="bg-gray-10 mx-4 flex flex-col gap-4 rounded-md border-1 border-gray-200 p-5">
@@ -290,9 +290,9 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
           />
           <NavTile
             label="서비스 가이드"
-            to="/onboarding"
+            to="/guide"
             onClose={onClose}
-            active={pathname === '/onboarding'}
+            active={pathname === '/guide'}
           />
         </div>
       </div>

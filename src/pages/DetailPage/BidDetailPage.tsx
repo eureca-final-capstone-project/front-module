@@ -67,7 +67,6 @@ const BidDetailPage = () => {
     const isSameFeed = latest.transactionFeedId === Number(transactionFeedId)
 
     if (isBidUpdate && isSameFeed) {
-      console.log('입찰 알림 수신 → 현재 페이지와 일치 → refetch 실행')
       queryClient.refetchQueries({ queryKey: ['transactionFeedDetail', transactionFeedId] })
       queryClient.refetchQueries({ queryKey: ['bidHistory', transactionFeedId] })
     }

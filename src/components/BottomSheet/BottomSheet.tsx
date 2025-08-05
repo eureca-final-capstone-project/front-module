@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { useScrollBlock } from '../../hooks/useScrollBlock'
 
 interface BottomSheetProps {
   isOpen: boolean
@@ -9,10 +10,12 @@ interface BottomSheetProps {
 }
 
 const BottomSheet = ({ isOpen, onClose, children, title }: BottomSheetProps) => {
+  useScrollBlock(isOpen)
   const [startY, setStartY] = useState<number | null>(null)
   const [dragging, setDragging] = useState(false)
 
   const headerRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   // ESC key
   useEffect(() => {
@@ -37,7 +40,7 @@ const BottomSheet = ({ isOpen, onClose, children, title }: BottomSheetProps) => 
     const handleMouseMove = (e: MouseEvent) => {
       if (!dragging || startY === null) return
       const deltaY = e.clientY - startY
-      if (deltaY > 60) {
+      if (deltaY > 100) {
         setDragging(false)
         setStartY(null)
         onClose()
@@ -67,7 +70,11 @@ const BottomSheet = ({ isOpen, onClose, children, title }: BottomSheetProps) => 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (startY === null) return
     const deltaY = e.touches[0].clientY - startY
-    if (deltaY > 60) {
+
+    const content = contentRef.current
+    const isAtTop = content?.scrollTop === 0
+
+    if (deltaY > 100 && isAtTop) {
       setStartY(null)
       onClose()
     }
@@ -108,7 +115,15 @@ const BottomSheet = ({ isOpen, onClose, children, title }: BottomSheetProps) => 
               <h2 className="text-fs18 font-semibold">{title}</h2>
               <hr className="mt-4 border-t border-t-gray-200" />
             </div>
-            <div className="scrollbar-hide flex-1 overflow-y-auto p-4 pb-6">{children}</div>
+            <div
+              ref={contentRef}
+              className="scrollbar-hide flex-1 overflow-y-auto p-4 pb-6"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={() => setStartY(null)}
+            >
+              {children}
+            </div>
           </motion.div>
         </>
       )}

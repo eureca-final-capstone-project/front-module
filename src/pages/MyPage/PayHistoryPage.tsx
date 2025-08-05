@@ -153,7 +153,7 @@ const PayHistoryPage = () => {
                     duration={0.3}
                   >
                     <ListTile onClick={() => setSelectedId(item.payHistoryId)}>
-                      <div className="flex gap-2">
+                      <div className="flex items-center gap-2">
                         <Badge {...getBadgeInfo(item.changeType)} variant="default" size="medium" />
                         <p>{labelText}</p>
                       </div>
