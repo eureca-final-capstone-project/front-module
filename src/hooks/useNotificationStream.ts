@@ -15,11 +15,9 @@ export function useNotificationStream() {
         addNotification(data)
         queryClient.invalidateQueries({ queryKey: ['notifications'] })
       },
-      onConnect: () => {
-        console.log('✅ 알림 스트림 연결됨')
-      },
+      onConnect: () => {},
       onError: e => {
-        console.error('❌ SSE 에러', e)
+        console.error('SSE 에러 발생:', e)
       },
     })
 

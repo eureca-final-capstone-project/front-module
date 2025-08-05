@@ -290,9 +290,9 @@ const MenuBar = ({ isOpen, onClose }: MenuBarProps) => {
           />
           <NavTile
             label="서비스 가이드"
-            to="/onboarding"
+            to="/guide"
             onClose={onClose}
-            active={pathname === '/onboarding'}
+            active={pathname === '/guide'}
           />
         </div>
       </div>

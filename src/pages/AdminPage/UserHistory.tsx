@@ -95,9 +95,8 @@ const UserHistory = () => {
     try {
       const { data: userReportData } = await getUserReport(row.userId)
       setReportsByUser(prev => ({ ...prev, [row.userId]: userReportData }))
-    } catch (error) {
+    } catch {
       showToast({ type: 'error', msg: '데이터를 불러오지 못했습니다.' })
-      console.error(error)
     }
   }
 

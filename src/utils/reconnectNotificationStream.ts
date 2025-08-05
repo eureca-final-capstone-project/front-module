@@ -10,8 +10,7 @@ export const reconnectNotificationStream = () => {
 
   const disconnect = connectNotificationStream<NotificationItem>({
     onMessage: addNotification,
-    onConnect: () => console.log('🔁 로그인 후 SSE 연결됨'),
-    onError: e => console.error('❌ SSE 에러', e),
+    onError: e => console.error('SSE 에러 발생:', e),
   })
 
   setDisconnectFn(disconnect)
