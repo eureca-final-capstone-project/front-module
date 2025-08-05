@@ -43,7 +43,12 @@ const ChangeDataPage = () => {
     onSuccess: () => {
       showToast?.({ type: 'success', msg: '데이터 전환이 완료되었습니다.' })
       setIsModalOpen(false)
-      navigate('/mypage/data-charge')
+
+      if (deviceType === 'mobile') {
+        navigate('/')
+      } else {
+        navigate('/mypage/data-charge')
+      }
     },
     onError: error => {
       showToast?.({
