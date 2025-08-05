@@ -75,7 +75,7 @@ const NormalDetailPage = () => {
     },
     onError: (error: AxiosError<{ statusCode: number; message: string }>) => {
       const code = error.response?.data?.statusCode
-      console.error('삭제 실패:', error)
+      console.error('게시글 삭제 실패:', error)
 
       switch (code) {
         case 30003:

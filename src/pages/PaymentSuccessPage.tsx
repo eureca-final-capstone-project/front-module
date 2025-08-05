@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { postConfirmPayment, ConfirmPaymentResponse } from '../apis/payment'
-import axios from 'axios'
 import Button from '../components/Button/Button'
 import SuccessIcon from '@/assets/icons/circle-check.svg?react'
 import Card from '../components/Card/Card'
@@ -46,16 +45,11 @@ const PaymentSuccessPage = () => {
           orderId,
           amount: Number(amount),
         })
-        console.log('------------결제 성공:', data)
         setPaymentInfo(data.data)
         setStatus('success')
         refetchUserPayStatus()
       } catch (error) {
-        console.error('----------------결제 실패', error)
-        if (axios.isAxiosError(error)) {
-          console.error('에러 응답 코드:', error.response?.status)
-          console.error('에러 응답 본문:', error.response?.data)
-        }
+        console.error('결제 실패:', error)
         setStatus('error')
       }
     }

@@ -80,9 +80,9 @@ const PaymentPage = () => {
         .catch((error: unknown) => {
           if (error && typeof error === 'object' && 'code' in error) {
             const typedError = error as { code: string; message: string }
-            console.error(`결제창 호출 실패 [${typedError.code}]`, typedError.message)
+            console.error(`결제창 호출이 [${typedError.code}]로`, typedError.message)
           } else {
-            console.error('결제창 호출 실패 (알 수 없는 에러)', error)
+            return
           }
         })
     },

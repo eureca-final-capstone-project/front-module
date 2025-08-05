@@ -45,7 +45,6 @@ export const useToast = () => {
         break
       case 'promise':
         if (!promiseFn) {
-          console.error('promise 타입에는 promiseFn이 필요합니다.')
           return
         }
         toast.promise(
