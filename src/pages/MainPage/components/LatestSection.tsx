@@ -33,12 +33,12 @@ const LatestSection = () => {
     queryKey: ['latest-posts'],
     queryFn: () => getTransactionFeeds(requestDto, pageable),
   })
-
+  console.log(data)
   if (isLoading) {
     return <LoadingSpinner text="최신 상품을 불러오는 중..." className="min-h-91" />
   }
 
-  if (isError || !data?.content) {
+  if (isError || !data?.content || data?.content.length <= 0) {
     return <EndOfFeedMessage type="No" text="최신 상품을 불러올 수 없습니다." />
   }
 

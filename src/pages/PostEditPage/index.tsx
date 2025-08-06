@@ -19,6 +19,7 @@ import CurrentDataInfoField from '../PostWritePage/components/CurrentDataInfoFie
 import DataInput from '../PostWritePage/components/DataInput'
 import { formatSalesDataAmount, getUnit } from '../../utils/format'
 import { updateTransactionFeed } from '../../apis/transactionFeed'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -35,6 +36,7 @@ const typeMap = {
 }
 
 const PostEditPage = () => {
+  useScrollToTop()
   const { postId: transactionFeedId } = useParams()
 
   const navigate = useNavigate()

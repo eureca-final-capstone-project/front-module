@@ -84,9 +84,9 @@ const GuidePage = () => {
     <div className="bg-background flex min-h-screen w-full flex-col items-center">
       <Header />
       <main className="mt-16 w-full flex-1 sm:mt-21.5">
-        <section className="bg-guide-gradation min-h-[calc(100vh-64px)] px-4 sm:min-h-[calc(100vh-86px)]">
-          <Container className="flex max-w-[1280px] flex-col items-center pb-20">
-            <div className="mb-5 max-h-50 max-w-40 sm:max-h-74 sm:max-w-63.5">
+        <section className="bg-guide-gradation h-[calc(100vh-64px)] px-4 sm:h-[calc(100vh-86px)]">
+          <Container className="relative flex max-w-[1280px] flex-col items-center justify-center pt-35 pb-30">
+            <div className="absolute top-0 mb-5 max-h-50 max-w-40 sm:max-h-74 sm:max-w-63.5">
               <img src={LightingImg} alt="조명" />
             </div>
             <div>
@@ -94,7 +94,7 @@ const GuidePage = () => {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="text-gray-10 mb-20 flex flex-col gap-3 tracking-tight sm:mb-28"
+                className="text-gray-10 mb-20 flex flex-col gap-3 tracking-tight"
               >
                 <div className="sm:text-fs20 flex items-end justify-center gap-1 px-1 text-lg font-bold sm:justify-start">
                   <img src={LogoImg} alt="Datcha" className="w-15 sm:w-23" />
@@ -116,6 +116,16 @@ const GuidePage = () => {
               >
                 {GUIDE_INTRO}
               </motion.p>
+            </div>
+            <div className="absolute bottom-10 flex flex-col items-center gap-4">
+              <p className="text-gray-10 text-fs14 font-extralight">scroll to view more</p>
+              <div className="flex h-6.5 w-4 justify-center rounded-full border-1 border-white p-1.5 sm:h-8 sm:w-5">
+                <motion.div
+                  className="h-1 w-0.5 rounded-full bg-white sm:h-1.5"
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ repeat: Infinity, duration: 1.2 }}
+                />
+              </div>
             </div>
           </Container>
         </section>

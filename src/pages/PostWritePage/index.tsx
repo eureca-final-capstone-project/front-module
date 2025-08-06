@@ -16,6 +16,7 @@ import { postTransactionFeed } from '../../apis/transactionFeed'
 import FloatActionButton from '../../components/FloatActionButton'
 import { useNavigate } from 'react-router-dom'
 import { useToast } from '../../hooks/useToast'
+import useScrollToTop from '../../hooks/useScrollToTop'
 
 const formSections = [
   { label: '제목', Component: TitleInput },
@@ -32,6 +33,7 @@ const typeMap = {
 }
 
 const PostWritePage = () => {
+  useScrollToTop()
   const navigate = useNavigate()
   const telecom = useUserStore(state => state.telecom)
   const { showToast } = useToast()
