@@ -69,19 +69,12 @@ const HeaderNav = ({ deviceType, setShowMobileSearch, showMobileSearch }: Header
   const isActiveLink = (path: string) => location.pathname.startsWith(path)
 
   const handleAction = (key: string, callback: () => void) => () => {
-    // setActiveNav(key)
-
-    if (key === 'notification') {
+    if (['notification', 'search', 'menu', 'guide'].includes(key)) {
       callback()
       return
     }
 
-    if (key === 'search') {
-      callback()
-      return
-    }
-
-    if (isLoggedIn || key === 'menu') {
+    if (isLoggedIn) {
       callback()
     } else {
       if (key !== 'profile') {
@@ -92,6 +85,11 @@ const HeaderNav = ({ deviceType, setShowMobileSearch, showMobileSearch }: Header
   }
 
   const navButtons = [
+    {
+      key: 'guide',
+      label: '서비스 가이드',
+      action: () => navigate('/guide'),
+    },
     {
       key: 'notification',
       label: '알림',
@@ -205,7 +203,8 @@ const HeaderNav = ({ deviceType, setShowMobileSearch, showMobileSearch }: Header
                 className={`hover:text-pri-500 relative cursor-pointer ${
                   (key === 'notification' && isAlertOpen) ||
                   (key === 'profile' && isProfileOpen) ||
-                  (key === 'mypage' && location.pathname === '/mypage/data-charge')
+                  (key === 'mypage' && location.pathname === '/mypage/data-charge') ||
+                  (key === 'guide' && location.pathname === '/guide')
                     ? 'text-pri-500'
                     : ''
                 }`}

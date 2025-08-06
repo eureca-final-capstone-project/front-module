@@ -89,10 +89,10 @@ const DataChargePage = () => {
         renderStatusFallback()
       ) : (
         <>
-          <p className="text-fs14 sm:text-fs16 px-4 pb-5 text-gray-700 sm:px-0 sm:pb-4">
+          <p className="text-fs14 sm:text-fs16 px-4 pb-0 text-gray-700 sm:px-0 sm:pb-4">
             보유하신 충전권을 확인하시고 데이터로 전환하세요!
           </p>
-          <div className={`grid ${gridCols} mb-5 gap-4 px-4 pt-4 sm:gap-5 sm:p-0`}>
+          <div className={`grid ${gridCols} mb-5 gap-4 px-4 sm:gap-5 sm:p-0`}>
             {coupons.map(coupon => (
               <DataChargeVoucher key={coupon.userDataCouponId} coupon={coupon} />
             ))}
