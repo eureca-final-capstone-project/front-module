@@ -67,7 +67,7 @@ const LoginForm = ({ isAdmin = false, onSuccessNavigateTo = '/' }: LoginFormProp
           break
         }
         case 401:
-          showToast({ type: 'error', msg: '이메일 혹은 비밀번호가 일치하지않습니다.' })
+          showToast({ type: 'error', msg: '이메일 혹은 비밀번호가 일치하지 않습니다.' })
           break
         case 10008:
           showToast({ type: 'error', msg: '해당 계정은 차단되어 로그인이 불가능합니다.' })
