@@ -33,7 +33,7 @@ const LatestSection = () => {
     queryKey: ['latest-posts'],
     queryFn: () => getTransactionFeeds(requestDto, pageable),
   })
-  console.log(data)
+
   if (isLoading) {
     return <LoadingSpinner text="최신 상품을 불러오는 중..." className="min-h-91" />
   }
