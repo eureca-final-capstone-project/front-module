@@ -276,15 +276,6 @@ const AlertModal = ({ isOpen, onClose }: AlertModalProps) => {
                     </div>
                   ))}
 
-              {status === 'success' &&
-                flattenedNotifications.map((notification, index) => (
-                  <div key={notification.alarmId}>
-                    <AlertItem notification={notification} onRead={handleReadOne} />
-                    {index !== flattenedNotifications.length - 1 && (
-                      <div className="border-t border-gray-100" />
-                    )}
-                  </div>
-                ))}
               {isFetchingNextPage && (
                 <p className="text-fs14 py-4 text-center">
                   <LoadingSpinner />
