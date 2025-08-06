@@ -31,7 +31,7 @@ const RecommendSection = () => {
     return <LoadingSpinner text="추천 상품을 불러오는 중..." className="min-h-91" />
   }
 
-  if (isError || !serverPosts) {
+  if (isError || !Array.isArray(serverPosts)) {
     return <EndOfFeedMessage type="No" text="추천 상품을 불러올 수 없습니다." />
   }
 
